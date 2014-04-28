@@ -1,0 +1,6 @@
+[submodule "Linkhub"]
+	path = Linkhub
+	url = https://github.com/linkhub-sdk/linkhub.auth.vb6.git
+[submodule "PopbillFax"]
+	path = PopbillFax
+	url = https://github.com/linkhub-sdk/popbill.fax.vb6.git
