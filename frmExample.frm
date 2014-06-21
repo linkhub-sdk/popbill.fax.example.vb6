@@ -24,6 +24,14 @@ Begin VB.Form frmExample
       TabIndex        =   16
       Top             =   2715
       Width           =   9375
+      Begin VB.CommandButton btnSearchPopUp 
+         Caption         =   "전송내역조회 팝업"
+         Height          =   465
+         Left            =   7425
+         TabIndex        =   28
+         Top             =   210
+         Width           =   1815
+      End
       Begin VB.CommandButton btnCancelReserve 
          Caption         =   "예약전송 취소"
          Height          =   450
@@ -268,29 +276,29 @@ Private FaxService As New PBFAXService
 
 
 Private Sub btnCancelReserve_Click()
- Dim response As PBResponse
+ Dim Response As PBResponse
     
-    Set response = FaxService.CancelReserve(txtCorpNum.Text, txtReceiptNum.Text, txtUserID.Text)
+    Set Response = FaxService.CancelReserve(txtCorpNum.Text, txtReceiptNum.Text, txtUserID.Text)
     
-    If response Is Nothing Then
+    If Response Is Nothing Then
         MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
-    MsgBox (response.message)
+    MsgBox (Response.message)
 End Sub
 
 Private Sub btnCheckIsMember_Click()
-    Dim response As PBResponse
+    Dim Response As PBResponse
     
-    Set response = FaxService.CheckIsMember(txtCorpNum.Text, PartnerID)
+    Set Response = FaxService.CheckIsMember(txtCorpNum.Text, PartnerID)
     
-    If response Is Nothing Then
+    If Response Is Nothing Then
         MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
-    MsgBox (response.message)
+    MsgBox (Response.message)
 End Sub
 
 
@@ -382,7 +390,7 @@ End Sub
 
 Private Sub btnJoinMember_Click()
     Dim joinData As New PBJoinForm
-    Dim response As PBResponse
+    Dim Response As PBResponse
     
     joinData.PartnerID = PartnerID '파트너 아이디
     joinData.CorpNum = "1231212312" '사업자번호 "-" 제외.
@@ -400,16 +408,28 @@ Private Sub btnJoinMember_Click()
     joinData.ContactFAX = "02-999-9998"
     joinData.ContactEmail = "test@test.com"
     
-    Set response = FaxService.JoinMember(joinData)
+    Set Response = FaxService.JoinMember(joinData)
     
-    If response Is Nothing Then
+    If Response Is Nothing Then
         MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
-    MsgBox (response.message)
+    MsgBox (Response.message)
     
     
+End Sub
+
+Private Sub btnSearchPopUp_Click()
+    Dim url As String
+    
+    url = FaxService.GetURL(txtCorpNum.Text, txtUserID.Text, "BOX")
+    
+    If url = "" Then
+         MsgBox ("[" + CStr(MessageService.LastErrCode) + "] " + MessageService.LastErrMessage)
+        Exit Sub
+    End If
+    MsgBox "URL : " + vbCrLf + url
 End Sub
 
 Private Sub btnSendFAX_Click()
