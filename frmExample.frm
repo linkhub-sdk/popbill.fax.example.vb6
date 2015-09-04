@@ -230,6 +230,7 @@ Begin VB.Form frmExample
       Height          =   315
       Left            =   4560
       TabIndex        =   3
+      Text            =   "testkorea"
       Top             =   165
       Width           =   1935
    End
@@ -237,7 +238,7 @@ Begin VB.Form frmExample
       Height          =   315
       Left            =   1335
       TabIndex        =   1
-      Text            =   "1231212312"
+      Text            =   "1234567890"
       Top             =   180
       Width           =   1935
    End
@@ -268,9 +269,9 @@ Attribute VB_Exposed = False
   Option Explicit
 
 '연동아이디
-Private Const LinkID = "TESTER"
+Private Const linkID = "TESTER"
 '비밀키. 유출에 주의하시기 바랍니다.
-Private Const SecretKey = "088b1258aoeMH5OtGjK4zaOlwZGVvSK40ceI8t4j7Hw="
+Private Const SecretKey = "SwWxqU+0TErBXy/9TVjIPEnI0VTUMMSQZtJf3Ed8q3I="
 
 Private FaxService As New PBFAXService
 
@@ -291,7 +292,7 @@ End Sub
 Private Sub btnCheckIsMember_Click()
     Dim Response As PBResponse
     
-    Set Response = FaxService.CheckIsMember(txtCorpNum.Text, LinkID)
+    Set Response = FaxService.CheckIsMember(txtCorpNum.Text, linkID)
     
     If Response Is Nothing Then
         MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
@@ -392,7 +393,7 @@ Private Sub btnJoinMember_Click()
     Dim joinData As New PBJoinForm
     Dim Response As PBResponse
     
-    joinData.LinkID = LinkID '연동 아이디
+    joinData.linkID = linkID '연동 아이디
     joinData.CorpNum = "1231212312" '사업자번호 "-" 제외.
     joinData.CEOName = "대표자성명"
     joinData.CorpName = "회원상호"
@@ -612,7 +613,7 @@ Private Sub btnUnitCost_Click()
 End Sub
 
 Private Sub Form_Load()
-    FaxService.Initialize LinkID, SecretKey
+    FaxService.Initialize linkID, SecretKey
     FaxService.IsTest = True
     
     cboPopbillTOGO.AddItem "LOGIN"
