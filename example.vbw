@@ -8,3 +8,5 @@ PBFAXService = 44, 58, 1237, 772,
 PBResponse = 198, 261, 1391, 974, 
 PBReceiver = 154, 203, 1347, 916, 
 PBFaxInfo = 176, 232, 1369, 945, 
+PBContactInfo = 198, 261, 1440, 969, 
+PBCorpInfo = 220, 290, 1462, 998, Z

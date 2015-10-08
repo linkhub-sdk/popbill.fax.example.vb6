@@ -2,14 +2,14 @@ VERSION 5.00
 Object = "{F9043C88-F6F2-101A-A3C9-08002B2F49FB}#1.2#0"; "COMDLG32.OCX"
 Begin VB.Form frmExample 
    Caption         =   "팝빌 팩스 SDK 예제"
-   ClientHeight    =   9825
+   ClientHeight    =   11490
    ClientLeft      =   60
    ClientTop       =   450
-   ClientWidth     =   9585
+   ClientWidth     =   11460
    LinkTopic       =   "Form1"
-   ScaleHeight     =   9825
-   ScaleWidth      =   9585
-   StartUpPosition =   3  'Windows 기본값
+   ScaleHeight     =   11490
+   ScaleWidth      =   11460
+   StartUpPosition =   2  '화면 가운데
    Begin MSComDlg.CommonDialog CommonDialog1 
       Left            =   8820
       Top             =   90
@@ -19,32 +19,32 @@ Begin VB.Form frmExample
    End
    Begin VB.Frame Frame6 
       Caption         =   " 팩스 전송 관련 "
-      Height          =   6975
-      Left            =   120
-      TabIndex        =   16
-      Top             =   2715
-      Width           =   9375
+      Height          =   7215
+      Left            =   240
+      TabIndex        =   12
+      Top             =   3960
+      Width           =   10695
       Begin VB.CommandButton btnSearchPopUp 
          Caption         =   "전송내역조회 팝업"
          Height          =   465
-         Left            =   7425
-         TabIndex        =   28
+         Left            =   8505
+         TabIndex        =   24
          Top             =   210
          Width           =   1815
       End
       Begin VB.CommandButton btnCancelReserve 
          Caption         =   "예약전송 취소"
          Height          =   450
-         Left            =   6810
-         TabIndex        =   27
+         Left            =   7410
+         TabIndex        =   23
          Top             =   1515
          Width           =   2355
       End
       Begin VB.CommandButton btnGetFaxDetail 
          Caption         =   "전송내역 확인"
          Height          =   450
-         Left            =   4320
-         TabIndex        =   26
+         Left            =   4920
+         TabIndex        =   22
          Top             =   1515
          Width           =   2355
       End
@@ -59,55 +59,55 @@ Begin VB.Form frmExample
             Strikethrough   =   0   'False
          EndProperty
          Height          =   4725
-         Left            =   105
+         Left            =   705
          MultiLine       =   -1  'True
-         TabIndex        =   25
+         TabIndex        =   21
          Top             =   2100
          Width           =   9090
       End
       Begin VB.TextBox txtReceiptNum 
          Height          =   315
-         Left            =   1200
-         TabIndex        =   24
+         Left            =   1800
+         TabIndex        =   20
          Top             =   1575
          Width           =   2835
       End
       Begin VB.CommandButton btnSendFax_Multi_Same 
          Caption         =   "다수파일 동보전송"
          Height          =   570
-         Left            =   5280
-         TabIndex        =   22
+         Left            =   6360
+         TabIndex        =   18
          Top             =   720
          Width           =   1875
       End
       Begin VB.CommandButton btnSendFAX_Multi 
          Caption         =   "다수 파일 전송"
          Height          =   570
-         Left            =   3600
-         TabIndex        =   21
+         Left            =   4680
+         TabIndex        =   17
          Top             =   720
          Width           =   1590
       End
       Begin VB.CommandButton btnSendFax_Same 
          Caption         =   "동보 전송"
          Height          =   570
-         Left            =   1920
-         TabIndex        =   20
+         Left            =   3000
+         TabIndex        =   16
          Top             =   720
          Width           =   1590
       End
       Begin VB.CommandButton btnSendFAX 
          Caption         =   "전송"
          Height          =   570
-         Left            =   240
-         TabIndex        =   19
+         Left            =   1320
+         TabIndex        =   15
          Top             =   720
          Width           =   1590
       End
       Begin VB.TextBox txtReserveDT 
          Height          =   315
-         Left            =   3420
-         TabIndex        =   18
+         Left            =   4500
+         TabIndex        =   14
          Top             =   255
          Width           =   2835
       End
@@ -115,8 +115,8 @@ Begin VB.Form frmExample
          AutoSize        =   -1  'True
          Caption         =   "접수번호 : "
          Height          =   180
-         Left            =   300
-         TabIndex        =   23
+         Left            =   900
+         TabIndex        =   19
          Top             =   1650
          Width           =   900
       End
@@ -124,141 +124,197 @@ Begin VB.Form frmExample
          AutoSize        =   -1  'True
          Caption         =   "예약전송 시간(yyyyMMddHHmmss) : "
          Height          =   180
-         Left            =   195
-         TabIndex        =   17
+         Left            =   1080
+         TabIndex        =   13
          Top             =   330
          Width           =   3210
       End
    End
    Begin VB.Frame Frame1 
       Caption         =   " 팝빌 기본 API "
-      Height          =   2055
-      Left            =   120
+      Height          =   2895
+      Left            =   240
       TabIndex        =   4
-      Top             =   600
-      Width           =   9375
-      Begin VB.Frame Frame2 
-         Caption         =   " 회원정보"
-         Height          =   1575
-         Left            =   120
-         TabIndex        =   12
+      Top             =   840
+      Width           =   10695
+      Begin VB.Frame Frame7 
+         Caption         =   " 회사정보 관련 "
+         Height          =   2295
+         Left            =   8520
+         TabIndex        =   33
          Top             =   360
          Width           =   1935
+         Begin VB.CommandButton btnUpdateCorpInfo 
+            Caption         =   "회사정보 수정"
+            Height          =   495
+            Left            =   120
+            TabIndex        =   35
+            Top             =   960
+            Width           =   1695
+         End
+         Begin VB.CommandButton btnGetCorpInfo 
+            Caption         =   "회사정보 조회"
+            Height          =   495
+            Left            =   120
+            TabIndex        =   34
+            Top             =   360
+            Width           =   1695
+         End
+      End
+      Begin VB.Frame Frame4 
+         Caption         =   " 담당자 관련 "
+         Height          =   2295
+         Left            =   6480
+         TabIndex        =   29
+         Top             =   360
+         Width           =   1935
+         Begin VB.CommandButton btnUpdateContact 
+            Caption         =   "담당자 정보 수정"
+            Height          =   495
+            Left            =   120
+            TabIndex        =   32
+            Top             =   1560
+            Width           =   1695
+         End
+         Begin VB.CommandButton btnListContact 
+            Caption         =   "담당자 목록 조회"
+            Height          =   495
+            Left            =   120
+            TabIndex        =   31
+            Top             =   960
+            Width           =   1695
+         End
+         Begin VB.CommandButton btnRegistContact 
+            Caption         =   "담당자 추가"
+            Height          =   495
+            Left            =   120
+            TabIndex        =   30
+            Top             =   360
+            Width           =   1695
+         End
+      End
+      Begin VB.Frame Frame2 
+         Caption         =   " 회원정보 "
+         Height          =   2295
+         Left            =   120
+         TabIndex        =   9
+         Top             =   360
+         Width           =   1695
+         Begin VB.CommandButton btnCheckID 
+            Caption         =   "ID 중복 확인"
+            Height          =   495
+            Left            =   120
+            TabIndex        =   25
+            Top             =   960
+            Width           =   1455
+         End
          Begin VB.CommandButton btnCheckIsMember 
             Caption         =   "가입 여부 확인"
             Height          =   495
-            Left            =   240
-            TabIndex        =   14
+            Left            =   120
+            TabIndex        =   11
             Top             =   360
             Width           =   1455
          End
          Begin VB.CommandButton btnJoinMember 
             Caption         =   "회원 가입"
             Height          =   495
-            Left            =   240
-            TabIndex        =   13
-            Top             =   960
+            Left            =   120
+            TabIndex        =   10
+            Top             =   1560
             Width           =   1455
          End
       End
       Begin VB.Frame Frame3 
-         Caption         =   " 포인트 관련"
-         Height          =   1575
-         Left            =   2160
-         TabIndex        =   10
+         Caption         =   " 포인트 관련 "
+         Height          =   2295
+         Left            =   1920
+         TabIndex        =   7
          Top             =   360
-         Width           =   2160
-         Begin VB.CommandButton btnUnitCost 
-            Caption         =   "전송 단가 확인"
+         Width           =   2505
+         Begin VB.CommandButton btnGetPartnerBalance 
+            Caption         =   "파트너 잔여포인트 확인"
             Height          =   495
-            Left            =   150
-            TabIndex        =   11
-            Top             =   360
-            Width           =   1815
+            Left            =   120
+            TabIndex        =   27
+            Top             =   1560
+            Width           =   2175
          End
-      End
-      Begin VB.Frame Frame4 
-         Caption         =   " 파트너 관련"
-         Height          =   1575
-         Left            =   4410
-         TabIndex        =   8
-         Top             =   360
-         Width           =   2535
          Begin VB.CommandButton btnGetBalance 
             Caption         =   "잔여 포인트 확인"
             Height          =   495
             Left            =   120
-            TabIndex        =   15
-            Top             =   270
-            Width           =   1815
-         End
-         Begin VB.CommandButton btnGetPartnerBalance 
-            Caption         =   "파트너 잔여 포인트 확인"
-            Height          =   495
-            Left            =   120
-            TabIndex        =   9
+            TabIndex        =   26
             Top             =   960
-            Width           =   2295
+            Width           =   2175
+         End
+         Begin VB.CommandButton btnUnitCost 
+            Caption         =   "전송 단가 확인"
+            Height          =   495
+            Left            =   150
+            TabIndex        =   8
+            Top             =   360
+            Width           =   2175
          End
       End
       Begin VB.Frame Frame5 
-         Caption         =   " 기타"
-         Height          =   1575
-         Left            =   7035
+         Caption         =   " 팝빌 기본 URL "
+         Height          =   2295
+         Left            =   4560
          TabIndex        =   5
          Top             =   360
-         Width           =   2175
-         Begin VB.CommandButton btnGetPopbillURL 
-            Caption         =   " 팝빌 기본 URL 확인"
+         Width           =   1815
+         Begin VB.CommandButton btnGetPopbillURL_CHRG 
+            Caption         =   "포인트 충전 URL"
             Height          =   495
             Left            =   120
-            TabIndex        =   7
-            Top             =   840
-            Width           =   1935
+            TabIndex        =   28
+            Top             =   960
+            Width           =   1575
          End
-         Begin VB.ComboBox cboPopbillTOGO 
-            Height          =   300
+         Begin VB.CommandButton btnGetPopbillURL 
+            Caption         =   " 팝빌 로그인 URL"
+            Height          =   495
             Left            =   120
             TabIndex        =   6
-            Text            =   "LOGIN"
             Top             =   360
-            Width           =   1935
+            Width           =   1575
          End
       End
    End
    Begin VB.TextBox txtUserID 
       Height          =   315
-      Left            =   4560
+      Left            =   6120
       TabIndex        =   3
       Text            =   "testkorea"
-      Top             =   165
+      Top             =   285
       Width           =   1935
    End
    Begin VB.TextBox txtCorpNum 
       Height          =   315
-      Left            =   1335
+      Left            =   2415
       TabIndex        =   1
       Text            =   "1234567890"
-      Top             =   180
+      Top             =   300
       Width           =   1935
    End
    Begin VB.Label Label2 
       AutoSize        =   -1  'True
-      Caption         =   "팝빌아이디 : "
+      Caption         =   "팝빌회원 아이디 : "
       Height          =   180
-      Left            =   3480
+      Left            =   4560
       TabIndex        =   2
-      Top             =   240
-      Width           =   1080
+      Top             =   360
+      Width           =   1500
    End
    Begin VB.Label Label1 
       AutoSize        =   -1  'True
-      Caption         =   "사업자번호 : "
+      Caption         =   "팝빌회원 사업자번호 : "
       Height          =   180
-      Left            =   240
+      Left            =   480
       TabIndex        =   0
-      Top             =   240
-      Width           =   1080
+      Top             =   360
+      Width           =   1860
    End
 End
 Attribute VB_Name = "frmExample"
@@ -289,6 +345,19 @@ Private Sub btnCancelReserve_Click()
     MsgBox (Response.message)
 End Sub
 
+Private Sub btnCheckID_Click()
+    Dim Response As PBResponse
+    
+    Set Response = FaxService.CheckID(txtUserID.Text)
+    
+    If Response Is Nothing Then
+        MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
+        Exit Sub
+    End If
+    
+    MsgBox ("[" + CStr(Response.code) + "] " + Response.message)
+End Sub
+
 Private Sub btnCheckIsMember_Click()
     Dim Response As PBResponse
     
@@ -317,6 +386,27 @@ Private Sub btnGetBalance_Click()
     MsgBox "잔여포인트 : " + CStr(balance)
     
     
+End Sub
+
+Private Sub btnGetCorpInfo_Click()
+    Dim CorpInfo As PBCorpInfo
+    
+    Set CorpInfo = FaxService.GetCorpInfo(txtCorpNum.Text, txtUserID.Text)
+     
+    If CorpInfo Is Nothing Then
+        MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
+        Exit Sub
+    End If
+    
+    Dim tmp As String
+    
+    tmp = tmp + "ceoname : " + CorpInfo.CEOName + vbCrLf
+    tmp = tmp + "corpName : " + CorpInfo.CorpName + vbCrLf
+    tmp = tmp + "addr : " + CorpInfo.Addr + vbCrLf
+    tmp = tmp + "bizType : " + CorpInfo.BizType + vbCrLf
+    tmp = tmp + "bizClass : " + CorpInfo.BizClass + vbCrLf
+    
+    MsgBox tmp
 End Sub
 
 Private Sub btnGetFaxDetail_Click()
@@ -377,10 +467,22 @@ Private Sub btnGetPartnerBalance_Click()
     
 End Sub
 
+Private Sub btnGetPopbillURL_CHRG_Click()
+    Dim url As String
+    
+    url = FaxService.GetPopbillURL(txtCorpNum.Text, txtUserID.Text, "CHRG")
+    
+    If url = "" Then
+         MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
+        Exit Sub
+    End If
+    MsgBox "URL : " + vbCrLf + url
+End Sub
+
 Private Sub btnGetPopbillURL_Click()
     Dim url As String
     
-    url = FaxService.GetPopbillURL(txtCorpNum.Text, txtUserID.Text, cboPopbillTOGO.Text)
+    url = FaxService.GetPopbillURL(txtCorpNum.Text, txtUserID.Text, "LOGIN")
     
     If url = "" Then
          MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
@@ -393,7 +495,7 @@ Private Sub btnJoinMember_Click()
     Dim joinData As New PBJoinForm
     Dim Response As PBResponse
     
-    joinData.linkID = linkID '연동 아이디
+    joinData.linkID = linkID '링크 아이디
     joinData.CorpNum = "1231212312" '사업자번호 "-" 제외.
     joinData.CEOName = "대표자성명"
     joinData.CorpName = "회원상호"
@@ -419,6 +521,54 @@ Private Sub btnJoinMember_Click()
     MsgBox (Response.message)
     
     
+End Sub
+
+Private Sub btnListContact_Click()
+    Dim resultList As Collection
+        
+    Set resultList = FaxService.ListContact(txtCorpNum.Text, txtUserID.Text)
+     
+    If resultList Is Nothing Then
+        MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
+        Exit Sub
+    End If
+    
+    Dim tmp As String
+    
+    tmp = "id | email | hp | personName | searchAllAllowYN | tel | fax | mgrYN | regDT " + vbCrLf
+    
+    Dim info As PBContactInfo
+    
+    For Each info In resultList
+        tmp = tmp + info.ID + " | " + info.email + " | " + info.hp + " | " + info.personName + " | " + CStr(info.searchAllAllowYN) _
+                + info.tel + " | " + info.fax + " | " + CStr(info.mgrYN) + " | " + info.regDT + vbCrLf
+    Next
+    
+    MsgBox tmp
+End Sub
+
+Private Sub btnRegistContact_Click()
+    Dim joinData As New PBContactInfo
+    Dim Response As PBResponse
+    
+    joinData.ID = "testkorea_20151007"      '담당자 아이디
+    joinData.PWD = "test@test.com"          '비밀번호
+    joinData.personName = "담당자명"        '담당자명
+    joinData.tel = "070-1234-1234"          '연락처
+    joinData.hp = "010-1234-1234"           '휴대폰번호
+    joinData.email = "test@test.com"        '이메일 주소
+    joinData.fax = "070-1234-1234"          '팩스번호
+    joinData.searchAllAllowYN = True        '전체조회여부, Ture-회사조회, False-개인조회
+    joinData.mgrYN = False                  '관리자 권한여부
+        
+    Set Response = FaxService.RegistContact(txtCorpNum.Text, joinData, txtUserID.Text)
+    
+    If Response Is Nothing Then
+        MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
+        Exit Sub
+    End If
+    
+    MsgBox ("[" + CStr(Response.code) + "] " + Response.message)
 End Sub
 
 Private Sub btnSearchPopUp_Click()
@@ -612,11 +762,52 @@ Private Sub btnUnitCost_Click()
     MsgBox "전송 단가 : " + CStr(unitCost)
 End Sub
 
+Private Sub btnUpdateContact_Click()
+    Dim joinData As New PBContactInfo
+    Dim Response As PBResponse
+    
+    joinData.personName = "담당자명_수정"  '담당자명
+    joinData.tel = "070-1234-1234"         '연락처
+    joinData.hp = "010-1234-1234"          '휴대폰번호
+    joinData.email = "test@test.com"       '이메일 주소
+    joinData.fax = "070-1234-1234"         '팩스번호
+    joinData.searchAllAllowYN = True       '전체조회여부, Ture-회사조회, False-개인조
+    joinData.mgrYN = False                 '관리자 권한여부
+                
+    Set Response = FaxService.UpdateContact(txtCorpNum.Text, joinData, txtUserID.Text)
+    
+    If Response Is Nothing Then
+        MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
+        Exit Sub
+    End If
+    
+    MsgBox ("[" + CStr(Response.code) + "] " + Response.message)
+End Sub
+
+Private Sub btnUpdateCorpInfo_Click()
+    Dim CorpInfo As New PBCorpInfo
+    Dim Response As PBResponse
+    
+    CorpInfo.CEOName = "대표자"         '대표자명
+    CorpInfo.CorpName = "상호_수정"          '상호명
+    CorpInfo.Addr = "서울특별시"        '주소
+    CorpInfo.BizType = "업태"           '업태
+    CorpInfo.BizClass = "업종"          '업종
+    
+    Set Response = FaxService.UpdateCorpInfo(txtCorpNum.Text, CorpInfo, txtUserID.Text)
+    
+    If Response Is Nothing Then
+        MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
+        Exit Sub
+    End If
+    
+    MsgBox ("[" + CStr(Response.code) + "] " + Response.message)
+End Sub
+
 Private Sub Form_Load()
     FaxService.Initialize linkID, SecretKey
+    
+    '연동환경 설정값 True(테스트용), False(상업용)
     FaxService.IsTest = True
-    
-    cboPopbillTOGO.AddItem "LOGIN"
-    cboPopbillTOGO.AddItem "CHRG"
-    
+        
 End Sub
