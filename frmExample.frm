@@ -322,10 +322,11 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-  Option Explicit
+Option Explicit
 
-'연동아이디
+'링크아이디
 Private Const linkID = "TESTER"
+
 '비밀키. 유출에 주의하시기 바랍니다.
 Private Const SecretKey = "SwWxqU+0TErBXy/9TVjIPEnI0VTUMMSQZtJf3Ed8q3I="
 
@@ -368,7 +369,7 @@ Private Sub btnCheckIsMember_Click()
         Exit Sub
     End If
     
-    MsgBox (Response.message)
+    MsgBox ("[" + CStr(Response.code) + "] " + Response.message)
 End Sub
 
 
@@ -586,6 +587,7 @@ End Sub
 Private Sub btnSendFAX_Click()
     '전송파일경로 목록
     Dim FilePaths As New Collection
+    Dim senderNum As String
     
     CommonDialog1.FileName = ""
     
@@ -600,15 +602,15 @@ Private Sub btnSendFAX_Click()
     Dim receivers As New Collection
     Dim receiver As New PBReceiver
     
-    receiver.receiverNum = "00001111"
+    receiver.receiverNum = "11122224444"
     receiver.receiverName = "수신자 명칭"
     
     receivers.Add receiver
     
+    senderNum = "07075103710"   '발신번호
+    
     Dim ReceiptNum As String
-    
-    
-    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, "07075106766", receivers, FilePaths, txtReserveDT.Text, txtUserID.Text)
+    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text)
     
     
      If ReceiptNum = "" Then
@@ -625,6 +627,7 @@ End Sub
 Private Sub btnSendFAX_Multi_Click()
     '전송파일경로 목록
     Dim FilePaths As New Collection
+    Dim senderNum As String
     
     Do
         CommonDialog1.FileName = ""
@@ -647,9 +650,12 @@ Private Sub btnSendFAX_Multi_Click()
     
     receivers.Add receiver
     
+    
+    senderNum = "07075103710"   '발신번호
+    
     Dim ReceiptNum As String
     
-    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, "07075106766", receivers, FilePaths, txtReserveDT.Text, txtUserID.Text)
+    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text)
     
     
      If ReceiptNum = "" Then
@@ -666,6 +672,7 @@ Private Sub btnSendFax_Multi_Same_Click()
     
     '전송파일경로 목록
     Dim FilePaths As New Collection
+    Dim senderNum As String
     
     Do
         CommonDialog1.FileName = ""
@@ -692,9 +699,11 @@ Private Sub btnSendFax_Multi_Same_Click()
         receivers.Add receiver
     Next
     
+    senderNum = "07075103710"         '발신번호
+    
     Dim ReceiptNum As String
     
-    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, "07075106766", receivers, FilePaths, txtReserveDT.Text, txtUserID.Text)
+    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text)
     
     If ReceiptNum = "" Then
         MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
@@ -710,6 +719,7 @@ Private Sub btnSendFax_Same_Click()
     
     '전송파일경로 목록
     Dim FilePaths As New Collection
+    Dim senderNum As String
     
     CommonDialog1.FileName = ""
     
@@ -732,11 +742,12 @@ Private Sub btnSendFax_Same_Click()
         receiver.receiverName = "수신자 명칭"
         receivers.Add receiver
     Next
+        
+    senderNum = "07075103710"
     
     Dim ReceiptNum As String
-    
-    
-    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, "07075106766", receivers, FilePaths, txtReserveDT.Text, txtUserID.Text)
+        
+    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text)
     
     
      If ReceiptNum = "" Then
@@ -789,7 +800,7 @@ Private Sub btnUpdateCorpInfo_Click()
     Dim Response As PBResponse
     
     CorpInfo.CEOName = "대표자"         '대표자명
-    CorpInfo.CorpName = "상호_수정"          '상호명
+    CorpInfo.CorpName = "상호_수정"     '상호명
     CorpInfo.Addr = "서울특별시"        '주소
     CorpInfo.BizType = "업태"           '업태
     CorpInfo.BizClass = "업종"          '업종
