@@ -2,13 +2,13 @@ VERSION 5.00
 Object = "{F9043C88-F6F2-101A-A3C9-08002B2F49FB}#1.2#0"; "COMDLG32.OCX"
 Begin VB.Form frmExample 
    Caption         =   "팝빌 팩스 SDK 예제"
-   ClientHeight    =   11490
+   ClientHeight    =   12285
    ClientLeft      =   60
    ClientTop       =   450
-   ClientWidth     =   11460
+   ClientWidth     =   11520
    LinkTopic       =   "Form1"
-   ScaleHeight     =   11490
-   ScaleWidth      =   11460
+   ScaleHeight     =   12285
+   ScaleWidth      =   11520
    StartUpPosition =   2  '화면 가운데
    Begin MSComDlg.CommonDialog CommonDialog1 
       Left            =   8820
@@ -24,18 +24,26 @@ Begin VB.Form frmExample
       TabIndex        =   12
       Top             =   3960
       Width           =   10695
+      Begin VB.CommandButton btnSearch 
+         Caption         =   "전송내역 검색조회"
+         Height          =   465
+         Left            =   8625
+         TabIndex        =   36
+         Top             =   840
+         Width           =   1815
+      End
       Begin VB.CommandButton btnSearchPopUp 
          Caption         =   "전송내역조회 팝업"
          Height          =   465
-         Left            =   8505
+         Left            =   8625
          TabIndex        =   24
-         Top             =   210
+         Top             =   330
          Width           =   1815
       End
       Begin VB.CommandButton btnCancelReserve 
          Caption         =   "예약전송 취소"
          Height          =   450
-         Left            =   7410
+         Left            =   7050
          TabIndex        =   23
          Top             =   1515
          Width           =   2355
@@ -43,7 +51,7 @@ Begin VB.Form frmExample
       Begin VB.CommandButton btnGetFaxDetail 
          Caption         =   "전송내역 확인"
          Height          =   450
-         Left            =   4920
+         Left            =   4560
          TabIndex        =   22
          Top             =   1515
          Width           =   2355
@@ -59,63 +67,63 @@ Begin VB.Form frmExample
             Strikethrough   =   0   'False
          EndProperty
          Height          =   4725
-         Left            =   705
+         Left            =   360
          MultiLine       =   -1  'True
          TabIndex        =   21
          Top             =   2100
-         Width           =   9090
+         Width           =   9930
       End
       Begin VB.TextBox txtReceiptNum 
          Height          =   315
-         Left            =   1800
+         Left            =   1440
          TabIndex        =   20
          Top             =   1575
          Width           =   2835
       End
       Begin VB.CommandButton btnSendFax_Multi_Same 
          Caption         =   "다수파일 동보전송"
-         Height          =   570
-         Left            =   6360
+         Height          =   450
+         Left            =   5280
          TabIndex        =   18
-         Top             =   720
+         Top             =   840
          Width           =   1875
       End
       Begin VB.CommandButton btnSendFAX_Multi 
          Caption         =   "다수 파일 전송"
-         Height          =   570
-         Left            =   4680
+         Height          =   450
+         Left            =   3600
          TabIndex        =   17
-         Top             =   720
+         Top             =   840
          Width           =   1590
       End
       Begin VB.CommandButton btnSendFax_Same 
          Caption         =   "동보 전송"
-         Height          =   570
-         Left            =   3000
+         Height          =   450
+         Left            =   1920
          TabIndex        =   16
-         Top             =   720
+         Top             =   840
          Width           =   1590
       End
       Begin VB.CommandButton btnSendFAX 
          Caption         =   "전송"
-         Height          =   570
-         Left            =   1320
+         Height          =   450
+         Left            =   360
          TabIndex        =   15
-         Top             =   720
-         Width           =   1590
+         Top             =   840
+         Width           =   1470
       End
       Begin VB.TextBox txtReserveDT 
          Height          =   315
-         Left            =   4500
+         Left            =   3600
          TabIndex        =   14
-         Top             =   255
-         Width           =   2835
+         Top             =   375
+         Width           =   3555
       End
       Begin VB.Label Label4 
          AutoSize        =   -1  'True
          Caption         =   "접수번호 : "
          Height          =   180
-         Left            =   900
+         Left            =   540
          TabIndex        =   19
          Top             =   1650
          Width           =   900
@@ -124,9 +132,9 @@ Begin VB.Form frmExample
          AutoSize        =   -1  'True
          Caption         =   "예약전송 시간(yyyyMMddHHmmss) : "
          Height          =   180
-         Left            =   1080
+         Left            =   360
          TabIndex        =   13
-         Top             =   330
+         Top             =   450
          Width           =   3210
       End
    End
@@ -570,6 +578,82 @@ Private Sub btnRegistContact_Click()
     End If
     
     MsgBox ("[" + CStr(Response.code) + "] " + Response.message)
+End Sub
+
+Private Sub btnSearch_Click()
+    Dim faxSearchList As PBFaxSearchList
+    Dim SDate As String
+    Dim EDate As String
+    Dim State As New Collection
+    Dim ReserveYN As Boolean
+    Dim SenderOnly As Boolean
+    Dim Page As Integer
+    Dim PerPage As Integer
+    
+    SDate = "20151101"      '[필수] 시작일자, 형식(yyyyMMdd)
+    EDate = "20151231"      '[필수] 종료일자, 형식(yyyyMMdd)
+    
+    '전송상태 배열, 1(대기), 2(성공), 3(실패), 4(취소)
+    State.Add "1"
+    State.Add "2"
+    State.Add "3"
+    State.Add "4"
+    
+    ReserveYN = True     '예약전송 검색여부, True-예약전송건 조회, False-전체조회
+    SenderOnly = False      '개인조회 여부, True-개인조회, False-회사조회
+    
+    Page = 1                '페이지 번호, 기본값 1
+    PerPage = 30            '페이지당 목록갯수, 기본값 500
+    
+    Set faxSearchList = FaxService.Search(txtCorpNum.Text, SDate, EDate, State, ReserveYN, SenderOnly, Page, PerPage)
+     
+    If faxSearchList Is Nothing Then
+        MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
+        Exit Sub
+    End If
+    
+    Dim tmp As String
+    
+    tmp = "code : " + CStr(faxSearchList.code) + vbCrLf
+    tmp = tmp + "total : " + CStr(faxSearchList.total) + vbCrLf
+    tmp = tmp + "perPage : " + CStr(faxSearchList.PerPage) + vbCrLf
+    tmp = tmp + "pageNum : " + CStr(faxSearchList.pageNum) + vbCrLf
+    tmp = tmp + "pageCount : " + CStr(faxSearchList.pageCount) + vbCrLf
+    tmp = tmp + "message : " + faxSearchList.message + vbCrLf + vbCrLf
+    
+    MsgBox tmp
+    
+    
+    tmp = "sendState | convState | sendnum | rcv | rcvnm | T | S | F | R | C | reserveDT | sendDT | resultDT | sendResult" + vbCrLf
+    
+    Dim sentFax As PBFaxInfo
+    
+    For Each sentFax In faxSearchList.list
+    
+        tmp = tmp + CStr(sentFax.sendState) + " | "         '전송상태
+        tmp = tmp + CStr(sentFax.convState) + " | "         '변환상태
+        
+        tmp = tmp + sentFax.sendNum + " | "                 '발신번호
+        tmp = tmp + sentFax.receiveNum + " | "              '수신번호
+        tmp = tmp + sentFax.receiveName + " | "             '수신자명
+        
+        tmp = tmp + CStr(sentFax.sendPageCnt) + " | "       '페이지수
+        tmp = tmp + CStr(sentFax.successPageCnt) + " | "    '성공 페이지수
+        tmp = tmp + CStr(sentFax.failPageCnt) + " | "       '실패 페이지수
+        tmp = tmp + CStr(sentFax.refundPageCnt) + " | "     '환불 페이지수
+        tmp = tmp + CStr(sentFax.cancelPageCnt) + " | "     '취소 페이지수
+        
+        tmp = tmp + sentFax.reserveDT + " | "               '예약전송일시
+        tmp = tmp + sentFax.sendDT + " | "                  '전송일시
+        tmp = tmp + sentFax.resultDT + " | "                '전송결과 수신일시
+        tmp = tmp + CStr(sentFax.sendResult)                '전송결과코드
+        
+        tmp = tmp + vbCrLf
+    Next
+    
+    
+    txtResult.Text = tmp
+    
 End Sub
 
 Private Sub btnSearchPopUp_Click()
