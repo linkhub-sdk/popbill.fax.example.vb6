@@ -2,13 +2,13 @@ VERSION 5.00
 Object = "{F9043C88-F6F2-101A-A3C9-08002B2F49FB}#1.2#0"; "COMDLG32.OCX"
 Begin VB.Form frmExample 
    Caption         =   "팝빌 팩스 SDK 예제"
-   ClientHeight    =   12285
+   ClientHeight    =   12240
    ClientLeft      =   60
    ClientTop       =   450
-   ClientWidth     =   11520
+   ClientWidth     =   12135
    LinkTopic       =   "Form1"
-   ScaleHeight     =   12285
-   ScaleWidth      =   11520
+   ScaleHeight     =   12240
+   ScaleWidth      =   12135
    StartUpPosition =   2  '화면 가운데
    Begin MSComDlg.CommonDialog CommonDialog1 
       Left            =   8820
@@ -19,15 +19,15 @@ Begin VB.Form frmExample
    End
    Begin VB.Frame Frame6 
       Caption         =   " 팩스 전송 관련 "
-      Height          =   7215
+      Height          =   7335
       Left            =   240
       TabIndex        =   12
       Top             =   3960
-      Width           =   10695
+      Width           =   11535
       Begin VB.CommandButton btnSearch 
          Caption         =   "전송내역 검색조회"
          Height          =   465
-         Left            =   8625
+         Left            =   9465
          TabIndex        =   36
          Top             =   840
          Width           =   1815
@@ -35,7 +35,7 @@ Begin VB.Form frmExample
       Begin VB.CommandButton btnSearchPopUp 
          Caption         =   "전송내역조회 팝업"
          Height          =   465
-         Left            =   8625
+         Left            =   9465
          TabIndex        =   24
          Top             =   330
          Width           =   1815
@@ -71,7 +71,7 @@ Begin VB.Form frmExample
          MultiLine       =   -1  'True
          TabIndex        =   21
          Top             =   2100
-         Width           =   9930
+         Width           =   10890
       End
       Begin VB.TextBox txtReceiptNum 
          Height          =   315
@@ -589,6 +589,8 @@ Private Sub btnSearch_Click()
     Dim SenderOnly As Boolean
     Dim Page As Integer
     Dim PerPage As Integer
+    Dim fileName As Variant
+    Dim i As Integer
     
     SDate = "20151101"      '[필수] 시작일자, 형식(yyyyMMdd)
     EDate = "20151231"      '[필수] 종료일자, 형식(yyyyMMdd)
@@ -624,7 +626,7 @@ Private Sub btnSearch_Click()
     MsgBox tmp
     
     
-    tmp = "sendState | convState | sendnum | rcv | rcvnm | T | S | F | R | C | reserveDT | sendDT | resultDT | sendResult" + vbCrLf
+    tmp = "sendState | convState | sendnum | rcv | rcvnm | T | S | F | R | C | reserveDT | sendDT | resultDT | sendResult | fileNames" + vbCrLf
     
     Dim sentFax As PBFaxInfo
     
@@ -646,9 +648,21 @@ Private Sub btnSearch_Click()
         tmp = tmp + sentFax.reserveDT + " | "               '예약전송일시
         tmp = tmp + sentFax.sendDT + " | "                  '전송일시
         tmp = tmp + sentFax.resultDT + " | "                '전송결과 수신일시
-        tmp = tmp + CStr(sentFax.sendResult)                '전송결과코드
+        tmp = tmp + CStr(sentFax.sendResult) + " | "         '전송결과코드"
+        
+        i = 0
+        
+        For Each fileName In sentFax.fileNames              '전송 파일이름
+            i = i + 1
+            If sentFax.fileNames.Count = i Then
+                tmp = tmp + fileName
+            Else
+                tmp = tmp + fileName + ", "
+            End If
+        Next
         
         tmp = tmp + vbCrLf
+    
     Next
     
     
@@ -673,14 +687,14 @@ Private Sub btnSendFAX_Click()
     Dim FilePaths As New Collection
     Dim senderNum As String
     
-    CommonDialog1.FileName = ""
+    CommonDialog1.fileName = ""
     
     CommonDialog1.ShowOpen
     
-    If CommonDialog1.FileName = "" Then Exit Sub
+    If CommonDialog1.fileName = "" Then Exit Sub
     
     
-    FilePaths.Add CommonDialog1.FileName
+    FilePaths.Add CommonDialog1.fileName
     
     '수신자 목록
     Dim receivers As New Collection
@@ -714,14 +728,14 @@ Private Sub btnSendFAX_Multi_Click()
     Dim senderNum As String
     
     Do
-        CommonDialog1.FileName = ""
+        CommonDialog1.fileName = ""
         CommonDialog1.ShowOpen
         
-        If CommonDialog1.FileName <> "" Then
-            FilePaths.Add CommonDialog1.FileName
+        If CommonDialog1.fileName <> "" Then
+            FilePaths.Add CommonDialog1.fileName
         End If
     
-    Loop While (CommonDialog1.FileName <> "")
+    Loop While (CommonDialog1.fileName <> "")
     
     If FilePaths.Count = 0 Then Exit Sub
     
@@ -759,14 +773,14 @@ Private Sub btnSendFax_Multi_Same_Click()
     Dim senderNum As String
     
     Do
-        CommonDialog1.FileName = ""
+        CommonDialog1.fileName = ""
         CommonDialog1.ShowOpen
         
-        If CommonDialog1.FileName <> "" Then
-            FilePaths.Add CommonDialog1.FileName
+        If CommonDialog1.fileName <> "" Then
+            FilePaths.Add CommonDialog1.fileName
         End If
     
-    Loop While (CommonDialog1.FileName <> "")
+    Loop While (CommonDialog1.fileName <> "")
     
     If FilePaths.Count = 0 Then Exit Sub
     
@@ -805,14 +819,14 @@ Private Sub btnSendFax_Same_Click()
     Dim FilePaths As New Collection
     Dim senderNum As String
     
-    CommonDialog1.FileName = ""
+    CommonDialog1.fileName = ""
     
     CommonDialog1.ShowOpen
     
-    If CommonDialog1.FileName = "" Then Exit Sub
+    If CommonDialog1.fileName = "" Then Exit Sub
     
     
-    FilePaths.Add CommonDialog1.FileName
+    FilePaths.Add CommonDialog1.fileName
     
     '동보 수신자 목록
     Dim receivers As New Collection
