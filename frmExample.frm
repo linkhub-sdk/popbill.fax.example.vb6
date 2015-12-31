@@ -2,13 +2,13 @@ VERSION 5.00
 Object = "{F9043C88-F6F2-101A-A3C9-08002B2F49FB}#1.2#0"; "COMDLG32.OCX"
 Begin VB.Form frmExample 
    Caption         =   "팝빌 팩스 SDK 예제"
-   ClientHeight    =   12240
+   ClientHeight    =   11535
    ClientLeft      =   60
    ClientTop       =   450
-   ClientWidth     =   12135
+   ClientWidth     =   13605
    LinkTopic       =   "Form1"
-   ScaleHeight     =   12240
-   ScaleWidth      =   12135
+   ScaleHeight     =   11535
+   ScaleWidth      =   13605
    StartUpPosition =   2  '화면 가운데
    Begin MSComDlg.CommonDialog CommonDialog1 
       Left            =   8820
@@ -19,15 +19,15 @@ Begin VB.Form frmExample
    End
    Begin VB.Frame Frame6 
       Caption         =   " 팩스 전송 관련 "
-      Height          =   7335
+      Height          =   7215
       Left            =   240
       TabIndex        =   12
       Top             =   3960
-      Width           =   11535
+      Width           =   12975
       Begin VB.CommandButton btnSearch 
          Caption         =   "전송내역 검색조회"
          Height          =   465
-         Left            =   9465
+         Left            =   10905
          TabIndex        =   36
          Top             =   840
          Width           =   1815
@@ -35,7 +35,7 @@ Begin VB.Form frmExample
       Begin VB.CommandButton btnSearchPopUp 
          Caption         =   "전송내역조회 팝업"
          Height          =   465
-         Left            =   9465
+         Left            =   10905
          TabIndex        =   24
          Top             =   330
          Width           =   1815
@@ -71,7 +71,7 @@ Begin VB.Form frmExample
          MultiLine       =   -1  'True
          TabIndex        =   21
          Top             =   2100
-         Width           =   10890
+         Width           =   12330
       End
       Begin VB.TextBox txtReceiptNum 
          Height          =   315
@@ -433,7 +433,7 @@ Private Sub btnGetFaxDetail_Click()
     
     
     Dim tmp As String
-    tmp = "sendState | convState | sendnum | rcv | rcvnm | T | S | F | R | C | reserveDT | sendDT | resultDT | sendResult" + vbCrLf
+    tmp = "sendState | convState | sendnum | rcv | rcvnm | T | S | F | R | C | receiptDT | reserveDT | sendDT | resultDT | sendResult" + vbCrLf
     
     For Each sentFax In sentFaxList
     
@@ -449,6 +449,7 @@ Private Sub btnGetFaxDetail_Click()
         tmp = tmp + CStr(sentFax.refundPageCnt) + " | "
         tmp = tmp + CStr(sentFax.cancelPageCnt) + " | "
         
+        tmp = tmp + CStr(sentFax.receiptDT) + " | "
         tmp = tmp + sentFax.reserveDT + " | "
         tmp = tmp + sentFax.sendDT + " | "
         tmp = tmp + sentFax.resultDT + " | "
@@ -589,6 +590,7 @@ Private Sub btnSearch_Click()
     Dim SenderOnly As Boolean
     Dim Page As Integer
     Dim PerPage As Integer
+    Dim Order As String
     Dim fileName As Variant
     Dim i As Integer
     
@@ -601,13 +603,15 @@ Private Sub btnSearch_Click()
     State.Add "3"
     State.Add "4"
     
-    ReserveYN = True     '예약전송 검색여부, True-예약전송건 조회, False-전체조회
+    ReserveYN = True        '예약전송 검색여부, True-예약전송건 조회, False-전체조회
     SenderOnly = False      '개인조회 여부, True-개인조회, False-회사조회
     
     Page = 1                '페이지 번호, 기본값 1
     PerPage = 30            '페이지당 목록갯수, 기본값 500
     
-    Set faxSearchList = FaxService.Search(txtCorpNum.Text, SDate, EDate, State, ReserveYN, SenderOnly, Page, PerPage)
+    Order = "D"             '정렬방향, D-내림차순(기본값), A-오름차순
+    
+    Set faxSearchList = FaxService.Search(txtCorpNum.Text, SDate, EDate, State, ReserveYN, SenderOnly, Page, PerPage, Order)
      
     If faxSearchList Is Nothing Then
         MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
@@ -626,7 +630,7 @@ Private Sub btnSearch_Click()
     MsgBox tmp
     
     
-    tmp = "sendState | convState | sendnum | rcv | rcvnm | T | S | F | R | C | reserveDT | sendDT | resultDT | sendResult | fileNames" + vbCrLf
+    tmp = "sendState | convState | sendnum | rcv | rcvnm | T | S | F | R | C | receiptDT | reserveDT | sendDT | resultDT | sendResult | fileNames" + vbCrLf
     
     Dim sentFax As PBFaxInfo
     
@@ -645,10 +649,11 @@ Private Sub btnSearch_Click()
         tmp = tmp + CStr(sentFax.refundPageCnt) + " | "     '환불 페이지수
         tmp = tmp + CStr(sentFax.cancelPageCnt) + " | "     '취소 페이지수
         
+        tmp = tmp + sentFax.receiptDT + " | "               '접수일시
         tmp = tmp + sentFax.reserveDT + " | "               '예약전송일시
         tmp = tmp + sentFax.sendDT + " | "                  '전송일시
         tmp = tmp + sentFax.resultDT + " | "                '전송결과 수신일시
-        tmp = tmp + CStr(sentFax.sendResult) + " | "         '전송결과코드"
+        tmp = tmp + CStr(sentFax.sendResult) + " | "        '전송결과코드"
         
         i = 0
         
