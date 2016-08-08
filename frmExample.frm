@@ -447,6 +447,8 @@ End Sub
 
 Private Sub btnGetFaxDetail_Click()
     Dim sentFaxList As Collection
+    Dim i As Integer
+    Dim fileName As Variant
     
     Set sentFaxList = FaxService.GetMessages(txtCorpNum.Text, txtReceiptNum.Text, txtUserID.Text)
     
@@ -460,13 +462,14 @@ Private Sub btnGetFaxDetail_Click()
     
     
     Dim tmp As String
-    tmp = "sendState | convState | sendnum | rcv | rcvnm | T | S | F | R | C | receiptDT | reserveDT | sendDT | resultDT | sendResult" + vbCrLf
+    tmp = "sendState | convState | sendnum | senderName | rcv | rcvnm | T | S | F | R | C | receiptDT | reserveDT | sendDT | resultDT | sendResult | filenames" + vbCrLf
     
     For Each sentFax In sentFaxList
     
         tmp = tmp + CStr(sentFax.sendState) + " | "
         tmp = tmp + CStr(sentFax.convState) + " | "
         tmp = tmp + sentFax.sendNum + " | "
+        tmp = tmp + sentFax.senderName + " | "
         tmp = tmp + sentFax.receiveNum + " | "
         tmp = tmp + sentFax.receiveName + " | "
         
@@ -481,7 +484,18 @@ Private Sub btnGetFaxDetail_Click()
         tmp = tmp + sentFax.sendDT + " | "
         tmp = tmp + sentFax.resultDT + " | "
      
-        tmp = tmp + CStr(sentFax.sendResult)
+        tmp = tmp + CStr(sentFax.sendResult) + " | "
+        
+        i = 0
+        
+        For Each fileName In sentFax.fileNames
+            i = i + 1
+            If sentFax.fileNames.Count = i Then
+                tmp = tmp + fileName
+            Else
+                tmp = tmp + fileName + ", "
+            End If
+        Next
         
         tmp = tmp + vbCrLf
     Next
@@ -621,8 +635,8 @@ Private Sub btnSearch_Click()
     Dim fileName As Variant
     Dim i As Integer
     
-    SDate = "20151101"      '[필수] 시작일자, 형식(yyyyMMdd)
-    EDate = "20151231"      '[필수] 종료일자, 형식(yyyyMMdd)
+    SDate = "20160801"      '[필수] 시작일자, 형식(yyyyMMdd)
+    EDate = "20160831"      '[필수] 종료일자, 형식(yyyyMMdd)
     
     '전송상태 배열, 1(대기), 2(성공), 3(실패), 4(취소)
     State.Add "1"
@@ -630,7 +644,7 @@ Private Sub btnSearch_Click()
     State.Add "3"
     State.Add "4"
     
-    ReserveYN = True        '예약전송 검색여부, True-예약전송건 조회, False-전체조회
+    ReserveYN = False        '예약전송 검색여부, True-예약전송건 조회, False-전체조회
     SenderOnly = False      '개인조회 여부, True-개인조회, False-회사조회
     
     Page = 1                '페이지 번호, 기본값 1
@@ -657,7 +671,7 @@ Private Sub btnSearch_Click()
     MsgBox tmp
     
     
-    tmp = "sendState | convState | sendnum | rcv | rcvnm | T | S | F | R | C | receiptDT | reserveDT | sendDT | resultDT | sendResult | fileNames" + vbCrLf
+    tmp = "sendState | convState | sendnum | senderName | rcv | rcvnm | T | S | F | R | C | receiptDT | reserveDT | sendDT | resultDT | sendResult | fileNames" + vbCrLf
     
     Dim sentFax As PBFaxInfo
     
@@ -667,6 +681,7 @@ Private Sub btnSearch_Click()
         tmp = tmp + CStr(sentFax.convState) + " | "         '변환상태
         
         tmp = tmp + sentFax.sendNum + " | "                 '발신번호
+        tmp = tmp + sentFax.senderName + " | "              '발신번호
         tmp = tmp + sentFax.receiveNum + " | "              '수신번호
         tmp = tmp + sentFax.receiveName + " | "             '수신자명
         
@@ -715,9 +730,12 @@ Private Sub btnSearchPopUp_Click()
 End Sub
 
 Private Sub btnSendFAX_Click()
-    '전송파일경로 목록
     Dim FilePaths As New Collection
     Dim senderNum As String
+    Dim senderName As String
+    Dim receivers As New Collection
+    Dim receiver As New PBReceiver
+    Dim ReceiptNum As String
     
     CommonDialog1.fileName = ""
     
@@ -725,25 +743,26 @@ Private Sub btnSendFAX_Click()
     
     If CommonDialog1.fileName = "" Then Exit Sub
     
-    
     FilePaths.Add CommonDialog1.fileName
     
-    '수신자 목록
-    Dim receivers As New Collection
-    Dim receiver As New PBReceiver
+    '발신번호
+    senderNum = "07075103710"
     
-    receiver.receiverNum = "11122224444"
+    '발신자명
+    senderName = "발신자명"
+    
+    '수신번호
+    receiver.receiverNum = "010111222"
+    
+    '수신자명
     receiver.receiverName = "수신자 명칭"
     
     receivers.Add receiver
     
-    senderNum = "07075103710"   '발신번호
     
-    Dim ReceiptNum As String
-    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text)
+    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, senderName, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text)
     
-    
-     If ReceiptNum = "" Then
+    If ReceiptNum = "" Then
         MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
         Exit Sub
     End If
@@ -755,9 +774,13 @@ Private Sub btnSendFAX_Click()
 End Sub
 
 Private Sub btnSendFAX_Multi_Click()
-    '전송파일경로 목록
+
     Dim FilePaths As New Collection
     Dim senderNum As String
+    Dim senderName As String
+    Dim receivers As New Collection
+    Dim receiver As New PBReceiver
+    Dim ReceiptNum As String
     
     Do
         CommonDialog1.fileName = ""
@@ -771,21 +794,21 @@ Private Sub btnSendFAX_Multi_Click()
     
     If FilePaths.Count = 0 Then Exit Sub
     
-    '수신자 목록
-    Dim receivers As New Collection
-    Dim receiver As New PBReceiver
+    '발신번호
+    senderNum = "07075103710"
     
-    receiver.receiverNum = "00001111"
+    '발신자명
+    senderName = "발신자명"
+    
+    '수신번호
+    receiver.receiverNum = "010111222"
+    
+    '수신자명
     receiver.receiverName = "수신자 명칭"
     
     receivers.Add receiver
     
-    
-    senderNum = "07075103710"   '발신번호
-    
-    Dim ReceiptNum As String
-    
-    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text)
+    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, senderName, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text)
     
     
      If ReceiptNum = "" Then
@@ -799,10 +822,13 @@ Private Sub btnSendFAX_Multi_Click()
 End Sub
 
 Private Sub btnSendFax_Multi_Same_Click()
-    
-    '전송파일경로 목록
     Dim FilePaths As New Collection
     Dim senderNum As String
+    Dim senderName As String
+    Dim receivers As New Collection
+    Dim receiver As PBReceiver
+    Dim i As Integer
+    Dim ReceiptNum As String
     
     Do
         CommonDialog1.fileName = ""
@@ -816,24 +842,21 @@ Private Sub btnSendFax_Multi_Same_Click()
     
     If FilePaths.Count = 0 Then Exit Sub
     
-    '동보 수신자 목록
-    Dim receivers As New Collection
-    Dim receiver As PBReceiver
-    Dim i As Integer
+    '발신번호
+    senderNum = "07075103710"
     
-    '최대 1000명까지 가능
+    '발신자명
+    senderName = "발신자명"
+    
+    '수신정보 최대 1000명까지 가능
     For i = 1 To 100
         Set receiver = New PBReceiver
-        receiver.receiverNum = "00001111"
+        receiver.receiverNum = "010111222"
         receiver.receiverName = "수신자 명칭"
         receivers.Add receiver
     Next
     
-    senderNum = "07075103710"         '발신번호
-    
-    Dim ReceiptNum As String
-    
-    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text)
+    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, senderName, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text)
     
     If ReceiptNum = "" Then
         MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
@@ -846,10 +869,13 @@ Private Sub btnSendFax_Multi_Same_Click()
 End Sub
 
 Private Sub btnSendFax_Same_Click()
-    
-    '전송파일경로 목록
     Dim FilePaths As New Collection
     Dim senderNum As String
+    Dim senderName As String
+    Dim receivers As New Collection
+    Dim receiver As PBReceiver
+    Dim i As Integer
+    Dim ReceiptNum As String
     
     CommonDialog1.fileName = ""
     
@@ -857,30 +883,25 @@ Private Sub btnSendFax_Same_Click()
     
     If CommonDialog1.fileName = "" Then Exit Sub
     
-    
     FilePaths.Add CommonDialog1.fileName
+        
+    '발신번호
+    senderNum = "07075103710"
     
-    '동보 수신자 목록
-    Dim receivers As New Collection
-    Dim receiver As PBReceiver
-    Dim i As Integer
+    '발신자명
+    senderName = "발신자명"
     
-    '최대 1000명까지 가능
+    '수신정보, 최대 1000건
     For i = 1 To 100
         Set receiver = New PBReceiver
-        receiver.receiverNum = "00001111"
+        receiver.receiverNum = "010111222"
         receiver.receiverName = "수신자 명칭"
         receivers.Add receiver
     Next
-        
-    senderNum = "07075103710"
+            
+    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, senderName, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text)
     
-    Dim ReceiptNum As String
-        
-    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text)
-    
-    
-     If ReceiptNum = "" Then
+    If ReceiptNum = "" Then
         MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
         Exit Sub
     End If
