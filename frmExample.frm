@@ -469,7 +469,7 @@ Private Sub btnGetFaxDetail_Click()
         tmp = tmp + CStr(sentFax.sendState) + " | "
         tmp = tmp + CStr(sentFax.convState) + " | "
         tmp = tmp + sentFax.sendNum + " | "
-        tmp = tmp + sentFax.senderName + " | "
+        tmp = tmp + sentFax.SenderName + " | "
         tmp = tmp + sentFax.receiveNum + " | "
         tmp = tmp + sentFax.receiveName + " | "
         
@@ -681,7 +681,7 @@ Private Sub btnSearch_Click()
         tmp = tmp + CStr(sentFax.convState) + " | "         '변환상태
         
         tmp = tmp + sentFax.sendNum + " | "                 '발신번호
-        tmp = tmp + sentFax.senderName + " | "              '발신번호
+        tmp = tmp + sentFax.SenderName + " | "              '발신번호
         tmp = tmp + sentFax.receiveNum + " | "              '수신번호
         tmp = tmp + sentFax.receiveName + " | "             '수신자명
         
@@ -732,7 +732,7 @@ End Sub
 Private Sub btnSendFAX_Click()
     Dim FilePaths As New Collection
     Dim senderNum As String
-    Dim senderName As String
+    Dim SenderName As String
     Dim receivers As New Collection
     Dim receiver As New PBReceiver
     Dim ReceiptNum As String
@@ -749,7 +749,7 @@ Private Sub btnSendFAX_Click()
     senderNum = "07075103710"
     
     '발신자명
-    senderName = "발신자명"
+    SenderName = "발신자명"
     
     '수신번호
     receiver.receiverNum = "010111222"
@@ -760,7 +760,7 @@ Private Sub btnSendFAX_Click()
     receivers.Add receiver
     
     
-    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, senderName, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text)
+    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, SenderName)
     
     If ReceiptNum = "" Then
         MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
@@ -777,7 +777,7 @@ Private Sub btnSendFAX_Multi_Click()
 
     Dim FilePaths As New Collection
     Dim senderNum As String
-    Dim senderName As String
+    Dim SenderName As String
     Dim receivers As New Collection
     Dim receiver As New PBReceiver
     Dim ReceiptNum As String
@@ -798,7 +798,7 @@ Private Sub btnSendFAX_Multi_Click()
     senderNum = "07075103710"
     
     '발신자명
-    senderName = "발신자명"
+    SenderName = "발신자명"
     
     '수신번호
     receiver.receiverNum = "010111222"
@@ -808,7 +808,7 @@ Private Sub btnSendFAX_Multi_Click()
     
     receivers.Add receiver
     
-    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, senderName, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text)
+    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, SenderName)
     
     
      If ReceiptNum = "" Then
@@ -824,7 +824,7 @@ End Sub
 Private Sub btnSendFax_Multi_Same_Click()
     Dim FilePaths As New Collection
     Dim senderNum As String
-    Dim senderName As String
+    Dim SenderName As String
     Dim receivers As New Collection
     Dim receiver As PBReceiver
     Dim i As Integer
@@ -846,7 +846,7 @@ Private Sub btnSendFax_Multi_Same_Click()
     senderNum = "07075103710"
     
     '발신자명
-    senderName = "발신자명"
+    SenderName = "발신자명"
     
     '수신정보 최대 1000명까지 가능
     For i = 1 To 100
@@ -856,7 +856,7 @@ Private Sub btnSendFax_Multi_Same_Click()
         receivers.Add receiver
     Next
     
-    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, senderName, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text)
+    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, SenderName)
     
     If ReceiptNum = "" Then
         MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
@@ -871,7 +871,7 @@ End Sub
 Private Sub btnSendFax_Same_Click()
     Dim FilePaths As New Collection
     Dim senderNum As String
-    Dim senderName As String
+    Dim SenderName As String
     Dim receivers As New Collection
     Dim receiver As PBReceiver
     Dim i As Integer
@@ -889,7 +889,7 @@ Private Sub btnSendFax_Same_Click()
     senderNum = "07075103710"
     
     '발신자명
-    senderName = "발신자명"
+    SenderName = "발신자명"
     
     '수신정보, 최대 1000건
     For i = 1 To 100
@@ -899,7 +899,7 @@ Private Sub btnSendFax_Same_Click()
         receivers.Add receiver
     Next
             
-    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, senderName, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text)
+    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, SenderName)
     
     If ReceiptNum = "" Then
         MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
