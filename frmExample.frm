@@ -245,7 +245,7 @@ Begin VB.Form frmExample
             Height          =   410
             Left            =   120
             TabIndex        =   37
-            Top             =   1800
+            Top             =   360
             Width           =   2175
          End
          Begin VB.CommandButton btnGetPartnerBalance 
@@ -267,9 +267,9 @@ Begin VB.Form frmExample
          Begin VB.CommandButton btnUnitCost 
             Caption         =   "전송 단가 확인"
             Height          =   410
-            Left            =   150
+            Left            =   120
             TabIndex        =   8
-            Top             =   360
+            Top             =   1800
             Width           =   2175
          End
       End
@@ -338,7 +338,28 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+'=========================================================================
+'
+' 팝빌 팩스 API VB 6.0 SDK Example
+'
+' - VB6 SDK 연동환경 설정방법 안내 :
+' - 업데이트 일자 : 2016-10-11
+' - 연동 기술지원 연락처 : 1600-8536 / 070-4504-2991 (직통 / 정요한대리)
+' - 연동 기술지원 이메일 : dev@linkhub.co.kr
+'
+' <테스트 연동개발 준비사항>
+' 1) 25, 28번 라인에 선언된 링크아이디(LinkID)와 비밀키(SecretKey)를
+'    링크허브 가입시 메일로 발급받은 인증정보를 참조하여 변경합니다.
+' 2) 팝빌 개발용 사이트(test.popbill.com)에 연동회원으로 가입합니다.
+'=========================================================================
+
 Option Explicit
+
+'=========================================================================
+' - 인증정보(링크아이디, 비밀키)는 파트너의 연동회원을 식별하는
+'   인증에 사용되는 정보로 유출되지 않도록 주의하시기 바랍니다.
+' - 상업용 전환이후에도 인증정보(링크아이디, 비밀키)는 변경되지 않습니다.
+'=========================================================================
 
 '링크아이디
 Private Const linkID = "TESTER"
@@ -346,21 +367,31 @@ Private Const linkID = "TESTER"
 '비밀키. 유출에 주의하시기 바랍니다.
 Private Const SecretKey = "SwWxqU+0TErBXy/9TVjIPEnI0VTUMMSQZtJf3Ed8q3I="
 
+'팩스 서비스 객체 생성
 Private FaxService As New PBFAXService
 
+'=========================================================================
+' 예약전송 팩스요청건을 취소합니다.
+' - 예약전송 취소는 예약전송시간 10분전까지 가능합니다.
+'=========================================================================
 
 Private Sub btnCancelReserve_Click()
- Dim Response As PBResponse
+    Dim Response As PBResponse
     
     Set Response = FaxService.CancelReserve(txtCorpNum.Text, txtReceiptNum.Text, txtUserID.Text)
     
     If Response Is Nothing Then
-        MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
-    MsgBox (Response.message)
+    MsgBox ("응답코드 : " + CStr(Response.code) + vbCrLf + "응답메시지 : " + Response.message)
 End Sub
+
+'=========================================================================
+' 팝빌 회원아이디 중복여부를 확인합니다.
+' 응답코드/메시지 : 1-사용중, 2-미사용중
+'=========================================================================
 
 Private Sub btnCheckID_Click()
     Dim Response As PBResponse
@@ -368,12 +399,17 @@ Private Sub btnCheckID_Click()
     Set Response = FaxService.CheckID(txtUserID.Text)
     
     If Response Is Nothing Then
-        MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
-    MsgBox ("[" + CStr(Response.code) + "] " + Response.message)
+    MsgBox ("응답코드 : " + CStr(Response.code) + vbCrLf + "응답메시지 : " + Response.message)
 End Sub
+
+'=========================================================================
+' 해당 사업자의 파트너 연동회원 가입여부를 확인합니다.
+' - LinkID는 인증정보로 설정되어 있는 링크아이디 값입니다.
+'=========================================================================
 
 Private Sub btnCheckIsMember_Click()
     Dim Response As PBResponse
@@ -381,13 +417,18 @@ Private Sub btnCheckIsMember_Click()
     Set Response = FaxService.CheckIsMember(txtCorpNum.Text, linkID)
     
     If Response Is Nothing Then
-        MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
-    MsgBox ("[" + CStr(Response.code) + "] " + Response.message)
+    MsgBox ("응답코드 : " + CStr(Response.code) + vbCrLf + "응답메시지 : " + Response.message)
 End Sub
 
+'=========================================================================
+' 연동회원의 잔여포인트를 확인합니다.
+' - 과금방식이 파트너과금인 경우 파트너 잔여포인트(GetPartnerBalance API)
+'   를 통해 확인하시기 바랍니다.
+'=========================================================================
 
 Private Sub btnGetBalance_Click()
     Dim balance As Double
@@ -395,15 +436,17 @@ Private Sub btnGetBalance_Click()
     balance = FaxService.GetBalance(txtCorpNum.Text)
     
     If balance < 0 Then
-        
-        MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
     MsgBox "잔여포인트 : " + CStr(balance)
     
-    
 End Sub
+
+'=========================================================================
+' 연동회원의 팩스 API 서비스 과금정보를 확인합니다.
+'=========================================================================
 
 Private Sub btnGetChargeInfo_Click()
     Dim ChargeInfo As PBChargeInfo
@@ -411,18 +454,22 @@ Private Sub btnGetChargeInfo_Click()
     Set ChargeInfo = FaxService.GetChargeInfo(txtCorpNum.Text, txtUserID.Text)
      
     If ChargeInfo Is Nothing Then
-        MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
     Dim tmp As String
     
-    tmp = tmp + "unitCost (요금) : " + ChargeInfo.unitCost + vbCrLf
+    tmp = tmp + "unitCost (전송단가) : " + ChargeInfo.unitCost + vbCrLf
     tmp = tmp + "chargeMethod (과금유형) : " + ChargeInfo.chargeMethod + vbCrLf
     tmp = tmp + "rateSystem (과금제도) : " + ChargeInfo.rateSystem + vbCrLf
     
     MsgBox tmp
 End Sub
+
+'=========================================================================
+' 연동회원의 회사정보를 확인합니다.
+'=========================================================================
 
 Private Sub btnGetCorpInfo_Click()
     Dim CorpInfo As PBCorpInfo
@@ -430,20 +477,25 @@ Private Sub btnGetCorpInfo_Click()
     Set CorpInfo = FaxService.GetCorpInfo(txtCorpNum.Text, txtUserID.Text)
      
     If CorpInfo Is Nothing Then
-        MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
     Dim tmp As String
     
-    tmp = tmp + "ceoname : " + CorpInfo.CEOName + vbCrLf
-    tmp = tmp + "corpName : " + CorpInfo.CorpName + vbCrLf
-    tmp = tmp + "addr : " + CorpInfo.Addr + vbCrLf
-    tmp = tmp + "bizType : " + CorpInfo.BizType + vbCrLf
-    tmp = tmp + "bizClass : " + CorpInfo.BizClass + vbCrLf
+    tmp = tmp + "ceoname (대표자성명) : " + CorpInfo.CEOName + vbCrLf
+    tmp = tmp + "corpName (상호) : " + CorpInfo.CorpName + vbCrLf
+    tmp = tmp + "addr (주소) : " + CorpInfo.Addr + vbCrLf
+    tmp = tmp + "bizType (업태) : " + CorpInfo.BizType + vbCrLf
+    tmp = tmp + "bizClass (종목) : " + CorpInfo.BizClass + vbCrLf
     
     MsgBox tmp
 End Sub
+
+'=========================================================================
+' 팩스 전송요청시 반환받은 접수번호(receiptNum)을 사용하여 팩스전송
+' 결과를 확인합니다.
+'=========================================================================
 
 Private Sub btnGetFaxDetail_Click()
     Dim sentFaxList As Collection
@@ -453,7 +505,7 @@ Private Sub btnGetFaxDetail_Click()
     Set sentFaxList = FaxService.GetMessages(txtCorpNum.Text, txtReceiptNum.Text, txtUserID.Text)
     
     If sentFaxList Is Nothing Then
-        MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
@@ -469,7 +521,7 @@ Private Sub btnGetFaxDetail_Click()
         tmp = tmp + CStr(sentFax.sendState) + " | "
         tmp = tmp + CStr(sentFax.convState) + " | "
         tmp = tmp + sentFax.sendNum + " | "
-        tmp = tmp + sentFax.SenderName + " | "
+        tmp = tmp + sentFax.senderName + " | "
         tmp = tmp + sentFax.receiveNum + " | "
         tmp = tmp + sentFax.receiveName + " | "
         
@@ -504,13 +556,19 @@ Private Sub btnGetFaxDetail_Click()
     txtResult.Text = tmp
 End Sub
 
+'=========================================================================
+' 파트너의 잔여포인트를 확인합니다.
+' - 과금방식이 연동과금인 경우 연동회원 잔여포인트(GetBalance API)를
+'   이용하시기 바랍니다.
+'=========================================================================
+
 Private Sub btnGetPartnerBalance_Click()
     Dim balance As Double
     
     balance = FaxService.GetPartnerBalance(txtCorpNum.Text)
     
     If balance < 0 Then
-        MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
@@ -518,17 +576,27 @@ Private Sub btnGetPartnerBalance_Click()
     
 End Sub
 
+'=========================================================================
+' 연동회원 포인트 충전 URL을 반환합니다.
+' - URL 보안정책에 따라 반환된 URL은 30초의 유효시간을 갖습니다.
+'=========================================================================
+
 Private Sub btnGetPopbillURL_CHRG_Click()
     Dim url As String
     
     url = FaxService.GetPopbillURL(txtCorpNum.Text, txtUserID.Text, "CHRG")
     
     If url = "" Then
-         MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     MsgBox "URL : " + vbCrLf + url
 End Sub
+
+'=========================================================================
+' 팝빌(www.popbill.com)에 로그인된 팝빌 URL을 반환합니다.
+' - 보안정책에 따라 반환된 URL은 30초의 유효시간을 갖습니다.
+'=========================================================================
 
 Private Sub btnGetPopbillURL_Click()
     Dim url As String
@@ -536,43 +604,77 @@ Private Sub btnGetPopbillURL_Click()
     url = FaxService.GetPopbillURL(txtCorpNum.Text, txtUserID.Text, "LOGIN")
     
     If url = "" Then
-         MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     MsgBox "URL : " + vbCrLf + url
 End Sub
 
+'=========================================================================
+' 팝빌 연동회원 가입을 요청합니다.
+'=========================================================================
+
 Private Sub btnJoinMember_Click()
     Dim joinData As New PBJoinForm
     Dim Response As PBResponse
     
-    joinData.linkID = linkID '링크 아이디
-    joinData.CorpNum = "1231212312" '사업자번호 "-" 제외.
+    '링크 아이디
+    joinData.linkID = linkID
+    
+    '사업자번호, '-'제외, 10자리
+    joinData.CorpNum = "1231212312"
+    
+    '대표자성명, 최대 30자
     joinData.CEOName = "대표자성명"
+    
+    '상호명, 최대 70자
     joinData.CorpName = "회원상호"
+    
+    '주소, 최대 300자
     joinData.Addr = "주소"
-    joinData.ZipCode = "500-100"
+    
+    '업태, 최대 40자
     joinData.BizType = "업태"
-    joinData.BizClass = "업종"
-    joinData.ID = "userid"      '6자 이상 20자 미만.
-    joinData.PWD = "pwd_must_be_long_enough"    '6자 이상 20자 미만.
+    
+    '종목, 최대 40자
+    joinData.BizClass = "종목"
+    
+    '아이디, 6자이상 20자 미만
+    joinData.ID = "userid"
+    
+    '비밀번호, 6자이상 20자 미만
+    joinData.PWD = "pwd_must_be_long_enough"
+    
+    '담당자명, 최대 30자
     joinData.ContactName = "담당자성명"
+    
+    '담당자 연락처, 최대 20자
     joinData.ContactTEL = "02-999-9999"
+    
+    '담당자 휴대폰번호, 최대 20자
     joinData.ContactHP = "010-1234-5678"
+    
+    '담당자 팩스번호, 최대 20자
     joinData.ContactFAX = "02-999-9998"
+    
+    '담당자 메일, 최대 70자
     joinData.ContactEmail = "test@test.com"
     
     Set Response = FaxService.JoinMember(joinData)
     
     If Response Is Nothing Then
-        MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
-    MsgBox (Response.message)
+    MsgBox ("응답코드 : " + CStr(Response.code) + vbCrLf + "응답메시지 : " + Response.message)
     
     
 End Sub
+
+'=========================================================================
+' 연동회원의 담당자 목록을 확인합니다.
+'=========================================================================
 
 Private Sub btnListContact_Click()
     Dim resultList As Collection
@@ -580,7 +682,7 @@ Private Sub btnListContact_Click()
     Set resultList = FaxService.ListContact(txtCorpNum.Text, txtUserID.Text)
      
     If resultList Is Nothing Then
-        MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
@@ -598,29 +700,55 @@ Private Sub btnListContact_Click()
     MsgBox tmp
 End Sub
 
+'=========================================================================
+' 연동회원의 담당자를 신규로 등록합니다.
+'=========================================================================
+
 Private Sub btnRegistContact_Click()
     Dim joinData As New PBContactInfo
     Dim Response As PBResponse
     
-    joinData.ID = "testkorea_20151007"      '담당자 아이디
-    joinData.PWD = "test@test.com"          '비밀번호
-    joinData.personName = "담당자명"        '담당자명
-    joinData.tel = "070-1234-1234"          '연락처
-    joinData.hp = "010-1234-1234"           '휴대폰번호
-    joinData.email = "test@test.com"        '이메일 주소
-    joinData.fax = "070-1234-1234"          '팩스번호
-    joinData.searchAllAllowYN = True        '전체조회여부, Ture-회사조회, False-개인조회
-    joinData.mgrYN = False                  '관리자 권한여부
+    '담당자 아이디, 6자 이상 20자 미만
+    joinData.ID = "testkorea_20161011"
+    
+    '비밀번호, 6자 이상 20자 미만
+    joinData.PWD = "test@test.com"
+    
+    '담당자명, 최대 30자
+    joinData.personName = "담당자명"
+    
+    '담당자 연락처
+    joinData.tel = "070-1234-1234"
+    
+    '담당자 휴대폰번호
+    joinData.hp = "010-1234-1234"
+    
+    '담당자 메일주소
+    joinData.email = "test@test.com"
+    
+    '담당자 팩스번호
+    joinData.fax = "070-1234-1234"
+    
+    '회사조회 권한여부, true-회사조회 / false-개인조회
+    joinData.searchAllAllowYN = True
+    
+    '관리자 권한여부
+    joinData.mgrYN = False
         
     Set Response = FaxService.RegistContact(txtCorpNum.Text, joinData, txtUserID.Text)
     
     If Response Is Nothing Then
-        MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
-    MsgBox ("[" + CStr(Response.code) + "] " + Response.message)
+    MsgBox ("응답코드 : " + CStr(Response.code) + vbCrLf + "응답메시지 : " + Response.message)
+    
 End Sub
+
+'=========================================================================
+' 검색조건을 사용하여 팩스전송 내역을 조회합니다.
+'=========================================================================
 
 Private Sub btnSearch_Click()
     Dim faxSearchList As PBFaxSearchList
@@ -635,8 +763,11 @@ Private Sub btnSearch_Click()
     Dim fileName As Variant
     Dim i As Integer
     
-    SDate = "20160801"      '[필수] 시작일자, 형식(yyyyMMdd)
-    EDate = "20160831"      '[필수] 종료일자, 형식(yyyyMMdd)
+    '[필수] 시작일자, 형식(yyyyMMdd)
+    SDate = "20160901"
+    
+    '[필수] 종료일자, 형식(yyyyMMdd)
+    EDate = "20161031"
     
     '전송상태 배열, 1(대기), 2(성공), 3(실패), 4(취소)
     State.Add "1"
@@ -644,18 +775,25 @@ Private Sub btnSearch_Click()
     State.Add "3"
     State.Add "4"
     
-    ReserveYN = False        '예약전송 검색여부, True-예약전송건 조회, False-전체조회
-    SenderOnly = False      '개인조회 여부, True-개인조회, False-회사조회
+    '예약전송 검색여부, True-예약전송건 조회, False-전체조회
+    ReserveYN = False
     
-    Page = 1                '페이지 번호, 기본값 1
-    PerPage = 30            '페이지당 목록갯수, 기본값 500
+    '개인조회 여부, True-개인조회, False-회사조회
+    SenderOnly = False
     
-    Order = "D"             '정렬방향, D-내림차순(기본값), A-오름차순
+    '페이지 번호, 기본값 1
+    Page = 1
+    
+    '페이지당 목록갯수, 기본값 500
+    PerPage = 30
+    
+    '정렬방향, D-내림차순(기본값), A-오름차순
+    Order = "D"
     
     Set faxSearchList = FaxService.Search(txtCorpNum.Text, SDate, EDate, State, ReserveYN, SenderOnly, Page, PerPage, Order)
      
     If faxSearchList Is Nothing Then
-        MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
@@ -681,7 +819,7 @@ Private Sub btnSearch_Click()
         tmp = tmp + CStr(sentFax.convState) + " | "         '변환상태
         
         tmp = tmp + sentFax.sendNum + " | "                 '발신번호
-        tmp = tmp + sentFax.SenderName + " | "              '발신번호
+        tmp = tmp + sentFax.senderName + " | "              '발신번호
         tmp = tmp + sentFax.receiveNum + " | "              '수신번호
         tmp = tmp + sentFax.receiveName + " | "             '수신자명
         
@@ -717,13 +855,18 @@ Private Sub btnSearch_Click()
     
 End Sub
 
+'=========================================================================
+' 팩스 전송내역 목록 팝업 URL을 반환합니다.
+' 보안정책으로 인해 반환된 URL은 30초의 유효시간을 갖습니다.
+'=========================================================================
+
 Private Sub btnSearchPopUp_Click()
     Dim url As String
     
     url = FaxService.GetURL(txtCorpNum.Text, txtUserID.Text, "BOX")
     
     If url = "" Then
-         MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     MsgBox "URL : " + vbCrLf + url
@@ -732,7 +875,7 @@ End Sub
 Private Sub btnSendFAX_Click()
     Dim FilePaths As New Collection
     Dim senderNum As String
-    Dim SenderName As String
+    Dim senderName As String
     Dim receivers As New Collection
     Dim receiver As New PBReceiver
     Dim ReceiptNum As String
@@ -746,13 +889,13 @@ Private Sub btnSendFAX_Click()
     FilePaths.Add CommonDialog1.fileName
     
     '발신번호
-    senderNum = "07075103710"
+    senderNum = "070-4304-2991"
     
     '발신자명
-    SenderName = "발신자명"
+    senderName = "발신자명"
     
     '수신번호
-    receiver.receiverNum = "010111222"
+    receiver.receiverNum = "070-111-222"
     
     '수신자명
     receiver.receiverName = "수신자 명칭"
@@ -760,7 +903,7 @@ Private Sub btnSendFAX_Click()
     receivers.Add receiver
     
     
-    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, SenderName)
+    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName)
     
     If ReceiptNum = "" Then
         MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
@@ -777,7 +920,7 @@ Private Sub btnSendFAX_Multi_Click()
 
     Dim FilePaths As New Collection
     Dim senderNum As String
-    Dim SenderName As String
+    Dim senderName As String
     Dim receivers As New Collection
     Dim receiver As New PBReceiver
     Dim ReceiptNum As String
@@ -798,7 +941,7 @@ Private Sub btnSendFAX_Multi_Click()
     senderNum = "07075103710"
     
     '발신자명
-    SenderName = "발신자명"
+    senderName = "발신자명"
     
     '수신번호
     receiver.receiverNum = "010111222"
@@ -808,7 +951,7 @@ Private Sub btnSendFAX_Multi_Click()
     
     receivers.Add receiver
     
-    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, SenderName)
+    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName)
     
     
      If ReceiptNum = "" Then
@@ -824,7 +967,7 @@ End Sub
 Private Sub btnSendFax_Multi_Same_Click()
     Dim FilePaths As New Collection
     Dim senderNum As String
-    Dim SenderName As String
+    Dim senderName As String
     Dim receivers As New Collection
     Dim receiver As PBReceiver
     Dim i As Integer
@@ -846,7 +989,7 @@ Private Sub btnSendFax_Multi_Same_Click()
     senderNum = "07075103710"
     
     '발신자명
-    SenderName = "발신자명"
+    senderName = "발신자명"
     
     '수신정보 최대 1000명까지 가능
     For i = 1 To 100
@@ -856,7 +999,7 @@ Private Sub btnSendFax_Multi_Same_Click()
         receivers.Add receiver
     Next
     
-    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, SenderName)
+    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName)
     
     If ReceiptNum = "" Then
         MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
@@ -871,7 +1014,7 @@ End Sub
 Private Sub btnSendFax_Same_Click()
     Dim FilePaths As New Collection
     Dim senderNum As String
-    Dim SenderName As String
+    Dim senderName As String
     Dim receivers As New Collection
     Dim receiver As PBReceiver
     Dim i As Integer
@@ -889,7 +1032,7 @@ Private Sub btnSendFax_Same_Click()
     senderNum = "07075103710"
     
     '발신자명
-    SenderName = "발신자명"
+    senderName = "발신자명"
     
     '수신정보, 최대 1000건
     For i = 1 To 100
@@ -899,7 +1042,7 @@ Private Sub btnSendFax_Same_Click()
         receivers.Add receiver
     Next
             
-    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, SenderName)
+    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName)
     
     If ReceiptNum = "" Then
         MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
@@ -911,59 +1054,93 @@ Private Sub btnSendFax_Same_Click()
     txtReceiptNum.Text = ReceiptNum
 End Sub
 
+'=========================================================================
+' 팩스 전송단가를 확인합니다.
+'=========================================================================
+
 Private Sub btnUnitCost_Click()
     Dim unitCost As Single
     
     unitCost = FaxService.GetUnitCost(txtCorpNum.Text)
     
     If unitCost < 0 Then
-        MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
     MsgBox "전송 단가 : " + CStr(unitCost)
 End Sub
 
+'=========================================================================
+' 연동회원의 담당자 정보를 수정합니다.
+'=========================================================================
+
 Private Sub btnUpdateContact_Click()
     Dim joinData As New PBContactInfo
     Dim Response As PBResponse
     
-    joinData.personName = "담당자명_수정"  '담당자명
-    joinData.tel = "070-1234-1234"         '연락처
-    joinData.hp = "010-1234-1234"          '휴대폰번호
-    joinData.email = "test@test.com"       '이메일 주소
-    joinData.fax = "070-1234-1234"         '팩스번호
-    joinData.searchAllAllowYN = True       '전체조회여부, Ture-회사조회, False-개인조
-    joinData.mgrYN = False                 '관리자 권한여부
+    '담당자명
+    joinData.personName = "담당자명_수정"
+    
+    '연락처
+    joinData.tel = "070-4304-2991"
+    
+    '휴대폰번호
+    joinData.hp = "010-1234-1234"
+    
+    '이메일 주소
+    joinData.email = "test@test.com"
+    
+    '팩스번호
+    joinData.fax = "070-1234-1234"
+    
+    '전체조회여부, Ture-회사조회, False-개인조
+    joinData.searchAllAllowYN = True
+    
+    '관리자 권한여부
+    joinData.mgrYN = False
                 
     Set Response = FaxService.UpdateContact(txtCorpNum.Text, joinData, txtUserID.Text)
     
     If Response Is Nothing Then
-        MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
-    MsgBox ("[" + CStr(Response.code) + "] " + Response.message)
+    MsgBox ("응답코드 : " + CStr(Response.code) + vbCrLf + "응답메시지 : " + Response.message)
 End Sub
+
+'=========================================================================
+' 연동회원의 회사정보를 수정합니다
+'=========================================================================
 
 Private Sub btnUpdateCorpInfo_Click()
     Dim CorpInfo As New PBCorpInfo
     Dim Response As PBResponse
     
-    CorpInfo.CEOName = "대표자"         '대표자명
-    CorpInfo.CorpName = "상호_수정"     '상호명
-    CorpInfo.Addr = "서울특별시"        '주소
-    CorpInfo.BizType = "업태"           '업태
-    CorpInfo.BizClass = "업종"          '업종
+    '대표자명
+    CorpInfo.CEOName = "대표자"
+    
+    '상호
+    CorpInfo.CorpName = "상호"
+    
+    '주소
+    CorpInfo.Addr = "서울특별시"
+    
+    '업태
+    CorpInfo.BizType = "업태"
+    
+    '종목
+    CorpInfo.BizClass = "종목"
     
     Set Response = FaxService.UpdateCorpInfo(txtCorpNum.Text, CorpInfo, txtUserID.Text)
     
     If Response Is Nothing Then
-        MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
-    MsgBox ("[" + CStr(Response.code) + "] " + Response.message)
+    MsgBox ("응답코드 : " + CStr(Response.code) + vbCrLf + "응답메시지 : " + Response.message)
 End Sub
 
 Private Sub Form_Load()
