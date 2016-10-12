@@ -450,6 +450,7 @@ End Sub
 
 Private Sub btnGetChargeInfo_Click()
     Dim ChargeInfo As PBChargeInfo
+    Dim tmp As String
     
     Set ChargeInfo = FaxService.GetChargeInfo(txtCorpNum.Text, txtUserID.Text)
      
@@ -457,8 +458,6 @@ Private Sub btnGetChargeInfo_Click()
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
-    
-    Dim tmp As String
     
     tmp = tmp + "unitCost (전송단가) : " + ChargeInfo.unitCost + vbCrLf
     tmp = tmp + "chargeMethod (과금유형) : " + ChargeInfo.chargeMethod + vbCrLf
@@ -473,6 +472,7 @@ End Sub
 
 Private Sub btnGetCorpInfo_Click()
     Dim CorpInfo As PBCorpInfo
+    Dim tmp As String
     
     Set CorpInfo = FaxService.GetCorpInfo(txtCorpNum.Text, txtUserID.Text)
      
@@ -480,8 +480,6 @@ Private Sub btnGetCorpInfo_Click()
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
-    
-    Dim tmp As String
     
     tmp = tmp + "ceoname (대표자성명) : " + CorpInfo.CEOName + vbCrLf
     tmp = tmp + "corpName (상호) : " + CorpInfo.CorpName + vbCrLf
@@ -501,6 +499,8 @@ Private Sub btnGetFaxDetail_Click()
     Dim sentFaxList As Collection
     Dim i As Integer
     Dim fileName As Variant
+    Dim sentFax As PBFaxInfo
+    Dim tmp As String
     
     Set sentFaxList = FaxService.GetMessages(txtCorpNum.Text, txtReceiptNum.Text, txtUserID.Text)
     
@@ -509,11 +509,6 @@ Private Sub btnGetFaxDetail_Click()
         Exit Sub
     End If
     
-    
-    Dim sentFax As PBFaxInfo
-    
-    
-    Dim tmp As String
     tmp = "sendState | convState | sendnum | senderName | rcv | rcvnm | T | S | F | R | C | receiptDT | reserveDT | sendDT | resultDT | sendResult | filenames" + vbCrLf
     
     For Each sentFax In sentFaxList
@@ -607,6 +602,7 @@ Private Sub btnGetPopbillURL_Click()
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
+    
     MsgBox "URL : " + vbCrLf + url
 End Sub
 
@@ -669,7 +665,6 @@ Private Sub btnJoinMember_Click()
     
     MsgBox ("응답코드 : " + CStr(Response.code) + vbCrLf + "응답메시지 : " + Response.message)
     
-    
 End Sub
 
 '=========================================================================
@@ -678,7 +673,9 @@ End Sub
 
 Private Sub btnListContact_Click()
     Dim resultList As Collection
-        
+    Dim tmp As String
+    Dim info As PBContactInfo
+    
     Set resultList = FaxService.ListContact(txtCorpNum.Text, txtUserID.Text)
      
     If resultList Is Nothing Then
@@ -686,11 +683,7 @@ Private Sub btnListContact_Click()
         Exit Sub
     End If
     
-    Dim tmp As String
-    
     tmp = "id | email | hp | personName | searchAllAllowYN | tel | fax | mgrYN | regDT " + vbCrLf
-    
-    Dim info As PBContactInfo
     
     For Each info In resultList
         tmp = tmp + info.ID + " | " + info.email + " | " + info.hp + " | " + info.personName + " | " + CStr(info.searchAllAllowYN) _
@@ -762,6 +755,8 @@ Private Sub btnSearch_Click()
     Dim Order As String
     Dim fileName As Variant
     Dim i As Integer
+    Dim tmp As String
+    Dim sentFax As PBFaxInfo
     
     '[필수] 시작일자, 형식(yyyyMMdd)
     SDate = "20160901"
@@ -797,8 +792,6 @@ Private Sub btnSearch_Click()
         Exit Sub
     End If
     
-    Dim tmp As String
-    
     tmp = "code : " + CStr(faxSearchList.code) + vbCrLf
     tmp = tmp + "total : " + CStr(faxSearchList.total) + vbCrLf
     tmp = tmp + "perPage : " + CStr(faxSearchList.PerPage) + vbCrLf
@@ -808,10 +801,7 @@ Private Sub btnSearch_Click()
     
     MsgBox tmp
     
-    
     tmp = "sendState | convState | sendnum | senderName | rcv | rcvnm | T | S | F | R | C | receiptDT | reserveDT | sendDT | resultDT | sendResult | fileNames" + vbCrLf
-    
-    Dim sentFax As PBFaxInfo
     
     For Each sentFax In faxSearchList.list
     
@@ -902,11 +892,10 @@ Private Sub btnSendFAX_Click()
     
     receivers.Add receiver
     
-    
     ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName)
     
     If ReceiptNum = "" Then
-        MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
@@ -917,7 +906,6 @@ Private Sub btnSendFAX_Click()
 End Sub
 
 Private Sub btnSendFAX_Multi_Click()
-
     Dim FilePaths As New Collection
     Dim senderNum As String
     Dim senderName As String
@@ -953,9 +941,8 @@ Private Sub btnSendFAX_Multi_Click()
     
     ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName)
     
-    
-     If ReceiptNum = "" Then
-        MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
+    If ReceiptNum = "" Then
+        MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
@@ -1002,7 +989,7 @@ Private Sub btnSendFax_Multi_Same_Click()
     ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName)
     
     If ReceiptNum = "" Then
-        MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
@@ -1045,7 +1032,7 @@ Private Sub btnSendFax_Same_Click()
     ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName)
     
     If ReceiptNum = "" Then
-        MsgBox ("[" + CStr(FaxService.LastErrCode) + "] " + FaxService.LastErrMessage)
+        MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
