@@ -792,12 +792,12 @@ Private Sub btnSearch_Click()
         Exit Sub
     End If
     
-    tmp = "code : " + CStr(faxSearchList.code) + vbCrLf
-    tmp = tmp + "total : " + CStr(faxSearchList.total) + vbCrLf
-    tmp = tmp + "perPage : " + CStr(faxSearchList.PerPage) + vbCrLf
-    tmp = tmp + "pageNum : " + CStr(faxSearchList.pageNum) + vbCrLf
-    tmp = tmp + "pageCount : " + CStr(faxSearchList.pageCount) + vbCrLf
-    tmp = tmp + "message : " + faxSearchList.message + vbCrLf + vbCrLf
+    tmp = "code (응답코드) : " + CStr(faxSearchList.code) + vbCrLf
+    tmp = tmp + "total (총 검색결과 건수) : " + CStr(faxSearchList.total) + vbCrLf
+    tmp = tmp + "perPage (페이지당 목록개수) : " + CStr(faxSearchList.PerPage) + vbCrLf
+    tmp = tmp + "pageNum (페이지 번호) : " + CStr(faxSearchList.pageNum) + vbCrLf
+    tmp = tmp + "pageCount (페이지 개수) : " + CStr(faxSearchList.pageCount) + vbCrLf
+    tmp = tmp + "message (응답메시지) : " + faxSearchList.message + vbCrLf + vbCrLf
     
     MsgBox tmp
     
