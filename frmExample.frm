@@ -24,7 +24,7 @@ Begin VB.Form frmExample
       TabIndex        =   12
       Top             =   3960
       Width           =   13455
-      Begin VB.CommandButton btnResednFaxSame 
+      Begin VB.CommandButton btnResendFaxSame 
          Caption         =   "동보 재전송"
          Height          =   450
          Left            =   9360
@@ -760,51 +760,6 @@ End Sub
 ' - 발신자/수신자 정보를 수정하여 전송할 수 있습니다.
 '=========================================================================
 
-Private Sub btnResednFaxSame_Click()
-    Dim senderNum As String
-    Dim senderName As String
-    Dim receivers As New Collection
-    Dim receiver As New PBReceiver
-    Dim receiptNum As String
-    Dim i As Integer
-    
-    ' 발신번호, 공백처리시 기존발신번호로 재전송
-    senderNum = ""
-    
-    ' 발신자명, 공백처리시 기존발신자명으로 재전송
-    senderName = ""
-    
-    ' 기존수신정보 변경없이 재전송하는 경우, receivers(수신정보) Collection 을 Nothing 으로 선언
-    'Set receivers = Nothing
-    
-    
-    ' 새로운 수신정보로 재전송하는 경우, 수신번호/수신자명을 기재하여 receivers Collection에 추가
-    ' 수신정보, 최대 1000건
-    For i = 1 To 10
-        Set receiver = New PBReceiver
-        receiver.receiverNum = "010111222"
-        receiver.receiverName = "수신자 명칭"
-        receivers.Add receiver
-    Next
-    
-    receiptNum = FaxService.ResendFAX(txtCorpNum.Text, txtReceiptNum.Text, senderNum, senderName, receivers, txtReserveDT.Text, txtUserID.Text)
-    
-    If receiptNum = "" Then
-        MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
-        Exit Sub
-    End If
-    
-    MsgBox "접수번호 : " + receiptNum
-    
-    txtReceiptNum.Text = receiptNum
-End Sub
-
-'=========================================================================
-' 팩스를 재전송합니다.
-' - 전송일로부터 180일이 경과되지 않은 건만 재전송할 수 있습니다.
-' - 발신자/수신자 정보를 수정하여 전송할 수 있습니다.
-'=========================================================================
-
 Private Sub btnResendFAX_Click()
     Dim senderNum As String
     Dim senderName As String
@@ -844,6 +799,51 @@ Private Sub btnResendFAX_Click()
     
     txtReceiptNum.Text = receiptNum
     
+End Sub
+
+'=========================================================================
+' 팩스를 재전송합니다.
+' - 전송일로부터 180일이 경과되지 않은 건만 재전송할 수 있습니다.
+' - 발신자/수신자 정보를 수정하여 전송할 수 있습니다.
+'=========================================================================
+
+Private Sub btnResendFaxSame_Click()
+    Dim senderNum As String
+    Dim senderName As String
+    Dim receivers As New Collection
+    Dim receiver As New PBReceiver
+    Dim receiptNum As String
+    Dim i As Integer
+    
+    ' 발신번호, 공백처리시 기존발신번호로 재전송
+    senderNum = ""
+    
+    ' 발신자명, 공백처리시 기존발신자명으로 재전송
+    senderName = ""
+    
+    ' 기존수신정보 변경없이 재전송하는 경우, receivers(수신정보) Collection 을 Nothing 으로 선언
+    'Set receivers = Nothing
+    
+    
+    ' 새로운 수신정보로 재전송하는 경우, 수신번호/수신자명을 기재하여 receivers Collection에 추가
+    ' 수신정보, 최대 1000건
+    For i = 1 To 10
+        Set receiver = New PBReceiver
+        receiver.receiverNum = "010111222"
+        receiver.receiverName = "수신자 명칭"
+        receivers.Add receiver
+    Next
+    
+    receiptNum = FaxService.ResendFAX(txtCorpNum.Text, txtReceiptNum.Text, senderNum, senderName, receivers, txtReserveDT.Text, txtUserID.Text)
+    
+    If receiptNum = "" Then
+        MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
+        Exit Sub
+    End If
+    
+    MsgBox "접수번호 : " + receiptNum
+    
+    txtReceiptNum.Text = receiptNum
 End Sub
 
 '=========================================================================
