@@ -5,10 +5,10 @@ Begin VB.Form frmExample
    ClientHeight    =   11535
    ClientLeft      =   60
    ClientTop       =   450
-   ClientWidth     =   13605
+   ClientWidth     =   13920
    LinkTopic       =   "Form1"
    ScaleHeight     =   11535
-   ScaleWidth      =   13605
+   ScaleWidth      =   13920
    StartUpPosition =   2  '화면 가운데
    Begin MSComDlg.CommonDialog CommonDialog1 
       Left            =   8820
@@ -23,21 +23,37 @@ Begin VB.Form frmExample
       Left            =   240
       TabIndex        =   12
       Top             =   3960
-      Width           =   12975
+      Width           =   13455
+      Begin VB.CommandButton btnResednFaxSame 
+         Caption         =   "동보 재전송"
+         Height          =   450
+         Left            =   9360
+         TabIndex        =   39
+         Top             =   840
+         Width           =   1695
+      End
+      Begin VB.CommandButton btnResendFAX 
+         Caption         =   "재전송"
+         Height          =   450
+         Left            =   7560
+         TabIndex        =   38
+         Top             =   840
+         Width           =   1695
+      End
       Begin VB.CommandButton btnSearch 
          Caption         =   "전송내역 검색조회"
          Height          =   465
-         Left            =   10905
+         Left            =   11385
          TabIndex        =   36
-         Top             =   840
+         Top             =   720
          Width           =   1815
       End
       Begin VB.CommandButton btnSearchPopUp 
          Caption         =   "전송내역조회 팝업"
          Height          =   465
-         Left            =   10905
+         Left            =   11385
          TabIndex        =   24
-         Top             =   330
+         Top             =   210
          Width           =   1815
       End
       Begin VB.CommandButton btnCancelReserve 
@@ -71,7 +87,7 @@ Begin VB.Form frmExample
          MultiLine       =   -1  'True
          TabIndex        =   21
          Top             =   2100
-         Width           =   12330
+         Width           =   12810
       End
       Begin VB.TextBox txtReceiptNum 
          Height          =   315
@@ -739,6 +755,98 @@ Private Sub btnRegistContact_Click()
 End Sub
 
 '=========================================================================
+' 팩스를 재전송합니다.
+' - 전송일로부터 180일이 경과되지 않은 건만 재전송할 수 있습니다.
+' - 발신자/수신자 정보를 수정하여 전송할 수 있습니다.
+'=========================================================================
+
+Private Sub btnResednFaxSame_Click()
+    Dim senderNum As String
+    Dim senderName As String
+    Dim receivers As New Collection
+    Dim receiver As New PBReceiver
+    Dim receiptNum As String
+    Dim i As Integer
+    
+    ' 발신번호, 공백처리시 기존발신번호로 재전송
+    senderNum = ""
+    
+    ' 발신자명, 공백처리시 기존발신자명으로 재전송
+    senderName = ""
+    
+    ' 기존수신정보 변경없이 재전송하는 경우, receivers(수신정보) Collection 을 Nothing 으로 선언
+    'Set receivers = Nothing
+    
+    
+    ' 새로운 수신정보로 재전송하는 경우, 수신번호/수신자명을 기재하여 receivers Collection에 추가
+    ' 수신정보, 최대 1000건
+    For i = 1 To 10
+        Set receiver = New PBReceiver
+        receiver.receiverNum = "010111222"
+        receiver.receiverName = "수신자 명칭"
+        receivers.Add receiver
+    Next
+    
+    receiptNum = FaxService.ResendFAX(txtCorpNum.Text, txtReceiptNum.Text, senderNum, senderName, receivers, txtReserveDT.Text, txtUserID.Text)
+    
+    If receiptNum = "" Then
+        MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
+        Exit Sub
+    End If
+    
+    MsgBox "접수번호 : " + receiptNum
+    
+    txtReceiptNum.Text = receiptNum
+End Sub
+
+'=========================================================================
+' 팩스를 재전송합니다.
+' - 전송일로부터 180일이 경과되지 않은 건만 재전송할 수 있습니다.
+' - 발신자/수신자 정보를 수정하여 전송할 수 있습니다.
+'=========================================================================
+
+Private Sub btnResendFAX_Click()
+    Dim senderNum As String
+    Dim senderName As String
+    Dim receivers As New Collection
+    Dim receiver As New PBReceiver
+    Dim receiptNum As String
+    
+    ' 발신번호, 공백처리시 기존발신번호로 재전송
+    senderNum = ""
+    
+    ' 발신자명, 공백처리시 기존발신자명으로 재전송
+    senderName = ""
+    
+    ' 기존수신정보 변경없이 재전송하는 경우, receivers(수신정보) Collection 을 Nothing 으로 선언
+    Set receivers = Nothing
+    
+    
+    ' 새로운 수신정보로 재전송하는 경우, 수신번호/수신자명을 기재하여 receivers Collection에 추가
+    ' 수신번호
+    'receiver.receiverNum = "0700000214"
+    
+    ' 수신자명
+    'receiver.receiverName = "수신자_수정"
+    
+    ' 수신정보 Collection 추가
+    'receivers.Add receiver
+    
+    
+    receiptNum = FaxService.ResendFAX(txtCorpNum.Text, txtReceiptNum.Text, senderNum, senderName, receivers, txtReserveDT.Text, txtUserID.Text)
+    
+    If receiptNum = "" Then
+        MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
+        Exit Sub
+    End If
+    
+    MsgBox "접수번호 : " + receiptNum
+    
+    txtReceiptNum.Text = receiptNum
+    
+End Sub
+
+'=========================================================================
 ' 검색조건을 사용하여 팩스전송 내역을 조회합니다.
 '=========================================================================
 
@@ -867,7 +975,7 @@ Private Sub btnSendFAX_Click()
     Dim senderName As String
     Dim receivers As New Collection
     Dim receiver As New PBReceiver
-    Dim ReceiptNum As String
+    Dim receiptNum As String
     
     CommonDialog1.fileName = ""
     
@@ -891,16 +999,16 @@ Private Sub btnSendFAX_Click()
     
     receivers.Add receiver
     
-    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName)
+    receiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName)
     
-    If ReceiptNum = "" Then
+    If receiptNum = "" Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
-    MsgBox "접수번호 : " + ReceiptNum
+    MsgBox "접수번호 : " + receiptNum
     
-    txtReceiptNum.Text = ReceiptNum
+    txtReceiptNum.Text = receiptNum
     
 End Sub
 
@@ -910,7 +1018,7 @@ Private Sub btnSendFAX_Multi_Click()
     Dim senderName As String
     Dim receivers As New Collection
     Dim receiver As New PBReceiver
-    Dim ReceiptNum As String
+    Dim receiptNum As String
     
     Do
         CommonDialog1.fileName = ""
@@ -938,16 +1046,16 @@ Private Sub btnSendFAX_Multi_Click()
     
     receivers.Add receiver
     
-    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName)
+    receiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName)
     
-    If ReceiptNum = "" Then
+    If receiptNum = "" Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
-    MsgBox "접수번호 : " + ReceiptNum
+    MsgBox "접수번호 : " + receiptNum
     
-    txtReceiptNum.Text = ReceiptNum
+    txtReceiptNum.Text = receiptNum
 End Sub
 
 Private Sub btnSendFax_Multi_Same_Click()
@@ -957,7 +1065,7 @@ Private Sub btnSendFax_Multi_Same_Click()
     Dim receivers As New Collection
     Dim receiver As PBReceiver
     Dim i As Integer
-    Dim ReceiptNum As String
+    Dim receiptNum As String
     
     Do
         CommonDialog1.fileName = ""
@@ -985,16 +1093,16 @@ Private Sub btnSendFax_Multi_Same_Click()
         receivers.Add receiver
     Next
     
-    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName)
+    receiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName)
     
-    If ReceiptNum = "" Then
+    If receiptNum = "" Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
-    MsgBox "접수번호 : " + ReceiptNum
+    MsgBox "접수번호 : " + receiptNum
     
-    txtReceiptNum.Text = ReceiptNum
+    txtReceiptNum.Text = receiptNum
 End Sub
 
 Private Sub btnSendFax_Same_Click()
@@ -1004,7 +1112,7 @@ Private Sub btnSendFax_Same_Click()
     Dim receivers As New Collection
     Dim receiver As PBReceiver
     Dim i As Integer
-    Dim ReceiptNum As String
+    Dim receiptNum As String
     
     CommonDialog1.fileName = ""
     
@@ -1028,16 +1136,16 @@ Private Sub btnSendFax_Same_Click()
         receivers.Add receiver
     Next
             
-    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName)
+    receiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName)
     
-    If ReceiptNum = "" Then
+    If receiptNum = "" Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
-    MsgBox "접수번호 : " + ReceiptNum
+    MsgBox "접수번호 : " + receiptNum
     
-    txtReceiptNum.Text = ReceiptNum
+    txtReceiptNum.Text = receiptNum
 End Sub
 
 '=========================================================================
