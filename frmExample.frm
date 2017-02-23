@@ -359,9 +359,9 @@ Attribute VB_Exposed = False
 ' 팝빌 팩스 API VB 6.0 SDK Example
 '
 ' - VB6 SDK 연동환경 설정방법 안내 :
-' - 업데이트 일자 : 2016-10-11
-' - 연동 기술지원 연락처 : 1600-8536 / 070-4304-2991 (직통 / 정요한대리)
-' - 연동 기술지원 이메일 : dev@linkhub.co.kr
+' - 업데이트 일자 : 2017-02-23
+' - 연동 기술지원 연락처 : 1600-8536 / 070-4304-2991
+' - 연동 기술지원 이메일 : code@linkhub.co.kr
 '
 ' <테스트 연동개발 준비사항>
 ' 1) 25, 28번 라인에 선언된 링크아이디(LinkID)와 비밀키(SecretKey)를
@@ -394,7 +394,7 @@ Private FaxService As New PBFAXService
 Private Sub btnCancelReserve_Click()
     Dim Response As PBResponse
     
-    Set Response = FaxService.CancelReserve(txtCorpNum.Text, txtReceiptNum.Text, txtUserID.Text)
+    Set Response = FaxService.CancelReserve(txtCorpNum.Text, txtReceiptNum.Text)
     
     If Response Is Nothing Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
@@ -467,7 +467,7 @@ Private Sub btnGetChargeInfo_Click()
     Dim ChargeInfo As PBChargeInfo
     Dim tmp As String
     
-    Set ChargeInfo = FaxService.GetChargeInfo(txtCorpNum.Text, txtUserID.Text)
+    Set ChargeInfo = FaxService.GetChargeInfo(txtCorpNum.Text)
      
     If ChargeInfo Is Nothing Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
@@ -489,7 +489,7 @@ Private Sub btnGetCorpInfo_Click()
     Dim CorpInfo As PBCorpInfo
     Dim tmp As String
     
-    Set CorpInfo = FaxService.GetCorpInfo(txtCorpNum.Text, txtUserID.Text)
+    Set CorpInfo = FaxService.GetCorpInfo(txtCorpNum.Text)
      
     If CorpInfo Is Nothing Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
@@ -517,7 +517,7 @@ Private Sub btnGetFaxDetail_Click()
     Dim sentFax As PBFaxInfo
     Dim tmp As String
     
-    Set sentFaxList = FaxService.GetMessages(txtCorpNum.Text, txtReceiptNum.Text, txtUserID.Text)
+    Set sentFaxList = FaxService.GetMessages(txtCorpNum.Text, txtReceiptNum.Text)
     
     If sentFaxList Is Nothing Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
@@ -691,7 +691,7 @@ Private Sub btnListContact_Click()
     Dim tmp As String
     Dim info As PBContactInfo
     
-    Set resultList = FaxService.ListContact(txtCorpNum.Text, txtUserID.Text)
+    Set resultList = FaxService.ListContact(txtCorpNum.Text)
      
     If resultList Is Nothing Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
@@ -743,7 +743,7 @@ Private Sub btnRegistContact_Click()
     '관리자 권한여부
     joinData.mgrYN = False
         
-    Set Response = FaxService.RegistContact(txtCorpNum.Text, joinData, txtUserID.Text)
+    Set Response = FaxService.RegistContact(txtCorpNum.Text, joinData)
     
     If Response Is Nothing Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
@@ -788,7 +788,7 @@ Private Sub btnResendFAX_Click()
     'receivers.Add receiver
     
     
-    receiptNum = FaxService.ResendFAX(txtCorpNum.Text, txtReceiptNum.Text, senderNum, senderName, receivers, txtReserveDT.Text, txtUserID.Text)
+    receiptNum = FaxService.ResendFAX(txtCorpNum.Text, txtReceiptNum.Text, senderNum, senderName, receivers, txtReserveDT.Text)
     
     If receiptNum = "" Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
@@ -834,7 +834,7 @@ Private Sub btnResendFaxSame_Click()
         receivers.Add receiver
     Next
     
-    receiptNum = FaxService.ResendFAX(txtCorpNum.Text, txtReceiptNum.Text, senderNum, senderName, receivers, txtReserveDT.Text, txtUserID.Text)
+    receiptNum = FaxService.ResendFAX(txtCorpNum.Text, txtReceiptNum.Text, senderNum, senderName, receivers, txtReserveDT.Text)
     
     If receiptNum = "" Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
@@ -1227,7 +1227,7 @@ Private Sub btnUpdateCorpInfo_Click()
     '종목
     CorpInfo.BizClass = "종목"
     
-    Set Response = FaxService.UpdateCorpInfo(txtCorpNum.Text, CorpInfo, txtUserID.Text)
+    Set Response = FaxService.UpdateCorpInfo(txtCorpNum.Text, CorpInfo)
     
     If Response Is Nothing Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
