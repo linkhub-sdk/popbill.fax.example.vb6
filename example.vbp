@@ -15,6 +15,7 @@ Class=PBContactInfo; PopbillFax\PBContactInfo.cls
 Class=PBCorpInfo; PopbillFax\PBCorpInfo.cls
 Class=PBFaxSearchList; PopbillFax\PBFaxSearchList.cls
 Class=PBChargeInfo; PopbillFax\PBChargeInfo.cls
+Class=PBFaxSenderNumber; PopbillFax\PBFaxSenderNumber.cls
 IconForm="frmExample"
 Startup="frmExample"
 ExeName32="msg_example.exe"

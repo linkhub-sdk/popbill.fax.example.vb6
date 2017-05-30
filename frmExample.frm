@@ -2,12 +2,12 @@ VERSION 5.00
 Object = "{F9043C88-F6F2-101A-A3C9-08002B2F49FB}#1.2#0"; "COMDLG32.OCX"
 Begin VB.Form frmExample 
    Caption         =   "팝빌 팩스 SDK 예제"
-   ClientHeight    =   11535
+   ClientHeight    =   12375
    ClientLeft      =   60
    ClientTop       =   450
    ClientWidth     =   13920
    LinkTopic       =   "Form1"
-   ScaleHeight     =   11535
+   ScaleHeight     =   12375
    ScaleWidth      =   13920
    StartUpPosition =   2  '화면 가운데
    Begin MSComDlg.CommonDialog CommonDialog1 
@@ -19,58 +19,90 @@ Begin VB.Form frmExample
    End
    Begin VB.Frame Frame6 
       Caption         =   " 팩스 전송 관련 "
-      Height          =   7215
+      Height          =   8175
       Left            =   240
       TabIndex        =   12
       Top             =   3960
       Width           =   13455
-      Begin VB.CommandButton btnResendFaxSame 
-         Caption         =   "동보 재전송"
-         Height          =   450
-         Left            =   9360
-         TabIndex        =   39
-         Top             =   840
-         Width           =   1695
-      End
-      Begin VB.CommandButton btnResendFAX 
-         Caption         =   "재전송"
-         Height          =   450
-         Left            =   7560
-         TabIndex        =   38
-         Top             =   840
-         Width           =   1695
+      Begin VB.Frame Frame9 
+         Caption         =   "발신번호 관리"
+         Height          =   1575
+         Left            =   10320
+         TabIndex        =   41
+         Top             =   360
+         Width           =   2055
+         Begin VB.CommandButton btnGetURL_SENDER 
+            Caption         =   "발신번호 관리 팝업"
+            Height          =   495
+            Left            =   120
+            TabIndex        =   43
+            Top             =   960
+            Width           =   1815
+         End
+         Begin VB.CommandButton btnGetSenderNumberList 
+            Caption         =   "발신번호 목록 조회"
+            Height          =   495
+            Left            =   120
+            TabIndex        =   42
+            Top             =   360
+            Width           =   1815
+         End
       End
       Begin VB.CommandButton btnSearch 
          Caption         =   "전송내역 검색조회"
          Height          =   465
-         Left            =   11385
+         Left            =   8025
          TabIndex        =   36
-         Top             =   720
+         Top             =   1320
          Width           =   1815
       End
       Begin VB.CommandButton btnSearchPopUp 
          Caption         =   "전송내역조회 팝업"
          Height          =   465
-         Left            =   11385
+         Left            =   8025
          TabIndex        =   24
-         Top             =   210
+         Top             =   720
          Width           =   1815
+      End
+      Begin VB.Frame Frame8 
+         Caption         =   "부가기능"
+         Height          =   1575
+         Left            =   7800
+         TabIndex        =   40
+         Top             =   360
+         Width           =   2295
+      End
+      Begin VB.CommandButton btnResendFaxSame 
+         Caption         =   "동보 재전송"
+         Height          =   450
+         Left            =   1920
+         TabIndex        =   39
+         Top             =   1440
+         Width           =   1575
+      End
+      Begin VB.CommandButton btnResendFAX 
+         Caption         =   "재전송"
+         Height          =   450
+         Left            =   360
+         TabIndex        =   38
+         Top             =   1440
+         Width           =   1455
       End
       Begin VB.CommandButton btnCancelReserve 
          Caption         =   "예약전송 취소"
          Height          =   450
-         Left            =   7050
+         Left            =   6120
          TabIndex        =   23
-         Top             =   1515
-         Width           =   2355
+         Top             =   2115
+         Width           =   1515
       End
       Begin VB.CommandButton btnGetFaxDetail 
          Caption         =   "전송내역 확인"
          Height          =   450
-         Left            =   4560
+         Left            =   4440
          TabIndex        =   22
-         Top             =   1515
-         Width           =   2355
+         Top             =   2115
+         Width           =   1515
       End
       Begin VB.TextBox txtResult 
          BeginProperty Font 
@@ -86,14 +118,14 @@ Begin VB.Form frmExample
          Left            =   360
          MultiLine       =   -1  'True
          TabIndex        =   21
-         Top             =   2100
+         Top             =   2760
          Width           =   12810
       End
       Begin VB.TextBox txtReceiptNum 
          Height          =   315
-         Left            =   1440
+         Left            =   1320
          TabIndex        =   20
-         Top             =   1575
+         Top             =   2175
          Width           =   2835
       End
       Begin VB.CommandButton btnSendFax_Multi_Same 
@@ -139,9 +171,9 @@ Begin VB.Form frmExample
          AutoSize        =   -1  'True
          Caption         =   "접수번호 : "
          Height          =   180
-         Left            =   540
+         Left            =   420
          TabIndex        =   19
-         Top             =   1650
+         Top             =   2250
          Width           =   900
       End
       Begin VB.Label Label3 
@@ -359,7 +391,7 @@ Attribute VB_Exposed = False
 ' 팝빌 팩스 API VB 6.0 SDK Example
 '
 ' - VB6 SDK 연동환경 설정방법 안내 : http://blog.linkhub.co.kr/569
-' - 업데이트 일자 : 2017-05-24
+' - 업데이트 일자 : 2017-05-30
 ' - 연동 기술지원 연락처 : 1600-8536 / 070-4304-2991
 ' - 연동 기술지원 이메일 : code@linkhub.co.kr
 '
@@ -622,6 +654,49 @@ Private Sub btnGetPopbillURL_Click()
 End Sub
 
 '=========================================================================
+' 팩스 발신번호 목록을 조회합니다.
+'=========================================================================
+
+Private Sub btnGetSenderNumberList_Click()
+    Dim SenderNumberList As Collection
+    Dim tmp As String
+    Dim SenderNumber As PBFaxSenderNumber
+    
+    Set SenderNumberList = FaxService.GetSenderNumberList(txtCorpNum.Text)
+    
+    If SenderNumberList Is Nothing Then
+        MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
+        Exit Sub
+    End If
+        
+    For Each SenderNumber In SenderNumberList
+        tmp = tmp + "발신번호(number) : " + SenderNumber.number + vbCrLf
+        tmp = tmp + "대표번호 지정여부(representYN) : " + CStr(SenderNumber.representYN) + vbCrLf
+        tmp = tmp + "등록상태(state) : " + CStr(SenderNumber.state) + vbCrLf + vbCrLf
+    Next
+    
+    MsgBox tmp
+End Sub
+
+'=========================================================================
+' 팩스 발신번호 관리 팝업 URL을 반환합니다.
+' 보안정책으로 인해 반환된 URL은 30초의 유효시간을 갖습니다.
+'=========================================================================
+
+Private Sub btnGetURL_SENDER_Click()
+    Dim url As String
+    
+    url = FaxService.GetURL(txtCorpNum.Text, txtUserID.Text, "SENDER")
+    
+    If url = "" Then
+        MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
+        Exit Sub
+    End If
+    
+    MsgBox "URL : " + vbCrLf + url
+End Sub
+
+'=========================================================================
 ' 팝빌 연동회원 가입을 요청합니다.
 '=========================================================================
 
@@ -854,7 +929,7 @@ Private Sub btnSearch_Click()
     Dim faxSearchList As PBFaxSearchList
     Dim SDate As String
     Dim EDate As String
-    Dim State As New Collection
+    Dim state As New Collection
     Dim ReserveYN As Boolean
     Dim SenderOnly As Boolean
     Dim Page As Integer
@@ -872,10 +947,10 @@ Private Sub btnSearch_Click()
     EDate = "20161031"
     
     '전송상태 배열, 1(대기), 2(성공), 3(실패), 4(취소)
-    State.Add "1"
-    State.Add "2"
-    State.Add "3"
-    State.Add "4"
+    state.Add "1"
+    state.Add "2"
+    state.Add "3"
+    state.Add "4"
     
     '예약전송 검색여부, True-예약전송건 조회, False-전체조회
     ReserveYN = False
@@ -892,7 +967,7 @@ Private Sub btnSearch_Click()
     '정렬방향, D-내림차순(기본값), A-오름차순
     Order = "D"
     
-    Set faxSearchList = FaxService.Search(txtCorpNum.Text, SDate, EDate, State, ReserveYN, SenderOnly, Page, PerPage, Order)
+    Set faxSearchList = FaxService.Search(txtCorpNum.Text, SDate, EDate, state, ReserveYN, SenderOnly, Page, PerPage, Order)
      
     If faxSearchList Is Nothing Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
