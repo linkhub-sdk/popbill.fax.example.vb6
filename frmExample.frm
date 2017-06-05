@@ -391,7 +391,7 @@ Attribute VB_Exposed = False
 ' 팝빌 팩스 API VB 6.0 SDK Example
 '
 ' - VB6 SDK 연동환경 설정방법 안내 : http://blog.linkhub.co.kr/569
-' - 업데이트 일자 : 2017-05-30
+' - 업데이트 일자 : 2017-06-05
 ' - 연동 기술지원 연락처 : 1600-8536 / 070-4304-2991
 ' - 연동 기술지원 이메일 : code@linkhub.co.kr
 '
@@ -1051,6 +1051,7 @@ Private Sub btnSendFAX_Click()
     Dim receivers As New Collection
     Dim receiver As New PBReceiver
     Dim receiptNum As String
+    Dim adsYN As Boolean
     
     CommonDialog1.fileName = ""
     
@@ -1061,20 +1062,22 @@ Private Sub btnSendFAX_Click()
     FilePaths.Add CommonDialog1.fileName
     
     '발신번호
-    senderNum = "070-4304-2991"
+    senderNum = "07043042991"
     
     '발신자명
     senderName = "발신자명"
     
     '수신번호
-    receiver.receiverNum = "070-111-222"
+    receiver.receiverNum = "070111222"
     
     '수신자명
     receiver.receiverName = "수신자 명칭"
-    
     receivers.Add receiver
     
-    receiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName)
+    '광고팩스 전송여부
+    adsYN = False
+    
+    receiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName, adsYN)
     
     If receiptNum = "" Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
@@ -1094,6 +1097,7 @@ Private Sub btnSendFAX_Multi_Click()
     Dim receivers As New Collection
     Dim receiver As New PBReceiver
     Dim receiptNum As String
+    Dim adsYN As Boolean
     
     Do
         CommonDialog1.fileName = ""
@@ -1108,20 +1112,23 @@ Private Sub btnSendFAX_Multi_Click()
     If FilePaths.Count = 0 Then Exit Sub
     
     '발신번호
-    senderNum = "07075103710"
+    senderNum = "07043042991"
     
     '발신자명
     senderName = "발신자명"
     
     '수신번호
-    receiver.receiverNum = "010111222"
+    receiver.receiverNum = "070111222"
     
     '수신자명
     receiver.receiverName = "수신자 명칭"
     
     receivers.Add receiver
     
-    receiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName)
+    '광고팩스 전송여부
+    adsYN = False
+    
+    receiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName, adsYN)
     
     If receiptNum = "" Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
@@ -1141,6 +1148,7 @@ Private Sub btnSendFax_Multi_Same_Click()
     Dim receiver As PBReceiver
     Dim i As Integer
     Dim receiptNum As String
+    Dim adsYN As Boolean
     
     Do
         CommonDialog1.fileName = ""
@@ -1155,20 +1163,23 @@ Private Sub btnSendFax_Multi_Same_Click()
     If FilePaths.Count = 0 Then Exit Sub
     
     '발신번호
-    senderNum = "07075103710"
+    senderNum = "07043042991"
     
     '발신자명
     senderName = "발신자명"
     
     '수신정보 최대 1000명까지 가능
-    For i = 1 To 100
+    For i = 1 To 5
         Set receiver = New PBReceiver
-        receiver.receiverNum = "010111222"
+        receiver.receiverNum = "070111222"
         receiver.receiverName = "수신자 명칭"
         receivers.Add receiver
     Next
     
-    receiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName)
+    '광고팩스 전송여부
+    adsYN = False
+    
+    receiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName, adsYN)
     
     If receiptNum = "" Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
@@ -1188,6 +1199,7 @@ Private Sub btnSendFax_Same_Click()
     Dim receiver As PBReceiver
     Dim i As Integer
     Dim receiptNum As String
+    Dim adsYN As Boolean
     
     CommonDialog1.fileName = ""
     
@@ -1198,20 +1210,23 @@ Private Sub btnSendFax_Same_Click()
     FilePaths.Add CommonDialog1.fileName
         
     '발신번호
-    senderNum = "07075103710"
+    senderNum = "07043042991"
     
     '발신자명
     senderName = "발신자명"
     
     '수신정보, 최대 1000건
-    For i = 1 To 100
+    For i = 1 To 5
         Set receiver = New PBReceiver
-        receiver.receiverNum = "010111222"
+        receiver.receiverNum = "070111222"
         receiver.receiverName = "수신자 명칭"
         receivers.Add receiver
     Next
+    
+    '광고팩스 전송여부
+    adsYN = True
             
-    receiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName)
+    receiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName, adsYN)
     
     If receiptNum = "" Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
