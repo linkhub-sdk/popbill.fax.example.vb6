@@ -391,8 +391,8 @@ Attribute VB_Exposed = False
 ' 팝빌 팩스 API VB 6.0 SDK Example
 '
 ' - VB6 SDK 연동환경 설정방법 안내 : http://blog.linkhub.co.kr/569
-' - 업데이트 일자 : 2017-06-05
-' - 연동 기술지원 연락처 : 1600-8536 / 070-4304-2991
+' - 업데이트 일자 : 2017-07-20
+' - 연동 기술지원 연락처 : 1600-9854 / 070-4304-2991
 ' - 연동 기술지원 이메일 : code@linkhub.co.kr
 '
 ' <테스트 연동개발 준비사항>
@@ -556,33 +556,31 @@ Private Sub btnGetFaxDetail_Click()
         Exit Sub
     End If
     
-    tmp = "sendState | convState | sendnum | senderName | rcv | rcvnm | T | S | F | R | C | receiptDT | reserveDT | sendDT | resultDT | sendResult | filenames" + vbCrLf
+    tmp = "state | result | title | sendnum | senderName | rcv | rcvnm | T | S | F | R | C | receiptDT | reserveDT | sendDT | resultDT | filenames" + vbCrLf
     
     For Each sentFax In sentFaxList
     
-        tmp = tmp + CStr(sentFax.sendState) + " | "
-        tmp = tmp + CStr(sentFax.convState) + " | "
-        tmp = tmp + sentFax.sendNum + " | "
-        tmp = tmp + sentFax.senderName + " | "
-        tmp = tmp + sentFax.receiveNum + " | "
-        tmp = tmp + sentFax.receiveName + " | "
+        tmp = tmp + CStr(sentFax.state) + " | "             '전송상태 코드
+        tmp = tmp + CStr(sentFax.result) + " | "            '전송결과 코드
+        tmp = tmp + sentFax.title + " | "                   '팩스제목
+        tmp = tmp + sentFax.sendNum + " | "                 '발신번호
+        tmp = tmp + sentFax.senderName + " | "              '발신자명
+        tmp = tmp + sentFax.receiveNum + " | "              '수신번호
+        tmp = tmp + sentFax.receiveName + " | "             '수신자명
+        tmp = tmp + CStr(sentFax.sendPageCnt) + " | "       '전체 페이지수
+        tmp = tmp + CStr(sentFax.successPageCnt) + " | "    '성공 페이지수
+        tmp = tmp + CStr(sentFax.failPageCnt) + " | "       '실패 페이지수
+        tmp = tmp + CStr(sentFax.refundPageCnt) + " | "     '환불 페이지수
+        tmp = tmp + CStr(sentFax.cancelPageCnt) + " | "     '취소 페이지수
         
-        tmp = tmp + CStr(sentFax.sendPageCnt) + " | "
-        tmp = tmp + CStr(sentFax.successPageCnt) + " | "
-        tmp = tmp + CStr(sentFax.failPageCnt) + " | "
-        tmp = tmp + CStr(sentFax.refundPageCnt) + " | "
-        tmp = tmp + CStr(sentFax.cancelPageCnt) + " | "
-        
-        tmp = tmp + CStr(sentFax.receiptDT) + " | "
-        tmp = tmp + sentFax.reserveDT + " | "
-        tmp = tmp + sentFax.sendDT + " | "
-        tmp = tmp + sentFax.resultDT + " | "
+        tmp = tmp + CStr(sentFax.receiptDT) + " | "         '접수일시
+        tmp = tmp + sentFax.reserveDT + " | "               '예약일시
+        tmp = tmp + sentFax.sendDT + " | "                  '전송일시
+        tmp = tmp + sentFax.resultDT + " | "                '전송결과 수신일시
      
-        tmp = tmp + CStr(sentFax.sendResult) + " | "
-        
         i = 0
         
-        For Each fileName In sentFax.fileNames
+        For Each fileName In sentFax.fileNames              '팩스전송 파일명
             i = i + 1
             If sentFax.fileNames.Count = i Then
                 tmp = tmp + fileName
@@ -941,10 +939,10 @@ Private Sub btnSearch_Click()
     Dim sentFax As PBFaxInfo
     
     '[필수] 시작일자, 형식(yyyyMMdd)
-    SDate = "20160901"
+    SDate = "20170601"
     
     '[필수] 종료일자, 형식(yyyyMMdd)
-    EDate = "20161031"
+    EDate = "20171231"
     
     '전송상태 배열, 1(대기), 2(성공), 3(실패), 4(취소)
     state.Add "1"
@@ -983,12 +981,13 @@ Private Sub btnSearch_Click()
     
     MsgBox tmp
     
-    tmp = "sendState | convState | sendnum | senderName | rcv | rcvnm | T | S | F | R | C | receiptDT | reserveDT | sendDT | resultDT | sendResult | fileNames" + vbCrLf
+    tmp = "state | result | title | sendnum | senderName | rcv | rcvnm | T | S | F | R | C | receiptDT | reserveDT | sendDT | resultDT | fileNames" + vbCrLf
     
     For Each sentFax In faxSearchList.list
     
-        tmp = tmp + CStr(sentFax.sendState) + " | "         '전송상태
-        tmp = tmp + CStr(sentFax.convState) + " | "         '변환상태
+        tmp = tmp + CStr(sentFax.state) + " | "             '전송상태 코드
+        tmp = tmp + CStr(sentFax.result) + " | "            '전송결과 코드
+        tmp = tmp + sentFax.title + " | "                   '팩스제목
         
         tmp = tmp + sentFax.sendNum + " | "                 '발신번호
         tmp = tmp + sentFax.senderName + " | "              '발신번호
@@ -1005,11 +1004,10 @@ Private Sub btnSearch_Click()
         tmp = tmp + sentFax.reserveDT + " | "               '예약전송일시
         tmp = tmp + sentFax.sendDT + " | "                  '전송일시
         tmp = tmp + sentFax.resultDT + " | "                '전송결과 수신일시
-        tmp = tmp + CStr(sentFax.sendResult) + " | "        '전송결과코드"
         
         i = 0
         
-        For Each fileName In sentFax.fileNames              '전송 파일이름
+        For Each fileName In sentFax.fileNames              '전송 파일명
             i = i + 1
             If sentFax.fileNames.Count = i Then
                 tmp = tmp + fileName
@@ -1052,6 +1050,7 @@ Private Sub btnSendFAX_Click()
     Dim receiver As New PBReceiver
     Dim receiptNum As String
     Dim adsYN As Boolean
+    Dim title As String
     
     CommonDialog1.fileName = ""
     
@@ -1077,7 +1076,10 @@ Private Sub btnSendFAX_Click()
     '광고팩스 전송여부
     adsYN = False
     
-    receiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName, adsYN)
+    '팩스제목
+    title = "팩스 단건전송 제목"
+    
+    receiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName, adsYN, title)
     
     If receiptNum = "" Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
@@ -1092,11 +1094,12 @@ End Sub
 
 Private Sub btnSendFAX_Multi_Click()
     Dim FilePaths As New Collection
-    Dim senderNum As String
-    Dim senderName As String
     Dim receivers As New Collection
     Dim receiver As New PBReceiver
+    Dim senderNum As String
+    Dim senderName As String
     Dim receiptNum As String
+    Dim title As String
     Dim adsYN As Boolean
     
     Do
@@ -1128,7 +1131,10 @@ Private Sub btnSendFAX_Multi_Click()
     '광고팩스 전송여부
     adsYN = False
     
-    receiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName, adsYN)
+    '팩스제목
+    title = "팩스 단건 다수파일 팩스제목"
+    
+    receiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName, adsYN, title)
     
     If receiptNum = "" Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
@@ -1142,12 +1148,13 @@ End Sub
 
 Private Sub btnSendFax_Multi_Same_Click()
     Dim FilePaths As New Collection
+    Dim receivers As New Collection
     Dim senderNum As String
     Dim senderName As String
-    Dim receivers As New Collection
+    Dim receiptNum As String
+    Dim title As String
     Dim receiver As PBReceiver
     Dim i As Integer
-    Dim receiptNum As String
     Dim adsYN As Boolean
     
     Do
@@ -1179,7 +1186,10 @@ Private Sub btnSendFax_Multi_Same_Click()
     '광고팩스 전송여부
     adsYN = False
     
-    receiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName, adsYN)
+    '팩스제목
+    title = "팩스 다수파일 동보전송 제목"
+    
+    receiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName, adsYN, title)
     
     If receiptNum = "" Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
@@ -1193,13 +1203,15 @@ End Sub
 
 Private Sub btnSendFax_Same_Click()
     Dim FilePaths As New Collection
+    Dim receivers As New Collection
     Dim senderNum As String
     Dim senderName As String
-    Dim receivers As New Collection
-    Dim receiver As PBReceiver
-    Dim i As Integer
     Dim receiptNum As String
+    Dim title As String
+    Dim receiver As PBReceiver
     Dim adsYN As Boolean
+    Dim i As Integer
+    
     
     CommonDialog1.fileName = ""
     
@@ -1225,8 +1237,11 @@ Private Sub btnSendFax_Same_Click()
     
     '광고팩스 전송여부
     adsYN = True
-            
-    receiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName, adsYN)
+    
+    '팩스제목
+    title = "팩스 동보전송 제목"
+                
+    receiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName, adsYN, title)
     
     If receiptNum = "" Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
