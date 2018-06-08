@@ -1143,6 +1143,7 @@ Private Sub btnSendFAX_Multi_Click()
     Dim title As String
     Dim adsYN As Boolean
     
+    '전송 파일 개수 최대 20개
     Do
         CommonDialog1.fileName = ""
         CommonDialog1.ShowOpen
@@ -1198,6 +1199,7 @@ Private Sub btnSendFax_Multi_Same_Click()
     Dim i As Integer
     Dim adsYN As Boolean
     
+    '전송 파일 개수 최대 20개
     Do
         CommonDialog1.fileName = ""
         CommonDialog1.ShowOpen
