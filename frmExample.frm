@@ -434,7 +434,7 @@ Option Explicit
 '=========================================================================
 
 '링크아이디
-Private Const linkID = "TESTER"
+Private Const LinkID = "TESTER"
 
 '비밀키. 유출에 주의하시기 바랍니다.
 Private Const SecretKey = "SwWxqU+0TErBXy/9TVjIPEnI0VTUMMSQZtJf3Ed8q3I="
@@ -485,7 +485,7 @@ End Sub
 Private Sub btnCheckIsMember_Click()
     Dim Response As PBResponse
     
-    Set Response = FaxService.CheckIsMember(txtCorpNum.Text, linkID)
+    Set Response = FaxService.CheckIsMember(txtCorpNum.Text, LinkID)
     
     If Response Is Nothing Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
@@ -744,7 +744,7 @@ Private Sub btnJoinMember_Click()
     Dim Response As PBResponse
     
     '링크 아이디
-    joinData.linkID = linkID
+    joinData.LinkID = LinkID
     
     '사업자번호, '-'제외, 10자리
     joinData.CorpNum = "1231212312"
@@ -765,10 +765,10 @@ Private Sub btnJoinMember_Click()
     joinData.BizClass = "종목"
     
     '아이디, 6자이상 20자 미만
-    joinData.ID = "userid"
+    joinData.id = "userid"
     
     '비밀번호, 6자이상 20자 미만
-    joinData.PWD = "pwd_must_be_long_enough"
+    joinData.pwd = "pwd_must_be_long_enough"
     
     '담당자명, 최대 30자
     joinData.ContactName = "담당자성명"
@@ -815,8 +815,8 @@ Private Sub btnListContact_Click()
     tmp = "id | email | hp | personName | searchAllAllowYN | tel | fax | mgrYN | regDT " + vbCrLf
     
     For Each info In resultList
-        tmp = tmp + info.ID + " | " + info.email + " | " + info.hp + " | " + info.personName + " | " + CStr(info.searchAllAllowYN) _
-                + info.tel + " | " + info.fax + " | " + CStr(info.mgrYN) + " | " + info.regDT + vbCrLf
+        tmp = tmp + info.id + " | " + info.email + " | " + info.hp + " | " + info.personName + " | " + CStr(info.searchAllAllowYN) _
+                + info.tel + " | " + info.fax + " | " + CStr(info.mgrYN) + " | " + info.regDT + " | " + CStr(info.state) + vbCrLf
     Next
     
     MsgBox tmp
@@ -831,10 +831,10 @@ Private Sub btnRegistContact_Click()
     Dim Response As PBResponse
     
     '담당자 아이디, 6자 이상 20자 미만
-    joinData.ID = "testkorea_20161011"
+    joinData.id = "testkorea_20161011"
     
     '비밀번호, 6자 이상 20자 미만
-    joinData.PWD = "test@test.com"
+    joinData.pwd = "test@test.com"
     
     '담당자명, 최대 30자
     joinData.personName = "담당자명"
@@ -1322,7 +1322,7 @@ Private Sub btnUpdateContact_Click()
     Dim Response As PBResponse
     
     '담당자 아이디
-    joinData.ID = txtUserID.Text
+    joinData.id = txtUserID.Text
     
     '담당자명
     joinData.personName = "담당자명_수정"
@@ -1390,7 +1390,7 @@ End Sub
 
 
 Private Sub Form_Load()
-    FaxService.Initialize linkID, SecretKey
+    FaxService.Initialize LinkID, SecretKey
     
     '연동환경 설정값 True(테스트용), False(상업용)
     FaxService.IsTest = True
