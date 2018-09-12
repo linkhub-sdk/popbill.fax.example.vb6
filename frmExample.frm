@@ -2,12 +2,12 @@ VERSION 5.00
 Object = "{F9043C88-F6F2-101A-A3C9-08002B2F49FB}#1.2#0"; "COMDLG32.OCX"
 Begin VB.Form frmExample 
    Caption         =   "팝빌 팩스 SDK 예제"
-   ClientHeight    =   11910
+   ClientHeight    =   12825
    ClientLeft      =   60
    ClientTop       =   450
    ClientWidth     =   15795
    LinkTopic       =   "Form1"
-   ScaleHeight     =   11910
+   ScaleHeight     =   12825
    ScaleWidth      =   15795
    StartUpPosition =   2  '화면 가운데
    Begin MSComDlg.CommonDialog CommonDialog1 
@@ -19,23 +19,78 @@ Begin VB.Form frmExample
    End
    Begin VB.Frame Frame6 
       Caption         =   " 팩스 전송 관련 "
-      Height          =   8175
+      Height          =   8895
       Left            =   240
       TabIndex        =   12
       Top             =   3480
       Width           =   13455
+      Begin VB.Frame Frame13 
+         Caption         =   "요청번호 할당 전송건 처리"
+         Height          =   1815
+         Left            =   4800
+         TabIndex        =   48
+         Top             =   1920
+         Width           =   4215
+         Begin VB.TextBox txtRequestNum 
+            Height          =   315
+            Left            =   1200
+            TabIndex        =   54
+            Top             =   240
+            Width           =   2835
+         End
+         Begin VB.CommandButton btnResendFaxRNSame 
+            Caption         =   "동보 재전송"
+            Height          =   495
+            Left            =   2160
+            TabIndex        =   53
+            Top             =   1200
+            Width           =   1935
+         End
+         Begin VB.CommandButton btnResendFAXRN 
+            Caption         =   "재전송"
+            Height          =   495
+            Left            =   240
+            TabIndex        =   52
+            Top             =   1200
+            Width           =   1815
+         End
+         Begin VB.CommandButton btnCancelReserveRN 
+            Caption         =   "예약전송 취소"
+            Height          =   495
+            Left            =   2160
+            TabIndex        =   51
+            Top             =   600
+            Width           =   1935
+         End
+         Begin VB.CommandButton btnGetFaxDetailRN 
+            Caption         =   "전송내역 확인"
+            Height          =   495
+            Left            =   240
+            TabIndex        =   50
+            Top             =   600
+            Width           =   1815
+         End
+         Begin VB.Label Label5 
+            Caption         =   "요청번호 :"
+            Height          =   375
+            Left            =   240
+            TabIndex        =   49
+            Top             =   295
+            Width           =   1095
+         End
+      End
       Begin VB.Frame Frame9 
          Caption         =   "발신번호 관리"
          Height          =   1575
-         Left            =   10320
-         TabIndex        =   38
+         Left            =   11160
+         TabIndex        =   37
          Top             =   360
          Width           =   2055
          Begin VB.CommandButton btnGetURL_SENDER 
             Caption         =   "발신번호 관리 팝업"
             Height          =   495
             Left            =   120
-            TabIndex        =   40
+            TabIndex        =   39
             Top             =   960
             Width           =   1815
          End
@@ -43,7 +98,7 @@ Begin VB.Form frmExample
             Caption         =   "발신번호 목록 조회"
             Height          =   495
             Left            =   120
-            TabIndex        =   39
+            TabIndex        =   38
             Top             =   360
             Width           =   1815
          End
@@ -51,58 +106,58 @@ Begin VB.Form frmExample
       Begin VB.CommandButton btnSearch 
          Caption         =   "전송내역 검색조회"
          Height          =   465
-         Left            =   8025
-         TabIndex        =   33
+         Left            =   8880
+         TabIndex        =   32
          Top             =   1320
          Width           =   1815
       End
       Begin VB.CommandButton btnSearchPopUp 
          Caption         =   "전송내역조회 팝업"
          Height          =   465
-         Left            =   8025
-         TabIndex        =   24
+         Left            =   8880
+         TabIndex        =   23
          Top             =   720
          Width           =   1815
       End
       Begin VB.Frame Frame8 
          Caption         =   "부가기능"
          Height          =   1575
-         Left            =   7800
-         TabIndex        =   37
+         Left            =   8640
+         TabIndex        =   36
          Top             =   360
          Width           =   2295
       End
       Begin VB.CommandButton btnResendFaxSame 
          Caption         =   "동보 재전송"
          Height          =   450
-         Left            =   1920
-         TabIndex        =   36
-         Top             =   1440
-         Width           =   1575
+         Left            =   2640
+         TabIndex        =   35
+         Top             =   3120
+         Width           =   1875
       End
       Begin VB.CommandButton btnResendFAX 
          Caption         =   "재전송"
          Height          =   450
-         Left            =   360
-         TabIndex        =   35
-         Top             =   1440
-         Width           =   1455
+         Left            =   600
+         TabIndex        =   34
+         Top             =   3120
+         Width           =   1875
       End
       Begin VB.CommandButton btnCancelReserve 
          Caption         =   "예약전송 취소"
          Height          =   450
-         Left            =   6120
-         TabIndex        =   23
-         Top             =   2115
-         Width           =   1515
+         Left            =   2640
+         TabIndex        =   22
+         Top             =   2520
+         Width           =   1875
       End
       Begin VB.CommandButton btnGetFaxDetail 
          Caption         =   "전송내역 확인"
          Height          =   450
-         Left            =   4440
-         TabIndex        =   22
-         Top             =   2115
-         Width           =   1515
+         Left            =   600
+         TabIndex        =   21
+         Top             =   2520
+         Width           =   1875
       End
       Begin VB.TextBox txtResult 
          BeginProperty Font 
@@ -117,15 +172,15 @@ Begin VB.Form frmExample
          Height          =   4725
          Left            =   360
          MultiLine       =   -1  'True
-         TabIndex        =   21
-         Top             =   2760
+         TabIndex        =   20
+         Top             =   3840
          Width           =   12810
       End
       Begin VB.TextBox txtReceiptNum 
          Height          =   315
-         Left            =   1320
-         TabIndex        =   20
-         Top             =   2175
+         Left            =   1560
+         TabIndex        =   19
+         Top             =   2160
          Width           =   2835
       End
       Begin VB.CommandButton btnSendFax_Multi_Same 
@@ -167,14 +222,21 @@ Begin VB.Form frmExample
          Top             =   375
          Width           =   3555
       End
-      Begin VB.Label Label4 
-         AutoSize        =   -1  'True
-         Caption         =   "접수번호 : "
-         Height          =   180
-         Left            =   420
-         TabIndex        =   19
-         Top             =   2250
-         Width           =   900
+      Begin VB.Frame Frame12 
+         Caption         =   "접수번호 관련 기능 (요청번호 미할당)"
+         Height          =   1815
+         Left            =   360
+         TabIndex        =   46
+         Top             =   1920
+         Width           =   4335
+         Begin VB.Label Label4 
+            Caption         =   "접수번호 :"
+            Height          =   255
+            Left            =   240
+            TabIndex        =   47
+            Top             =   280
+            Width           =   975
+         End
       End
       Begin VB.Label Label3 
          AutoSize        =   -1  'True
@@ -197,14 +259,14 @@ Begin VB.Form frmExample
          Caption         =   "파트너과금 포인트"
          Height          =   1935
          Left            =   12840
-         TabIndex        =   42
+         TabIndex        =   41
          Top             =   360
          Width           =   2295
          Begin VB.CommandButton btnGetPartnerURL_CHRG 
             Caption         =   "포인트 충전 URL"
             Height          =   410
             Left            =   120
-            TabIndex        =   46
+            TabIndex        =   45
             Top             =   840
             Width           =   2055
          End
@@ -212,7 +274,7 @@ Begin VB.Form frmExample
             Caption         =   "파트너 잔여포인트 확인"
             Height          =   410
             Left            =   120
-            TabIndex        =   45
+            TabIndex        =   44
             Top             =   360
             Width           =   2055
          End
@@ -221,14 +283,14 @@ Begin VB.Form frmExample
          Caption         =   "연동과금 포인트"
          Height          =   1935
          Left            =   10680
-         TabIndex        =   41
+         TabIndex        =   40
          Top             =   360
          Width           =   2055
          Begin VB.CommandButton btnGetPopbillURL_CHRG 
             Caption         =   "포인트 충전 URL"
             Height          =   410
             Left            =   120
-            TabIndex        =   44
+            TabIndex        =   43
             Top             =   840
             Width           =   1815
          End
@@ -236,7 +298,7 @@ Begin VB.Form frmExample
             Caption         =   "잔여 포인트 확인"
             Height          =   410
             Left            =   120
-            TabIndex        =   43
+            TabIndex        =   42
             Top             =   360
             Width           =   1815
          End
@@ -245,14 +307,14 @@ Begin VB.Form frmExample
          Caption         =   " 회사정보 관련 "
          Height          =   1935
          Left            =   8640
-         TabIndex        =   30
+         TabIndex        =   29
          Top             =   360
          Width           =   1935
          Begin VB.CommandButton btnUpdateCorpInfo 
             Caption         =   "회사정보 수정"
             Height          =   410
             Left            =   120
-            TabIndex        =   32
+            TabIndex        =   31
             Top             =   840
             Width           =   1695
          End
@@ -260,7 +322,7 @@ Begin VB.Form frmExample
             Caption         =   "회사정보 조회"
             Height          =   410
             Left            =   120
-            TabIndex        =   31
+            TabIndex        =   30
             Top             =   360
             Width           =   1695
          End
@@ -269,14 +331,14 @@ Begin VB.Form frmExample
          Caption         =   " 담당자 관련 "
          Height          =   1935
          Left            =   6600
-         TabIndex        =   26
+         TabIndex        =   25
          Top             =   360
          Width           =   1935
          Begin VB.CommandButton btnUpdateContact 
             Caption         =   "담당자 정보 수정"
             Height          =   410
             Left            =   120
-            TabIndex        =   29
+            TabIndex        =   28
             Top             =   1320
             Width           =   1695
          End
@@ -284,7 +346,7 @@ Begin VB.Form frmExample
             Caption         =   "담당자 목록 조회"
             Height          =   410
             Left            =   120
-            TabIndex        =   28
+            TabIndex        =   27
             Top             =   840
             Width           =   1695
          End
@@ -292,7 +354,7 @@ Begin VB.Form frmExample
             Caption         =   "담당자 추가"
             Height          =   410
             Left            =   120
-            TabIndex        =   27
+            TabIndex        =   26
             Top             =   360
             Width           =   1695
          End
@@ -308,7 +370,7 @@ Begin VB.Form frmExample
             Caption         =   "ID 중복 확인"
             Height          =   410
             Left            =   120
-            TabIndex        =   25
+            TabIndex        =   24
             Top             =   840
             Width           =   1455
          End
@@ -340,7 +402,7 @@ Begin VB.Form frmExample
             Caption         =   "과금정보 확인"
             Height          =   410
             Left            =   120
-            TabIndex        =   34
+            TabIndex        =   33
             Top             =   360
             Width           =   2175
          End
@@ -451,6 +513,24 @@ Private Sub btnCancelReserve_Click()
     Dim Response As PBResponse
     
     Set Response = FaxService.CancelReserve(txtCorpNum.Text, txtReceiptNum.Text)
+    
+    If Response Is Nothing Then
+        MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
+        Exit Sub
+    End If
+    
+    MsgBox ("응답코드 : " + CStr(Response.code) + vbCrLf + "응답메시지 : " + Response.message)
+End Sub
+
+'=========================================================================
+' 팩스전송요청시 할당한 전송요청번호(requestNum)로 팩스 예약전송건을 취소합니다.
+' - 예약전송 취소는 예약전송시간 10분전까지 가능하며, 팩스변환 이후 가능합니다.
+'=========================================================================
+Private Sub btnCancelReserveRN_Click()
+
+    Dim Response As PBResponse
+    
+    Set Response = FaxService.CancelReserveRN(txtCorpNum.Text, txtRequestNum.Text)
     
     If Response Is Nothing Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
@@ -574,6 +654,65 @@ Private Sub btnGetFaxDetail_Click()
     Dim tmp As String
     
     Set sentFaxList = FaxService.GetMessages(txtCorpNum.Text, txtReceiptNum.Text)
+    
+    If sentFaxList Is Nothing Then
+        MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
+        Exit Sub
+    End If
+    
+    tmp = "state | result | title | sendnum | senderName | rcv | rcvnm | T | S | F | R | C | receiptDT | reserveDT | sendDT | resultDT | filenames" + vbCrLf
+    
+    For Each sentFax In sentFaxList
+    
+        tmp = tmp + CStr(sentFax.state) + " | "             '전송상태 코드
+        tmp = tmp + CStr(sentFax.result) + " | "            '전송결과 코드
+        tmp = tmp + sentFax.title + " | "                   '팩스제목
+        tmp = tmp + sentFax.sendNum + " | "                 '발신번호
+        tmp = tmp + sentFax.senderName + " | "              '발신자명
+        tmp = tmp + sentFax.receiveNum + " | "              '수신번호
+        tmp = tmp + sentFax.receiveName + " | "             '수신자명
+        tmp = tmp + CStr(sentFax.sendPageCnt) + " | "       '전체 페이지수
+        tmp = tmp + CStr(sentFax.successPageCnt) + " | "    '성공 페이지수
+        tmp = tmp + CStr(sentFax.failPageCnt) + " | "       '실패 페이지수
+        tmp = tmp + CStr(sentFax.refundPageCnt) + " | "     '환불 페이지수
+        tmp = tmp + CStr(sentFax.cancelPageCnt) + " | "     '취소 페이지수
+        
+        tmp = tmp + CStr(sentFax.receiptDT) + " | "         '접수일시
+        tmp = tmp + sentFax.reserveDT + " | "               '예약일시
+        tmp = tmp + sentFax.sendDT + " | "                  '전송일시
+        tmp = tmp + sentFax.resultDT + " | "                '전송결과 수신일시
+     
+        i = 0
+        
+        For Each fileName In sentFax.fileNames              '팩스전송 파일명
+            i = i + 1
+            If sentFax.fileNames.Count = i Then
+                tmp = tmp + fileName
+            Else
+                tmp = tmp + fileName + ", "
+            End If
+        Next
+        
+        tmp = tmp + vbCrLf
+    Next
+    
+    
+    txtResult.Text = tmp
+End Sub
+
+'=========================================================================
+' 팩스전송요청시 할당한 전송요청번호(requestNum)으로 전송결과를 확인합니다
+' - 응답항목에 대한 자세한 사항은 "[팩스 API 연동매뉴얼] >  3.3.2
+'   GetFaxDetailRN (전송내역 및 전송상태 확인 - 요청번호 할당)을 참조하시기 바랍니다.
+'=========================================================================
+Private Sub btnGetFaxDetailRN_Click()
+Dim sentFaxList As Collection
+    Dim i As Integer
+    Dim fileName As Variant
+    Dim sentFax As PBFaxInfo
+    Dim tmp As String
+    
+    Set sentFaxList = FaxService.GetMessagesRN(txtCorpNum.Text, txtRequestNum.Text)
     
     If sentFaxList Is Nothing Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
@@ -812,7 +951,7 @@ Private Sub btnListContact_Click()
         Exit Sub
     End If
     
-    tmp = "id | email | hp | personName | searchAllAllowYN | tel | fax | mgrYN | regDT " + vbCrLf
+    tmp = "id | email | hp | personName | searchAllAllowYN | tel | fax | mgrYN | regDT | state" + vbCrLf
     
     For Each info In resultList
         tmp = tmp + info.id + " | " + info.email + " | " + info.hp + " | " + info.personName + " | " + CStr(info.searchAllAllowYN) _
@@ -880,6 +1019,8 @@ Private Sub btnResendFAX_Click()
     Dim receivers As New Collection
     Dim receiver As New PBReceiver
     Dim receiptNum As String
+    Dim requestNum As String
+    Dim title As String
     
     ' 발신번호, 공백처리시 기존발신번호로 재전송
     senderNum = ""
@@ -901,8 +1042,14 @@ Private Sub btnResendFAX_Click()
     ' 수신정보 Collection 추가
     'receivers.Add receiver
     
+    '팩스제목
+    title = ""
     
-    receiptNum = FaxService.ResendFAX(txtCorpNum.Text, txtReceiptNum.Text, senderNum, senderName, receivers, txtReserveDT.Text)
+    '전송요청번호, 파트너가 전송요청에 대한 관리번호를 직접 할당하여 관리하는 경우 기재
+    '최대 36자리, 영문, 숫자, 언더바('_'), 하이픈('-')을 조합하여 사업자별로 중복되지 않도록 구성
+    requestNum = ""
+    
+    receiptNum = FaxService.ResendFAX(txtCorpNum.Text, txtReceiptNum.Text, senderNum, senderName, receivers, txtReserveDT.Text, txtUserID.Text, title, requestNum)
     
     If receiptNum = "" Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
@@ -913,6 +1060,64 @@ Private Sub btnResendFAX_Click()
     
     txtReceiptNum.Text = receiptNum
     
+End Sub
+
+'=========================================================================
+' 전송요청번호(requestNum)을 할당한 팩스를 재전송합니다.
+' - 전송일로부터 180일이 경과된 경우 재전송할 수 없습니다.
+' - 팩스 재전송 요청시 포인트가 차감됩니다. (전송실패시 환불처리)
+' - 팩스전송 문서 파일포맷 안내 : http://blog.linkhub.co.kr/2561
+'=========================================================================
+Private Sub btnResendFaxRNSame_Click()
+    Dim OrgRequestNum As String
+    Dim senderNum As String
+    Dim senderName As String
+    Dim receivers As New Collection
+    Dim receiver As New PBReceiver
+    Dim receiptNum As String
+    Dim i As Integer
+    Dim requestNum As String
+    Dim title As String
+
+    '원본 팩스 전송시 할당한 전송요청번호(requestNum)
+    OrgRequestNum = ""
+
+    ' 발신번호, 공백처리시 기존발신번호로 재전송
+    senderNum = ""
+    
+    ' 발신자명, 공백처리시 기존발신자명으로 재전송
+    senderName = ""
+    
+    ' 기존수신정보 변경없이 재전송하는 경우, receivers(수신정보) Collection 을 Nothing 으로 선언
+    'Set receivers = Nothing
+    
+    ' 새로운 수신정보로 재전송하는 경우, 수신번호/수신자명을 기재하여 receivers Collection에 추가
+    ' 수신정보, 최대 1000건
+    For i = 1 To 10
+        Set receiver = New PBReceiver
+        receiver.receiverNum = "010111222"
+        receiver.receiverName = "수신자 명칭"
+        receivers.Add receiver
+    Next
+    
+    '팩스제목
+    title = ""
+    
+    '전송요청번호, 파트너가 전송요청에 대한 관리번호를 직접 할당하여 관리하는 경우 기재
+    '최대 36자리, 영문, 숫자, 언더바('_'), 하이픈('-')을 조합하여 사업자별로 중복되지 않도록 구성
+    requestNum = ""
+    
+    
+    receiptNum = FaxService.ResendFAXRN(txtCorpNum.Text, OrgRequestNum, senderNum, senderName, receivers, txtReserveDT.Text, txtUserID.Text, title, requestNum)
+    
+    If receiptNum = "" Then
+        MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
+        Exit Sub
+    End If
+    
+    MsgBox "접수번호 : " + receiptNum
+    
+    txtReceiptNum.Text = receiptNum
 End Sub
 
 '=========================================================================
@@ -928,6 +1133,8 @@ Private Sub btnResendFaxSame_Click()
     Dim receiver As New PBReceiver
     Dim receiptNum As String
     Dim i As Integer
+    Dim requestNum As String
+    Dim title As String
     
     ' 발신번호, 공백처리시 기존발신번호로 재전송
     senderNum = ""
@@ -948,7 +1155,14 @@ Private Sub btnResendFaxSame_Click()
         receivers.Add receiver
     Next
     
-    receiptNum = FaxService.ResendFAX(txtCorpNum.Text, txtReceiptNum.Text, senderNum, senderName, receivers, txtReserveDT.Text)
+    '팩스제목
+    title = ""
+    
+    '전송요청번호, 파트너가 전송요청에 대한 관리번호를 직접 할당하여 관리하는 경우 기재
+    '최대 36자리, 영문, 숫자, 언더바('_'), 하이픈('-')을 조합하여 사업자별로 중복되지 않도록 구성
+    requestNum = ""
+    
+    receiptNum = FaxService.ResendFAX(txtCorpNum.Text, txtReceiptNum.Text, senderNum, senderName, receivers, txtReserveDT.Text, txtUserID.Text, title, requestNum)
     
     If receiptNum = "" Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
@@ -959,6 +1173,68 @@ Private Sub btnResendFaxSame_Click()
     
     txtReceiptNum.Text = receiptNum
 End Sub
+
+
+
+
+'=========================================================================
+' 전송요청번호(requestNum)을 할당한 팩스를 재전송합니다.
+' - 전송일로부터 180일이 경과된 경우 재전송할 수 없습니다.
+' - 팩스 재전송 요청시 포인트가 차감됩니다. (전송실패시 환불처리)
+' - 팩스전송 문서 파일포맷 안내 : http://blog.linkhub.co.kr/2561
+'=========================================================================
+Private Sub btnResendFAXRN_Click()
+    Dim OrgRequestNum As String
+    Dim senderNum As String
+    Dim senderName As String
+    Dim receivers As New Collection
+    Dim receiver As New PBReceiver
+    Dim receiptNum As String
+    Dim requestNum As String
+    Dim title As String
+    
+    '원본 팩스 전송시 할당한 전송요청번호(requestNum)
+    OrgRequestNum = ""
+    
+    ' 발신번호, 공백처리시 기존발신번호로 재전송
+    senderNum = ""
+    
+    ' 발신자명, 공백처리시 기존발신자명으로 재전송
+    senderName = ""
+    
+    ' 기존수신정보 변경없이 재전송하는 경우, receivers(수신정보) Collection 을 Nothing 으로 선언
+    Set receivers = Nothing
+    
+    ' 새로운 수신정보로 재전송하는 경우, 수신번호/수신자명을 기재하여 receivers Collection에 추가
+    ' 수신번호
+    'receiver.receiverNum = "0700000214"
+    
+    ' 수신자명
+    'receiver.receiverName = "수신자_수정"
+    
+    ' 수신정보 Collection 추가
+    'receivers.Add receiver
+    
+    '팩스제목
+    title = ""
+    
+    '전송요청번호, 파트너가 전송요청에 대한 관리번호를 직접 할당하여 관리하는 경우 기재
+    '최대 36자리, 영문, 숫자, 언더바('_'), 하이픈('-')을 조합하여 사업자별로 중복되지 않도록 구성
+    requestNum = ""
+    
+    receiptNum = FaxService.ResendFAXRN(txtCorpNum.Text, OrgRequestNum, senderNum, senderName, receivers, txtReserveDT.Text, txtUserID.Text, title, requestNum)
+    
+    If receiptNum = "" Then
+        MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
+        Exit Sub
+    End If
+    
+    MsgBox "접수번호 : " + receiptNum
+    
+    txtReceiptNum.Text = receiptNum
+End Sub
+
+
 
 '=========================================================================
 ' 검색조건을 사용하여 팩스전송 내역을 조회합니다.
@@ -1092,6 +1368,7 @@ Private Sub btnSendFAX_Click()
     Dim receiptNum As String
     Dim adsYN As Boolean
     Dim title As String
+    Dim requestNum As String
     
     CommonDialog1.fileName = ""
     
@@ -1120,7 +1397,11 @@ Private Sub btnSendFAX_Click()
     '팩스제목
     title = "팩스 단건전송 제목"
     
-    receiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName, adsYN, title)
+    '전송요청번호, 파트너가 전송요청에 대한 관리번호를 직접 할당하여 관리하는 경우 기재
+    '최대 36자리, 영문, 숫자, 언더바('_'), 하이픈('-')을 조합하여 사업자별로 중복되지 않도록 구성
+    requestNum = ""
+    
+    receiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName, adsYN, title, requestNum)
     
     If receiptNum = "" Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
@@ -1142,6 +1423,7 @@ Private Sub btnSendFAX_Multi_Click()
     Dim receiptNum As String
     Dim title As String
     Dim adsYN As Boolean
+    Dim requestNum As String
     
     '전송 파일 개수 최대 20개
     Do
@@ -1176,7 +1458,11 @@ Private Sub btnSendFAX_Multi_Click()
     '팩스제목
     title = "팩스 단건 다수파일 팩스제목"
     
-    receiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName, adsYN, title)
+    '전송요청번호, 파트너가 전송요청에 대한 관리번호를 직접 할당하여 관리하는 경우 기재
+    '최대 36자리, 영문, 숫자, 언더바('_'), 하이픈('-')을 조합하여 사업자별로 중복되지 않도록 구성
+    requestNum = ""
+    
+    receiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName, adsYN, title, requestNum)
     
     If receiptNum = "" Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
@@ -1198,6 +1484,7 @@ Private Sub btnSendFax_Multi_Same_Click()
     Dim receiver As PBReceiver
     Dim i As Integer
     Dim adsYN As Boolean
+    Dim requestNum As String
     
     '전송 파일 개수 최대 20개
     Do
@@ -1232,7 +1519,11 @@ Private Sub btnSendFax_Multi_Same_Click()
     '팩스제목
     title = "팩스 다수파일 동보전송 제목"
     
-    receiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName, adsYN, title)
+    '전송요청번호, 파트너가 전송요청에 대한 관리번호를 직접 할당하여 관리하는 경우 기재
+    '최대 36자리, 영문, 숫자, 언더바('_'), 하이픈('-')을 조합하여 사업자별로 중복되지 않도록 구성
+    requestNum = ""
+    
+    receiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName, adsYN, title, requestNum)
     
     If receiptNum = "" Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
@@ -1254,6 +1545,7 @@ Private Sub btnSendFax_Same_Click()
     Dim receiver As PBReceiver
     Dim adsYN As Boolean
     Dim i As Integer
+    Dim requestNum As String
     
     
     CommonDialog1.fileName = ""
@@ -1284,7 +1576,11 @@ Private Sub btnSendFax_Same_Click()
     '팩스제목
     title = "팩스 동보전송 제목"
                 
-    receiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName, adsYN, title)
+    '전송요청번호, 파트너가 전송요청에 대한 관리번호를 직접 할당하여 관리하는 경우 기재
+    '최대 36자리, 영문, 숫자, 언더바('_'), 하이픈('-')을 조합하여 사업자별로 중복되지 않도록 구성
+    requestNum = ""
+    
+    receiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName, adsYN, title, requestNum)
     
     If receiptNum = "" Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
