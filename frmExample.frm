@@ -477,7 +477,7 @@ Attribute VB_Exposed = False
 ' 팝빌 팩스 API VB 6.0 SDK Example
 '
 ' - VB6 SDK 연동환경 설정방법 안내 : http://blog.linkhub.co.kr/569
-' - 업데이트 일자 : 2017-08-30
+' - 업데이트 일자 : 2018-10-04
 ' - 연동 기술지원 연락처 : 1600-9854 / 070-4304-2991
 ' - 연동 기술지원 이메일 : code@linkhub.co.kr
 '
@@ -660,7 +660,7 @@ Private Sub btnGetFaxDetail_Click()
         Exit Sub
     End If
     
-    tmp = "state | result | title | sendnum | senderName | rcv | rcvnm | T | S | F | R | C | receiptDT | reserveDT | sendDT | resultDT | filenames" + vbCrLf
+    tmp = "state | result | title | sendnum | senderName | rcv | rcvnm | T | S | F | R | C | receiptDT | reserveDT | sendDT | resultDT | receiptNum | requestNum | filenames" + vbCrLf
     
     For Each sentFax In sentFaxList
     
@@ -681,6 +681,8 @@ Private Sub btnGetFaxDetail_Click()
         tmp = tmp + sentFax.reserveDT + " | "               '예약일시
         tmp = tmp + sentFax.sendDT + " | "                  '전송일시
         tmp = tmp + sentFax.resultDT + " | "                '전송결과 수신일시
+        tmp = tmp + sentFax.receiptNum + " | "              '접수번호
+        tmp = tmp + sentFax.requestNum + " | "              '요청번호
      
         i = 0
         
@@ -719,7 +721,7 @@ Dim sentFaxList As Collection
         Exit Sub
     End If
     
-    tmp = "state | result | title | sendnum | senderName | rcv | rcvnm | T | S | F | R | C | receiptDT | reserveDT | sendDT | resultDT | filenames" + vbCrLf
+    tmp = "state | result | title | sendnum | senderName | rcv | rcvnm | T | S | F | R | C | receiptDT | reserveDT | sendDT | resultDT | receiptNum | requestNum | filenames" + vbCrLf
     
     For Each sentFax In sentFaxList
     
@@ -740,6 +742,8 @@ Dim sentFaxList As Collection
         tmp = tmp + sentFax.reserveDT + " | "               '예약일시
         tmp = tmp + sentFax.sendDT + " | "                  '전송일시
         tmp = tmp + sentFax.resultDT + " | "                '전송결과 수신일시
+        tmp = tmp + sentFax.receiptNum + " | "              '접수번호
+        tmp = tmp + sentFax.requestNum + " | "              '요청번호
      
         i = 0
         
@@ -1238,6 +1242,7 @@ End Sub
 
 '=========================================================================
 ' 검색조건을 사용하여 팩스전송 내역을 조회합니다.
+'  - 최대 검색기간 : 6개월 이내
 '=========================================================================
 
 Private Sub btnSearch_Click()
@@ -1254,12 +1259,13 @@ Private Sub btnSearch_Click()
     Dim i As Integer
     Dim tmp As String
     Dim sentFax As PBFaxInfo
+    Dim QString As String
     
     '[필수] 시작일자, 형식(yyyyMMdd)
-    SDate = "20170601"
+    SDate = "20180801"
     
     '[필수] 종료일자, 형식(yyyyMMdd)
-    EDate = "20171231"
+    EDate = "20180820"
     
     '전송상태 배열, 1(대기), 2(성공), 3(실패), 4(취소)
     state.Add "1"
@@ -1282,7 +1288,10 @@ Private Sub btnSearch_Click()
     '정렬방향, D-내림차순(기본값), A-오름차순
     Order = "D"
     
-    Set faxSearchList = FaxService.Search(txtCorpNum.Text, SDate, EDate, state, ReserveYN, SenderOnly, Page, PerPage, Order)
+    '조회 검색어, 발신자명 또는 수신자명 기재
+    QString = ""
+    
+    Set faxSearchList = FaxService.Search(txtCorpNum.Text, SDate, EDate, state, ReserveYN, SenderOnly, Page, PerPage, Order, QString)
      
     If faxSearchList Is Nothing Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
@@ -1298,7 +1307,7 @@ Private Sub btnSearch_Click()
     
     MsgBox tmp
     
-    tmp = "state | result | title | sendnum | senderName | rcv | rcvnm | T | S | F | R | C | receiptDT | reserveDT | sendDT | resultDT | fileNames" + vbCrLf
+    tmp = "state | result | title | sendnum | senderName | rcv | rcvnm | T | S | F | R | C | receiptDT | reserveDT | sendDT | resultDT | receiptNum | requestNum | fileNames" + vbCrLf
     
     For Each sentFax In faxSearchList.list
     
@@ -1321,6 +1330,8 @@ Private Sub btnSearch_Click()
         tmp = tmp + sentFax.reserveDT + " | "               '예약전송일시
         tmp = tmp + sentFax.sendDT + " | "                  '전송일시
         tmp = tmp + sentFax.resultDT + " | "                '전송결과 수신일시
+        tmp = tmp + sentFax.receiptNum + " | "              '접수번호
+        tmp = tmp + sentFax.requestNum + " | "              '요청번호
         
         i = 0
         
