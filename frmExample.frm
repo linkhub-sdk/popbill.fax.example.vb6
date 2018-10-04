@@ -660,7 +660,7 @@ Private Sub btnGetFaxDetail_Click()
         Exit Sub
     End If
     
-    tmp = "state | result | title | sendnum | senderName | rcv | rcvnm | T | S | F | R | C | receiptDT | reserveDT | sendDT | resultDT | receiptNum | requestNum | filenames" + vbCrLf
+    tmp = "state | result | title | sendnum | senderName | rcv | rcvnm | T | S | F | R | C | receiptDT | reserveDT | sendDT | resultDT | receiptNum | requestNum | chargePageCnt | tiffFileSize | filenames" + vbCrLf
     
     For Each sentFax In sentFaxList
     
@@ -683,6 +683,8 @@ Private Sub btnGetFaxDetail_Click()
         tmp = tmp + sentFax.resultDT + " | "                '전송결과 수신일시
         tmp = tmp + sentFax.receiptNum + " | "              '접수번호
         tmp = tmp + sentFax.requestNum + " | "              '요청번호
+        tmp = tmp + sentFax.chargePageCnt + " | "           '과금 페이지수
+        tmp = tmp + sentFax.tiffFileSize + "byte | "            '변환파일용량 (단위 : byte)
      
         i = 0
         
@@ -721,7 +723,7 @@ Dim sentFaxList As Collection
         Exit Sub
     End If
     
-    tmp = "state | result | title | sendnum | senderName | rcv | rcvnm | T | S | F | R | C | receiptDT | reserveDT | sendDT | resultDT | receiptNum | requestNum | filenames" + vbCrLf
+    tmp = "state | result | title | sendnum | senderName | rcv | rcvnm | T | S | F | R | C | receiptDT | reserveDT | sendDT | resultDT | receiptNum | requestNum | chargePageCnt | tiffFileSize | filenames" + vbCrLf
     
     For Each sentFax In sentFaxList
     
@@ -744,6 +746,8 @@ Dim sentFaxList As Collection
         tmp = tmp + sentFax.resultDT + " | "                '전송결과 수신일시
         tmp = tmp + sentFax.receiptNum + " | "              '접수번호
         tmp = tmp + sentFax.requestNum + " | "              '요청번호
+        tmp = tmp + sentFax.chargePageCnt + " | "           '과금 페이지수
+        tmp = tmp + sentFax.tiffFileSize + " | "            '변환파일용량 (단위 : byte)
      
         i = 0
         
@@ -1307,7 +1311,7 @@ Private Sub btnSearch_Click()
     
     MsgBox tmp
     
-    tmp = "state | result | title | sendnum | senderName | rcv | rcvnm | T | S | F | R | C | receiptDT | reserveDT | sendDT | resultDT | receiptNum | requestNum | fileNames" + vbCrLf
+    tmp = "state | result | title | sendnum | senderName | rcv | rcvnm | T | S | F | R | C | receiptDT | reserveDT | sendDT | resultDT | receiptNum | requestNum | chargePageCnt | tiffFileSize | fileNames" + vbCrLf
     
     For Each sentFax In faxSearchList.list
     
@@ -1332,6 +1336,8 @@ Private Sub btnSearch_Click()
         tmp = tmp + sentFax.resultDT + " | "                '전송결과 수신일시
         tmp = tmp + sentFax.receiptNum + " | "              '접수번호
         tmp = tmp + sentFax.requestNum + " | "              '요청번호
+        tmp = tmp + sentFax.chargePageCnt + " | "           '과금 페이지수
+        tmp = tmp + sentFax.tiffFileSize + "byte | "            '변환파일용량(단위 : byte)
         
         i = 0
         
