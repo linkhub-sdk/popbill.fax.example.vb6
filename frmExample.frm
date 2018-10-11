@@ -683,8 +683,8 @@ Private Sub btnGetFaxDetail_Click()
         tmp = tmp + sentFax.resultDT + " | "                '전송결과 수신일시
         tmp = tmp + sentFax.receiptNum + " | "              '접수번호
         tmp = tmp + sentFax.requestNum + " | "              '요청번호
-        tmp = tmp + sentFax.chargePageCnt + " | "           '과금 페이지수
-        tmp = tmp + sentFax.tiffFileSize + "byte | "            '변환파일용량 (단위 : byte)
+        tmp = tmp + CStr(sentFax.chargePageCnt) + " | "     '과금 페이지수
+        tmp = tmp + sentFax.tiffFileSize + "byte | "        '변환파일용량 (단위 : byte)
      
         i = 0
         
@@ -746,7 +746,7 @@ Dim sentFaxList As Collection
         tmp = tmp + sentFax.resultDT + " | "                '전송결과 수신일시
         tmp = tmp + sentFax.receiptNum + " | "              '접수번호
         tmp = tmp + sentFax.requestNum + " | "              '요청번호
-        tmp = tmp + sentFax.chargePageCnt + " | "           '과금 페이지수
+        tmp = tmp + CStr(sentFax.chargePageCnt) + " | "     '과금 페이지수
         tmp = tmp + sentFax.tiffFileSize + " | "            '변환파일용량 (단위 : byte)
      
         i = 0
@@ -1336,8 +1336,8 @@ Private Sub btnSearch_Click()
         tmp = tmp + sentFax.resultDT + " | "                '전송결과 수신일시
         tmp = tmp + sentFax.receiptNum + " | "              '접수번호
         tmp = tmp + sentFax.requestNum + " | "              '요청번호
-        tmp = tmp + sentFax.chargePageCnt + " | "           '과금 페이지수
-        tmp = tmp + sentFax.tiffFileSize + "byte | "            '변환파일용량(단위 : byte)
+        tmp = tmp + CStr(sentFax.chargePageCnt) + " | "     '과금 페이지수
+        tmp = tmp + sentFax.tiffFileSize + "byte | "        '변환파일용량(단위 : byte)
         
         i = 0
         
