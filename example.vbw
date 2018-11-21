@@ -1,10 +1,10 @@
-frmExample = 4, 29, 1416, 880, , 15, -6, 1208, 880, C
+frmExample = 108, 96, 1520, 947, , 15, -6, 1208, 880, C
 LinkhubToken = 110, 145, 1242, 797, C
 cStringBuilder = 0, 0, 0, 0, C
 Linkhub = 88, 116, 1220, 768, C
 PBAttachFile = 0, 0, 0, 0, C
 PBJoinForm = 132, 174, 1264, 888, C
-PBFAXService = 98, 40, 1497, 754, 
+PBFAXService = 98, 40, 1497, 754, C
 PBResponse = 198, 261, 1330, 974, C
 PBReceiver = 154, 203, 1286, 916, 
 PBFaxInfo = 211, 117, 1343, 830, 
