@@ -693,7 +693,7 @@ Private Sub btnGetFaxDetail_Click()
         tmp = tmp + sentFax.reserveDT + " | "               '예약일시
         tmp = tmp + sentFax.sendDT + " | "                  '전송일시
         tmp = tmp + sentFax.resultDT + " | "                '전송결과 수신일시
-        tmp = tmp + sentFax.ReceiptNum + " | "              '접수번호
+        tmp = tmp + sentFax.receiptNum + " | "              '접수번호
         tmp = tmp + sentFax.requestNum + " | "              '요청번호
         tmp = tmp + CStr(sentFax.chargePageCnt) + " | "     '과금 페이지수
         tmp = tmp + sentFax.tiffFileSize + "byte | "        '변환파일용량 (단위 : byte)
@@ -756,7 +756,7 @@ Dim sentFaxList As Collection
         tmp = tmp + sentFax.reserveDT + " | "               '예약일시
         tmp = tmp + sentFax.sendDT + " | "                  '전송일시
         tmp = tmp + sentFax.resultDT + " | "                '전송결과 수신일시
-        tmp = tmp + sentFax.ReceiptNum + " | "              '접수번호
+        tmp = tmp + sentFax.receiptNum + " | "              '접수번호
         tmp = tmp + sentFax.requestNum + " | "              '요청번호
         tmp = tmp + CStr(sentFax.chargePageCnt) + " | "     '과금 페이지수
         tmp = tmp + sentFax.tiffFileSize + " | "            '변환파일용량 (단위 : byte)
@@ -1052,8 +1052,9 @@ End Sub
 
 '=========================================================================
 ' 팩스를 재전송합니다.
-' - 전송일로부터 60일이 경과되지 않은 건만 재전송할 수 있습니다.
-' - 발신자/수신자 정보를 수정하여 전송할 수 있습니다.
+' - 접수일로부터 60일이 경과되지 않은 건만 재전송할 수 있습니다.
+' - 팩스 재전송 요청시 포인트가 차감됩니다. (전송실패시 환불처리)
+' - 팩스전송 문서 파일포맷 안내 : http://blog.linkhub.co.kr/2561
 '=========================================================================
 
 Private Sub btnResendFAX_Click()
@@ -1061,7 +1062,7 @@ Private Sub btnResendFAX_Click()
     Dim senderName As String
     Dim receivers As New Collection
     Dim receiver As New PBReceiver
-    Dim ReceiptNum As String
+    Dim receiptNum As String
     Dim requestNum As String
     Dim title As String
     
@@ -1092,22 +1093,22 @@ Private Sub btnResendFAX_Click()
     '최대 36자리, 영문, 숫자, 언더바('_'), 하이픈('-')을 조합하여 사업자별로 중복되지 않도록 구성
     requestNum = ""
     
-    ReceiptNum = FaxService.ResendFAX(txtCorpNum.Text, txtReceiptNum.Text, senderNum, senderName, receivers, txtReserveDT.Text, txtUserID.Text, title, requestNum)
+    receiptNum = FaxService.ResendFAX(txtCorpNum.Text, txtReceiptNum.Text, senderNum, senderName, receivers, txtReserveDT.Text, txtUserID.Text, title, requestNum)
     
-    If ReceiptNum = "" Then
+    If receiptNum = "" Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
-    MsgBox "접수번호 : " + ReceiptNum
+    MsgBox "접수번호 : " + receiptNum
     
-    txtReceiptNum.Text = ReceiptNum
+    txtReceiptNum.Text = receiptNum
     
 End Sub
 
 '=========================================================================
 ' 전송요청번호(requestNum)을 할당한 팩스를 재전송합니다.
-' - 전송일로부터 60일이 경과된 경우 재전송할 수 없습니다.
+' - 접수일로부터 60일이 경과된 경우 재전송할 수 없습니다.
 ' - 팩스 재전송 요청시 포인트가 차감됩니다. (전송실패시 환불처리)
 ' - 팩스전송 문서 파일포맷 안내 : http://blog.linkhub.co.kr/2561
 '=========================================================================
@@ -1117,7 +1118,7 @@ Private Sub btnResendFaxRNSame_Click()
     Dim senderName As String
     Dim receivers As New Collection
     Dim receiver As New PBReceiver
-    Dim ReceiptNum As String
+    Dim receiptNum As String
     Dim i As Integer
     Dim requestNum As String
     Dim title As String
@@ -1151,22 +1152,23 @@ Private Sub btnResendFaxRNSame_Click()
     requestNum = ""
     
     
-    ReceiptNum = FaxService.ResendFAXRN(txtCorpNum.Text, OrgRequestNum, senderNum, senderName, receivers, txtReserveDT.Text, txtUserID.Text, title, requestNum)
+    receiptNum = FaxService.ResendFAXRN(txtCorpNum.Text, OrgRequestNum, senderNum, senderName, receivers, txtReserveDT.Text, txtUserID.Text, title, requestNum)
     
-    If ReceiptNum = "" Then
+    If receiptNum = "" Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
-    MsgBox "접수번호 : " + ReceiptNum
+    MsgBox "접수번호 : " + receiptNum
     
-    txtReceiptNum.Text = ReceiptNum
+    txtReceiptNum.Text = receiptNum
 End Sub
 
 '=========================================================================
 ' 팩스를 재전송합니다.
-' - 전송일로부터 60일이 경과되지 않은 건만 재전송할 수 있습니다.
-' - 발신자/수신자 정보를 수정하여 전송할 수 있습니다.
+' - 접수일로부터 60일이 경과되지 않은 건만 재전송할 수 있습니다.
+' - 팩스 재전송 요청시 포인트가 차감됩니다. (전송실패시 환불처리)
+' - 팩스전송 문서 파일포맷 안내 : http://blog.linkhub.co.kr/2561
 '=========================================================================
 
 Private Sub btnResendFaxSame_Click()
@@ -1174,7 +1176,7 @@ Private Sub btnResendFaxSame_Click()
     Dim senderName As String
     Dim receivers As New Collection
     Dim receiver As New PBReceiver
-    Dim ReceiptNum As String
+    Dim receiptNum As String
     Dim i As Integer
     Dim requestNum As String
     Dim title As String
@@ -1205,24 +1207,22 @@ Private Sub btnResendFaxSame_Click()
     '최대 36자리, 영문, 숫자, 언더바('_'), 하이픈('-')을 조합하여 사업자별로 중복되지 않도록 구성
     requestNum = ""
     
-    ReceiptNum = FaxService.ResendFAX(txtCorpNum.Text, txtReceiptNum.Text, senderNum, senderName, receivers, txtReserveDT.Text, txtUserID.Text, title, requestNum)
+    receiptNum = FaxService.ResendFAX(txtCorpNum.Text, txtReceiptNum.Text, senderNum, senderName, receivers, txtReserveDT.Text, txtUserID.Text, title, requestNum)
     
-    If ReceiptNum = "" Then
+    If receiptNum = "" Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
-    MsgBox "접수번호 : " + ReceiptNum
+    MsgBox "접수번호 : " + receiptNum
     
-    txtReceiptNum.Text = ReceiptNum
+    txtReceiptNum.Text = receiptNum
 End Sub
-
-
 
 
 '=========================================================================
 ' 전송요청번호(requestNum)을 할당한 팩스를 재전송합니다.
-' - 전송일로부터 60일이 경과된 경우 재전송할 수 없습니다.
+' - 접수일로부터 60일이 경과된 경우 재전송할 수 없습니다.
 ' - 팩스 재전송 요청시 포인트가 차감됩니다. (전송실패시 환불처리)
 ' - 팩스전송 문서 파일포맷 안내 : http://blog.linkhub.co.kr/2561
 '=========================================================================
@@ -1232,7 +1232,7 @@ Private Sub btnResendFAXRN_Click()
     Dim senderName As String
     Dim receivers As New Collection
     Dim receiver As New PBReceiver
-    Dim ReceiptNum As String
+    Dim receiptNum As String
     Dim requestNum As String
     Dim title As String
     
@@ -1265,16 +1265,16 @@ Private Sub btnResendFAXRN_Click()
     '최대 36자리, 영문, 숫자, 언더바('_'), 하이픈('-')을 조합하여 사업자별로 중복되지 않도록 구성
     requestNum = ""
     
-    ReceiptNum = FaxService.ResendFAXRN(txtCorpNum.Text, OrgRequestNum, senderNum, senderName, receivers, txtReserveDT.Text, txtUserID.Text, title, requestNum)
+    receiptNum = FaxService.ResendFAXRN(txtCorpNum.Text, OrgRequestNum, senderNum, senderName, receivers, txtReserveDT.Text, txtUserID.Text, title, requestNum)
     
-    If ReceiptNum = "" Then
+    If receiptNum = "" Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
-    MsgBox "접수번호 : " + ReceiptNum
+    MsgBox "접수번호 : " + receiptNum
     
-    txtReceiptNum.Text = ReceiptNum
+    txtReceiptNum.Text = receiptNum
 End Sub
 
 
@@ -1369,7 +1369,7 @@ Private Sub btnSearch_Click()
         tmp = tmp + sentFax.reserveDT + " | "               '예약전송일시
         tmp = tmp + sentFax.sendDT + " | "                  '전송일시
         tmp = tmp + sentFax.resultDT + " | "                '전송결과 수신일시
-        tmp = tmp + sentFax.ReceiptNum + " | "              '접수번호
+        tmp = tmp + sentFax.receiptNum + " | "              '접수번호
         tmp = tmp + sentFax.requestNum + " | "              '요청번호
         tmp = tmp + CStr(sentFax.chargePageCnt) + " | "     '과금 페이지수
         tmp = tmp + sentFax.tiffFileSize + "byte | "        '변환파일용량(단위 : byte)
@@ -1417,7 +1417,7 @@ Private Sub btnSendFAX_Click()
     Dim senderName As String
     Dim receivers As New Collection
     Dim receiver As New PBReceiver
-    Dim ReceiptNum As String
+    Dim receiptNum As String
     Dim adsYN As Boolean
     Dim title As String
     Dim requestNum As String
@@ -1453,16 +1453,16 @@ Private Sub btnSendFAX_Click()
     '최대 36자리, 영문, 숫자, 언더바('_'), 하이픈('-')을 조합하여 사업자별로 중복되지 않도록 구성
     requestNum = ""
     
-    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName, adsYN, title, requestNum)
+    receiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName, adsYN, title, requestNum)
     
-    If ReceiptNum = "" Then
+    If receiptNum = "" Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
-    MsgBox "접수번호 : " + ReceiptNum
+    MsgBox "접수번호 : " + receiptNum
     
-    txtReceiptNum.Text = ReceiptNum
+    txtReceiptNum.Text = receiptNum
     
 End Sub
 
@@ -1472,7 +1472,7 @@ Private Sub btnSendFAX_Multi_Click()
     Dim receiver As New PBReceiver
     Dim senderNum As String
     Dim senderName As String
-    Dim ReceiptNum As String
+    Dim receiptNum As String
     Dim title As String
     Dim adsYN As Boolean
     Dim requestNum As String
@@ -1514,16 +1514,16 @@ Private Sub btnSendFAX_Multi_Click()
     '최대 36자리, 영문, 숫자, 언더바('_'), 하이픈('-')을 조합하여 사업자별로 중복되지 않도록 구성
     requestNum = ""
     
-    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName, adsYN, title, requestNum)
+    receiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName, adsYN, title, requestNum)
     
-    If ReceiptNum = "" Then
+    If receiptNum = "" Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
-    MsgBox "접수번호 : " + ReceiptNum
+    MsgBox "접수번호 : " + receiptNum
     
-    txtReceiptNum.Text = ReceiptNum
+    txtReceiptNum.Text = receiptNum
 End Sub
 
 Private Sub btnSendFax_Multi_Same_Click()
@@ -1531,7 +1531,7 @@ Private Sub btnSendFax_Multi_Same_Click()
     Dim receivers As New Collection
     Dim senderNum As String
     Dim senderName As String
-    Dim ReceiptNum As String
+    Dim receiptNum As String
     Dim title As String
     Dim receiver As PBReceiver
     Dim i As Integer
@@ -1575,16 +1575,16 @@ Private Sub btnSendFax_Multi_Same_Click()
     '최대 36자리, 영문, 숫자, 언더바('_'), 하이픈('-')을 조합하여 사업자별로 중복되지 않도록 구성
     requestNum = ""
     
-    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName, adsYN, title, requestNum)
+    receiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName, adsYN, title, requestNum)
     
-    If ReceiptNum = "" Then
+    If receiptNum = "" Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
-    MsgBox "접수번호 : " + ReceiptNum
+    MsgBox "접수번호 : " + receiptNum
     
-    txtReceiptNum.Text = ReceiptNum
+    txtReceiptNum.Text = receiptNum
 End Sub
 
 Private Sub btnSendFax_Same_Click()
@@ -1592,7 +1592,7 @@ Private Sub btnSendFax_Same_Click()
     Dim receivers As New Collection
     Dim senderNum As String
     Dim senderName As String
-    Dim ReceiptNum As String
+    Dim receiptNum As String
     Dim title As String
     Dim receiver As PBReceiver
     Dim adsYN As Boolean
@@ -1632,16 +1632,16 @@ Private Sub btnSendFax_Same_Click()
     '최대 36자리, 영문, 숫자, 언더바('_'), 하이픈('-')을 조합하여 사업자별로 중복되지 않도록 구성
     requestNum = ""
     
-    ReceiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName, adsYN, title, requestNum)
+    receiptNum = FaxService.SendFAX(txtCorpNum.Text, senderNum, receivers, FilePaths, txtReserveDT.Text, txtUserID.Text, senderName, adsYN, title, requestNum)
     
-    If ReceiptNum = "" Then
+    If receiptNum = "" Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
-    MsgBox "접수번호 : " + ReceiptNum
+    MsgBox "접수번호 : " + receiptNum
     
-    txtReceiptNum.Text = ReceiptNum
+    txtReceiptNum.Text = receiptNum
 End Sub
 
 '=========================================================================
