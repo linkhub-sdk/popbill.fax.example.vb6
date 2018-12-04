@@ -27,10 +27,10 @@ Begin VB.Form frmExample
       Begin VB.Frame Frame13 
          Caption         =   "요청번호 할당 전송건 처리"
          Height          =   1815
-         Left            =   4800
+         Left            =   4680
          TabIndex        =   48
          Top             =   1920
-         Width           =   4215
+         Width           =   4335
          Begin VB.TextBox txtRequestNum 
             Height          =   315
             Left            =   1200
@@ -40,35 +40,35 @@ Begin VB.Form frmExample
          End
          Begin VB.CommandButton btnResendFaxRNSame 
             Caption         =   "동보 재전송"
-            Height          =   495
-            Left            =   2160
+            Height          =   450
+            Left            =   2280
             TabIndex        =   53
             Top             =   1200
-            Width           =   1935
+            Width           =   1875
          End
          Begin VB.CommandButton btnResendFAXRN 
             Caption         =   "재전송"
-            Height          =   495
+            Height          =   450
             Left            =   240
             TabIndex        =   52
             Top             =   1200
-            Width           =   1815
+            Width           =   1875
          End
          Begin VB.CommandButton btnCancelReserveRN 
             Caption         =   "예약전송 취소"
-            Height          =   495
-            Left            =   2160
+            Height          =   450
+            Left            =   2280
             TabIndex        =   51
             Top             =   600
-            Width           =   1935
+            Width           =   1875
          End
          Begin VB.CommandButton btnGetFaxDetailRN 
             Caption         =   "전송내역 확인"
-            Height          =   495
-            Left            =   240
+            Height          =   450
+            Left            =   245
             TabIndex        =   50
             Top             =   600
-            Width           =   1815
+            Width           =   1875
          End
          Begin VB.Label Label5 
             Caption         =   "요청번호 :"
@@ -82,7 +82,7 @@ Begin VB.Form frmExample
       Begin VB.Frame Frame9 
          Caption         =   "발신번호 관리"
          Height          =   1575
-         Left            =   9000
+         Left            =   9120
          TabIndex        =   37
          Top             =   360
          Width           =   2055
@@ -105,16 +105,16 @@ Begin VB.Form frmExample
       End
       Begin VB.CommandButton btnSearch 
          Caption         =   "전송내역 검색조회"
-         Height          =   465
-         Left            =   11280
+         Height          =   495
+         Left            =   11400
          TabIndex        =   32
          Top             =   1320
          Width           =   1815
       End
       Begin VB.CommandButton btnGetSentListURL 
          Caption         =   "전송내역조회 팝업"
-         Height          =   465
-         Left            =   11280
+         Height          =   495
+         Left            =   11400
          TabIndex        =   23
          Top             =   720
          Width           =   1815
@@ -122,7 +122,7 @@ Begin VB.Form frmExample
       Begin VB.Frame Frame8 
          Caption         =   "부가기능"
          Height          =   2175
-         Left            =   11160
+         Left            =   11280
          TabIndex        =   36
          Top             =   360
          Width           =   2055
@@ -178,7 +178,7 @@ Begin VB.Form frmExample
             Strikethrough   =   0   'False
          EndProperty
          Height          =   4725
-         Left            =   360
+         Left            =   240
          MultiLine       =   -1  'True
          TabIndex        =   20
          Top             =   3840
@@ -233,7 +233,7 @@ Begin VB.Form frmExample
       Begin VB.Frame Frame12 
          Caption         =   "접수번호 관련 기능 (요청번호 미할당)"
          Height          =   1815
-         Left            =   360
+         Left            =   240
          TabIndex        =   46
          Top             =   1920
          Width           =   4335
@@ -870,7 +870,6 @@ End Sub
 '=========================================================================
 ' 팩스 발신번호 목록을 조회합니다.
 '=========================================================================
-
 Private Sub btnGetSenderNumberList_Click()
     Dim SenderNumberList As Collection
     Dim tmp As String
@@ -910,12 +909,6 @@ Private Sub btnGetSenderNumberMgtURL_Click()
     
     MsgBox "URL : " + vbCrLf + url
 End Sub
-
-
-
-
-
-
 
 '=========================================================================
 ' 팝빌 연동회원 가입을 요청합니다.
@@ -1411,6 +1404,10 @@ Private Sub btnGetSentListURL_Click()
     MsgBox "URL : " + vbCrLf + url
 End Sub
 
+'=========================================================================
+'팩스를 전송합니다. (전송할 파일 개수는 최대 20개까지 가능)
+'- 팩스전송 문서 파일포맷 안내 : http://blog.linkhub.co.kr/2561
+'=========================================================================
 Private Sub btnSendFAX_Click()
     Dim FilePaths As New Collection
     Dim senderNum As String
