@@ -126,7 +126,7 @@ Begin VB.Form frmExample
          TabIndex        =   36
          Top             =   360
          Width           =   2055
-         Begin VB.CommandButton btnGetPreViewURL 
+         Begin VB.CommandButton btnGetPreviewURL 
             Caption         =   "팩스 미리보기 팝업"
             Height          =   495
             Left            =   120
@@ -854,10 +854,10 @@ End Sub
 ' 접수한 팩스 전송건에 대한 미리보기 팝업 URL을 반환합니다.
 ' - 반환된 URL은 보안정책에 따라 30초의 유효시간을 갖습니다.
 '=========================================================================
-Private Sub btnGetPreViewURL_Click()
+Private Sub btnGetPreviewURL_Click()
     Dim url As String
     
-    url = FaxService.GetPreViewURL(txtCorpNum.Text, txtReceiptNum.Text, txtUserID.Text)
+    url = FaxService.GetPreviewURL(txtCorpNum.Text, txtReceiptNum.Text, txtUserID.Text)
     
     If url = "" Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
