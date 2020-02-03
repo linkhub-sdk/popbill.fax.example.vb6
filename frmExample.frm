@@ -484,7 +484,7 @@ Attribute VB_Exposed = False
 '
 ' 팝빌 팩스 API VB 6.0 SDK Example
 '
-' - 업데이트 일자 : 2019-09-26
+' - 업데이트 일자 : 2020-01-31
 ' - 연동 기술지원 연락처 : 1600-9854 / 070-4304-2991
 ' - 연동 기술지원 이메일 : code@linkhub.co.kr
 '
@@ -514,6 +514,7 @@ Private FaxService As New PBFAXService
 '=========================================================================
 ' 파트너의 연동회원으로 가입된 사업자번호인지 확인합니다.
 ' - LinkID는 인증정보로 설정되어 있는 링크아이디 값입니다.
+' - https://docs.popbill.com/fax/vb/api#CheckIsMember
 '=========================================================================
 Private Sub btnCheckIsMember_Click()
     Dim Response As PBResponse
@@ -530,6 +531,7 @@ End Sub
 
 '=========================================================================
 ' 팝빌 회원아이디 중복여부를 확인합니다.
+' - https://docs.popbill.com/fax/vb/api#CheckID
 '=========================================================================
 Private Sub btnCheckID_Click()
     Dim Response As PBResponse
@@ -546,6 +548,7 @@ End Sub
 
 '=========================================================================
 ' 팝빌 연동회원 가입을 요청합니다.
+' - https://docs.popbill.com/fax/vb/api#JoinMember
 '=========================================================================
 Private Sub btnJoinMember_Click()
     Dim joinData As New PBJoinForm
@@ -605,6 +608,7 @@ End Sub
 
 '=========================================================================
 ' 팩스 전송단가를 확인합니다.
+' - https://docs.popbill.com/fax/vb/api#GetUnitCost
 '=========================================================================
 Private Sub btnUnitCost_Click()
     Dim unitCost As Single
@@ -621,6 +625,7 @@ End Sub
 
 '=========================================================================
 ' 연동회원의 팩스 API 서비스 과금정보를 확인합니다.
+' - https://docs.popbill.com/fax/vb/api#GetChargeInfo
 '=========================================================================
 Private Sub btnGetChargeInfo_Click()
     Dim ChargeInfo As PBChargeInfo
@@ -659,6 +664,7 @@ End Sub
 
 '=========================================================================
 ' 연동회원의 담당자를 신규로 등록합니다.
+' - https://docs.popbill.com/fax/vb/api#RegistContact
 '=========================================================================
 Private Sub btnRegistContact_Click()
     Dim joinData As New PBContactInfo
@@ -703,6 +709,7 @@ End Sub
 
 '=========================================================================
 ' 연동회원의 담당자 목록을 확인합니다.
+' - https://docs.popbill.com/fax/vb/api#ListContact
 '=========================================================================
 Private Sub btnListContact_Click()
     Dim resultList As Collection
@@ -729,6 +736,7 @@ End Sub
 
 '=========================================================================
 ' 연동회원의 담당자 정보를 수정합니다.
+' - https://docs.popbill.com/fax/vb/api#UpdateContact
 '=========================================================================
 Private Sub btnUpdateContact_Click()
     Dim joinData As New PBContactInfo
@@ -770,6 +778,7 @@ End Sub
 
 '=========================================================================
 ' 연동회원의 회사정보를 확인합니다.
+' - https://docs.popbill.com/fax/vb/api#GetCorpInfo
 '=========================================================================
 Private Sub btnGetCorpInfo_Click()
     Dim CorpInfo As PBCorpInfo
@@ -793,6 +802,7 @@ End Sub
 
 '=========================================================================
 ' 연동회원의 회사정보를 수정합니다
+' - https://docs.popbill.com/fax/vb/api#UpdateCorpInfo
 '=========================================================================
 Private Sub btnUpdateCorpInfo_Click()
     Dim CorpInfo As New PBCorpInfo
@@ -827,6 +837,7 @@ End Sub
 ' 연동회원의 잔여포인트를 확인합니다.
 ' - 과금방식이 파트너과금인 경우 파트너 잔여포인트(GetPartnerBalance API)
 '   를 통해 확인하시기 바랍니다.
+' - https://docs.popbill.com/fax/vb/api#GetBalance
 '=========================================================================
 Private Sub btnGetBalance_Click()
     Dim balance As Double
@@ -844,6 +855,7 @@ End Sub
 '=========================================================================
 ' 연동회원 포인트 충전 URL을 반환합니다.
 ' - URL 보안정책에 따라 반환된 URL은 30초의 유효시간을 갖습니다.
+' - https://docs.popbill.com/fax/vb/api#GetChargeURL
 '=========================================================================
 Private Sub btnGetChargeURL_Click()
     Dim url As String
@@ -862,6 +874,7 @@ End Sub
 ' 파트너 잔여포인트를 확인합니다.
 ' - 과금방식이 연동과금인 경우 연동회원 잔여포인트(GetBalance API)
 '   를 통해 확인하시기 바랍니다.
+' - https://docs.popbill.com/fax/vb/api#GetPartnerBalance
 '=========================================================================
 Private Sub btnGetPartnerBalance_Click()
     Dim balance As Double
@@ -879,6 +892,7 @@ End Sub
 '=========================================================================
 ' 파트너 포인트 충전 URL을 반환합니다.
 ' - URL 보안정책에 따라 반환된 URL은 30초의 유효시간을 갖습니다.
+' - https://docs.popbill.com/fax/vb/api#GetPartnerURL
 '=========================================================================
 Private Sub btnGetPartnerURL_CHRG_Click()
     Dim url As String
@@ -895,10 +909,7 @@ End Sub
 
 '=========================================================================
 ' 팩스를 전송합니다.
-' - 팩스전송 문서 파일포맷 안내 : http://blog.linkhub.co.kr/2561
-' - 팩스 과금 방식 안내 : https://partner.linkhub.co.kr/Customer/Notice/813
-' - 팝빌에 사전등록되지 않은 발신번호를 기재한 경우 팝빌 지정 발신번호로팩스가 전송 됩니다.
-' - [참고] "[팩스 API 연동매뉴얼] > 1.3. 팩스전송 제한 사유 안내"
+' - https://docs.popbill.com/fax/vb/api#SendFAX
 '=========================================================================
 Private Sub btnSendFAX_Click()
     Dim FilePaths As New Collection
@@ -956,10 +967,7 @@ End Sub
 
 '=========================================================================
 ' [동보전송] 팩스를 전송합니다.
-' - 팩스전송 문서 파일포맷 안내 : http://blog.linkhub.co.kr/2561
-' - 팩스 과금 방식 안내 : https://partner.linkhub.co.kr/Customer/Notice/813
-' - 팝빌에 사전등록되지 않은 발신번호를 기재한 경우 팝빌 지정 발신번호로팩스가 전송 됩니다.
-' - [참고] "[팩스 API 연동매뉴얼] > 1.3. 팩스전송 제한 사유 안내"
+' - https://docs.popbill.com/fax/vb/api#SendFAX
 '=========================================================================
 Private Sub btnSendFax_Same_Click()
     Dim FilePaths As New Collection
@@ -1020,10 +1028,7 @@ End Sub
 
 '=========================================================================
 ' [다수파일 전송] 팩스를 전송합니다. (전송할 파일 개수는 최대 20개까지 가능)
-' - 팩스전송 문서 파일포맷 안내 : http://blog.linkhub.co.kr/2561
-' - 팩스 과금 방식 안내 : https://partner.linkhub.co.kr/Customer/Notice/813
-' - 팝빌에 사전등록되지 않은 발신번호를 기재한 경우 팝빌 지정 발신번호로팩스가 전송 됩니다.
-' - [참고] "[팩스 API 연동매뉴얼] > 1.3. 팩스전송 제한 사유 안내"
+' - https://docs.popbill.com/fax/vb/api#SendFAX
 '=========================================================================
 Private Sub btnSendFAX_Multi_Click()
     Dim FilePaths As New Collection
@@ -1087,10 +1092,7 @@ End Sub
 
 '=========================================================================
 ' [다수파일 동보전송] 팩스를 전송합니다. (전송할 파일 개수는 최대 20개까지 가능)
-' - 팩스전송 문서 파일포맷 안내 : http://blog.linkhub.co.kr/2561
-' - 팩스 과금 방식 안내 : https://partner.linkhub.co.kr/Customer/Notice/813
-' - 팝빌에 사전등록되지 않은 발신번호를 기재한 경우 팝빌 지정 발신번호로팩스가 전송 됩니다.
-' - [참고] "[팩스 API 연동매뉴얼] > 1.3. 팩스전송 제한 사유 안내"
+' - https://docs.popbill.com/fax/vb/api#SendFAX
 '=========================================================================
 Private Sub btnSendFax_Multi_Same_Click()
     Dim FilePaths As New Collection
@@ -1155,6 +1157,7 @@ End Sub
 
 '=========================================================================
 ' 팩스 전송요청시 반환받은 접수번호(receiptNum)을 사용하여 팩스전송 결과를 확인합니다.
+' - https://docs.popbill.com/fax/vb/api#GetMessages
 '=========================================================================
 Private Sub btnGetFaxDetail_Click()
     Dim sentFaxList As Collection
@@ -1259,6 +1262,7 @@ End Sub
 '=========================================================================
 ' 팩스전송요청시 발급받은 접수번호(receiptNum)로 팩스 예약전송건을 취소합니다.
 ' - 예약전송 취소는 예약전송시간 10분전까지 가능하며, 팩스변환 이후 가능합니다.
+' - https://docs.popbill.com/fax/vb/api#CancelReserve
 '=========================================================================
 Private Sub btnCancelReserve_Click()
     Dim Response As PBResponse
@@ -1277,10 +1281,7 @@ End Sub
 ' 팩스를 재전송합니다
 ' - 접수일로부터 60일이 경과되지 않은 건만 재전송할 수 있습니다.
 ' - 팩스 재전송 요청시 포인트가 차감됩니다. (전송실패시 환불처리)
-' - 팩스전송 문서 파일포맷 안내 : http://blog.linkhub.co.kr/2561
-' - 팩스 과금 방식 안내 : https://partner.linkhub.co.kr/Customer/Notice/813
-' - 팝빌에 사전등록되지 않은 발신번호를 기재한 경우 팝빌 지정 발신번호로팩스가 전송 됩니다.
-' - [참고] "[팩스 API 연동매뉴얼] > 1.3. 팩스전송 제한 사유 안내"
+' - https://docs.popbill.com/fax/vb/api#ResendFAX
 '=========================================================================
 Private Sub btnResendFAX_Click()
     Dim senderNum As String
@@ -1333,10 +1334,7 @@ End Sub
 ' [동보전송] 팩스를 재전송합니다
 ' - 접수일로부터 60일이 경과되지 않은 건만 재전송할 수 있습니다.
 ' - 팩스 재전송 요청시 포인트가 차감됩니다. (전송실패시 환불처리)
-' - 팩스전송 문서 파일포맷 안내 : http://blog.linkhub.co.kr/2561
-' - 팩스 과금 방식 안내 : https://partner.linkhub.co.kr/Customer/Notice/813
-' - 팝빌에 사전등록되지 않은 발신번호를 기재한 경우 팝빌 지정 발신번호로팩스가 전송 됩니다.
-' - [참고] "[팩스 API 연동매뉴얼] > 1.3. 팩스전송 제한 사유 안내"
+' - https://docs.popbill.com/fax/vb/api#ResendFAX
 '=========================================================================
 Private Sub btnResendFAX_Same_Click()
     Dim senderNum As String
@@ -1387,8 +1385,7 @@ End Sub
 
 '=========================================================================
 ' 팩스전송요청시 할당한 전송요청번호(requestNum)으로 전송결과를 확인합니다
-' - 응답항목에 대한 자세한 사항은 "[팩스 API 연동매뉴얼] >  3.3.2
-'   GetFaxDetailRN (전송내역 및 전송상태 확인 - 요청번호 할당)을 참조하시기 바랍니다.
+' - https://docs.popbill.com/fax/vb/api#GetMessagesRN
 '=========================================================================
 Private Sub btnGetFaxDetailRN_Click()
 Dim sentFaxList As Collection
@@ -1451,6 +1448,7 @@ End Sub
 '=========================================================================
 ' 팩스전송요청시 할당한 전송요청번호(requestNum)로 팩스 예약전송건을 취소합니다.
 ' - 예약전송 취소는 예약전송시간 10분전까지 가능하며, 팩스변환 이후 가능합니다.
+' - https://docs.popbill.com/fax/vb/api#CancelReserveRN
 '=========================================================================
 Private Sub btnCancelReserveRN_Click()
     Dim Response As PBResponse
@@ -1469,10 +1467,7 @@ End Sub
 ' 전송요청번호(requestNum)을 할당한 팩스를 재전송합니다.
 ' - 접수일로부터 60일이 경과된 경우 재전송할 수 없습니다.
 ' - 팩스 재전송 요청시 포인트가 차감됩니다. (전송실패시 환불처리)
-' - 팩스전송 문서 파일포맷 안내 : http://blog.linkhub.co.kr/2561
-' - 팩스 과금 방식 안내 : https://partner.linkhub.co.kr/Customer/Notice/813
-' - 팝빌에 사전등록되지 않은 발신번호를 기재한 경우 팝빌 지정 발신번호로팩스가 전송 됩니다.
-' - [참고] "[팩스 API 연동매뉴얼] > 1.3. 팩스전송 제한 사유 안내"
+' - https://docs.popbill.com/fax/vb/api#ResendFAXRN
 '=========================================================================
 Private Sub btnResendFAXRN_Click()
     Dim OrgRequestNum As String
@@ -1529,10 +1524,7 @@ End Sub
 ' [동보전송] 전송요청번호(requestNum)을 할당한 팩스를 재전송합니다.
 ' - 접수일로부터 60일이 경과된 경우 재전송할 수 없습니다.
 ' - 팩스 재전송 요청시 포인트가 차감됩니다. (전송실패시 환불처리)
-' - 팩스전송 문서 파일포맷 안내 : http://blog.linkhub.co.kr/2561
-' - 팩스 과금 방식 안내 : https://partner.linkhub.co.kr/Customer/Notice/813
-' - 팝빌에 사전등록되지 않은 발신번호를 기재한 경우 팝빌 지정 발신번호로팩스가 전송 됩니다.
-' - [참고] "[팩스 API 연동매뉴얼] > 1.3. 팩스전송 제한 사유 안내"
+' - https://docs.popbill.com/fax/vb/api#ResendFAXRN
 '=========================================================================
 Private Sub btnResendFAXRN_Same_Click()
     Dim OrgRequestNum As String
@@ -1587,6 +1579,7 @@ End Sub
 
 '=========================================================================
 ' 팝빌에 등록된 팩스 발신번호 목록을 조회합니다.
+' - https://docs.popbill.com/fax/vb/api#GetSenderNumberList
 '=========================================================================
 Private Sub btnGetSenderNumberList_Click()
     Dim SenderNumberList As Collection
@@ -1612,6 +1605,7 @@ End Sub
 '=========================================================================
 ' 팩스 발신번호 관리 팝업 URL을 반환합니다.
 ' 보안정책으로 인해 반환된 URL은 30초의 유효시간을 갖습니다.
+' - https://docs.popbill.com/fax/vb/api#GetSenderNumberMgtURL
 '=========================================================================
 Private Sub btnGetSenderNumberMgtURL_Click()
     Dim url As String
@@ -1628,7 +1622,8 @@ End Sub
 
 '=========================================================================
 ' 검색조건을 사용하여 팩스전송 내역을 조회합니다.
-' 최대 검색기간 : 6개월 이내
+' - 최대 검색기간 : 6개월 이내
+' - https://docs.popbill.com/fax/vb/api#Search
 '=========================================================================
 Private Sub btnSearch_Click()
     Dim faxSearchList As PBFaxSearchList
@@ -1781,7 +1776,8 @@ End Sub
 
 '=========================================================================
 ' 팩스 전송내역 목록 팝업 URL을 반환합니다.
-' 보안정책으로 인해 반환된 URL은 30초의 유효시간을 갖습니다.
+' - 보안정책으로 인해 반환된 URL은 30초의 유효시간을 갖습니다.
+' - https://docs.popbill.com/fax/vb/api#GetSentListURL
 '=========================================================================
 Private Sub btnGetSentListURL_Click()
     Dim url As String
@@ -1799,6 +1795,7 @@ End Sub
 '=========================================================================
 ' 접수한 팩스 전송건에 대한 미리보기 팝업 URL을 반환합니다.
 ' - 반환된 URL은 보안정책에 따라 30초의 유효시간을 갖습니다.
+' - https://docs.popbill.com/fax/vb/api#GetPreviewURL
 '=========================================================================
 Private Sub btnGetPreviewURL_Click()
     Dim url As String
