@@ -524,7 +524,7 @@ Attribute VB_Exposed = False
 '
 ' 팝빌 팩스 API VB 6.0 SDK Example
 '
-' - 업데이트 일자 : 2021-10-18
+' - 업데이트 일자 : 2022-01-13
 ' - 연동 기술지원 연락처 : 1600-9854 / 070-4304-2991
 ' - 연동 기술지원 이메일 : code@linkhub.co.kr
 '
@@ -607,19 +607,19 @@ Private Sub btnJoinMember_Click()
     joinData.CorpNum = "1234567890"
     
     '대표자성명, 최대 100자
-    joinData.ceoname = "대표자성명"
+    joinData.CEOName = "대표자성명"
     
     '상호명, 최대 200자
-    joinData.corpName = "회원상호"
+    joinData.CorpName = "회원상호"
     
     '사업장 주소, 최대 300자
-    joinData.addr = "주소"
+    joinData.Addr = "주소"
     
     '업태, 최대 100자
-    joinData.bizType = "업태"
+    joinData.BizType = "업태"
     
     '종목, 최대 100자
-    joinData.bizClass = "종목"
+    joinData.BizClass = "종목"
 
     '담당자 성명, 최대 100자
     joinData.ContactName = "담당자성명"
@@ -855,11 +855,11 @@ Private Sub btnGetCorpInfo_Click()
         Exit Sub
     End If
     
-    tmp = tmp + "ceoname (대표자성명) : " + CorpInfo.ceoname + vbCrLf
-    tmp = tmp + "corpName (상호) : " + CorpInfo.corpName + vbCrLf
-    tmp = tmp + "addr (주소) : " + CorpInfo.addr + vbCrLf
-    tmp = tmp + "bizType (업태) : " + CorpInfo.bizType + vbCrLf
-    tmp = tmp + "bizClass (종목) : " + CorpInfo.bizClass + vbCrLf
+    tmp = tmp + "ceoname (대표자성명) : " + CorpInfo.CEOName + vbCrLf
+    tmp = tmp + "corpName (상호) : " + CorpInfo.CorpName + vbCrLf
+    tmp = tmp + "addr (주소) : " + CorpInfo.Addr + vbCrLf
+    tmp = tmp + "bizType (업태) : " + CorpInfo.BizType + vbCrLf
+    tmp = tmp + "bizClass (종목) : " + CorpInfo.BizClass + vbCrLf
     
     MsgBox tmp
 End Sub
@@ -873,19 +873,19 @@ Private Sub btnUpdateCorpInfo_Click()
     Dim Response As PBResponse
     
     '대표자명, 최대 100자
-    CorpInfo.ceoname = "대표자"
+    CorpInfo.CEOName = "대표자"
     
     '상호, 최대 200자
-    CorpInfo.corpName = "상호"
+    CorpInfo.CorpName = "상호"
     
     '주소, 최대 300자
-    CorpInfo.addr = "서울특별시"
+    CorpInfo.Addr = "서울특별시"
     
     '업태, 최대 100자
-    CorpInfo.bizType = "업태"
+    CorpInfo.BizType = "업태"
     
     '종목, 최대 100자
-    CorpInfo.bizClass = "종목"
+    CorpInfo.BizClass = "종목"
     
     Set Response = FaxService.UpdateCorpInfo(txtCorpNum.Text, CorpInfo)
     
@@ -1279,10 +1279,10 @@ Private Sub btnGetFaxDetail_Click()
         Exit Sub
     End If
     
-    tmp = "state(전송상태 코드) | result(전송결과 코드) | title(팩스제목) | sendNum(발신번호) | senderName(발신자명) | receiveNum(수신번호) | receiveName(수신자명) |"
+    tmp = "state(전송상태 코드) | result(전송결과 코드) | title(팩스제목) | sendNum(발신번호) | senderName(발신자명) | receiveNum(수신번호) | receiveNumType(수신번호 유형)  | receiveName(수신자명) |"
     tmp = tmp + "sendPageCnt(전체 페이지수) | successPageCnt(성공 페이지수) | failPageCnt(실패 페이지수) | refundPageCnt(환불 페이지수) | cancelPageCnt(취소 페이지수) |"
     tmp = tmp + "receiptDT(접수일시) | reserveDT(예약일시) | sendDT(전송일시) | resultDT(전송결과 수신일시) | receiptNum(접수번호) | "
-    tmp = tmp + "requestNum(요청번호) | chargePageCnt(과금 페이지수) | tiffFileSize(변환파일용량(단위 : byte)) | iSuccessPageCnt(지능망 성공장수) | receiveNumType(수신번호 유형) | fileNames(전송 파일명)" + vbCrLf
+    tmp = tmp + "requestNum(요청번호) | chargePageCnt(과금 페이지수) | tiffFileSize(변환파일용량(단위 : byte)) | fileNames(전송 파일명)" + vbCrLf
     
     For Each sentFax In sentFaxList
             
@@ -1303,6 +1303,9 @@ Private Sub btnGetFaxDetail_Click()
         
         '수신번호
         tmp = tmp + sentFax.receiveNum + " | "
+        
+        '수신번호 유형
+        tmp = tmp + sentFax.receiveNumType + " | "
         
         '수신자명
         tmp = tmp + sentFax.receiveName + " | "
@@ -1345,12 +1348,6 @@ Private Sub btnGetFaxDetail_Click()
         
         '변환파일용량  (단위 : byte)
         tmp = tmp + sentFax.tiffFileSize + "byte | "
-        
-        '지능망 성공장수
-        tmp = tmp + CStr(sentFax.iSuccessPageCnt) + " | "
-        
-        '수신번호 유형
-        tmp = tmp + sentFax.receiveNumType + " | "
         
         i = 0
         
@@ -1512,10 +1509,10 @@ Dim sentFaxList As Collection
         Exit Sub
     End If
     
-    tmp = "state(전송상태 코드) | result(전송결과 코드) | title(팩스제목) | sendNum(발신번호) | senderName(발신자명) | receiveNum(수신번호) | receiveName(수신자명) |"
+    tmp = "state(전송상태 코드) | result(전송결과 코드) | title(팩스제목) | sendNum(발신번호) | senderName(발신자명) | receiveNum(수신번호) | receiveNumType(수신번호 유형) | receiveName(수신자명) |"
     tmp = tmp + "sendPageCnt(전체 페이지수) | successPageCnt(성공 페이지수) | failPageCnt(실패 페이지수) | refundPageCnt(환불 페이지수) | cancelPageCnt(취소 페이지수) |"
     tmp = tmp + "receiptDT(접수일시) | reserveDT(예약일시) | sendDT(전송일시) | resultDT(전송결과 수신일시) | receiptNum(접수번호) | "
-    tmp = tmp + "requestNum(요청번호) | chargePageCnt(과금 페이지수) | tiffFileSize(변환파일용량(단위 : byte)) | iSuccessPageCnt(지능망 성공장수) | receiveNumType(수신번호 유형) | fileNames(전송 파일명)" + vbCrLf
+    tmp = tmp + "requestNum(요청번호) | chargePageCnt(과금 페이지수) | tiffFileSize(변환파일용량(단위 : byte)) | fileNames(전송 파일명)" + vbCrLf
     
     For Each sentFax In sentFaxList
         tmp = tmp + CStr(sentFax.state) + " | "             '전송상태 코드
@@ -1524,6 +1521,7 @@ Dim sentFaxList As Collection
         tmp = tmp + sentFax.sendNum + " | "                 '발신번호
         tmp = tmp + sentFax.senderName + " | "              '발신자명
         tmp = tmp + sentFax.receiveNum + " | "              '수신번호
+        tmp = tmp + sentFax.receiveNumType + " | "          '수신번호 유형
         tmp = tmp + sentFax.receiveName + " | "             '수신자명
         tmp = tmp + CStr(sentFax.sendPageCnt) + " | "       '전체 페이지수
         tmp = tmp + CStr(sentFax.successPageCnt) + " | "    '성공 페이지수
@@ -1538,8 +1536,7 @@ Dim sentFaxList As Collection
         tmp = tmp + sentFax.requestNum + " | "              '요청번호
         tmp = tmp + CStr(sentFax.chargePageCnt) + " | "     '과금 페이지수
         tmp = tmp + sentFax.tiffFileSize + "byte | "        '변환파일용량 (단위 : byte)
-        tmp = tmp + CStr(sentFax.iSuccessPageCnt) + " | "   '지능망 성공장수
-        tmp = tmp + sentFax.receiveNumType + " | "          '수신번호 유형
+        
         i = 0
         
         For Each fileName In sentFax.fileNames              '팩스전송 파일명
@@ -1752,10 +1749,10 @@ Private Sub btnSearch_Click()
     Dim QString As String
     
     '[필수] 시작일자, 형식(yyyyMMdd)
-    SDate = "20211001"
+    SDate = "20220101"
     
     '[필수] 종료일자, 형식(yyyyMMdd)
-    EDate = "20211012"
+    EDate = "20220130"
     
     '전송상태 배열, 1(대기), 2(성공), 3(실패), 4(취소)
     state.Add "1"
@@ -1799,10 +1796,10 @@ Private Sub btnSearch_Click()
     
     MsgBox tmp
 
-    tmp = "state(전송상태 코드) | result(전송결과 코드) | title(팩스제목) | sendnum(발신번호) | senderName(발신자명) | receiveNum(수신번호) | receiveName(수신자명) |"
+    tmp = "state(전송상태 코드) | result(전송결과 코드) | title(팩스제목) | sendnum(발신번호) | senderName(발신자명) | receiveNum(수신번호) | receiveNumType(수신번호 유형)  | receiveName(수신자명) |"
     tmp = tmp + "sendPageCnt(전체 페이지수) | successPageCnt(성공 페이지수) | failPageCnt(실패 페이지수) | refundPageCnt(환불 페이지수) | cancelPageCnt(취소 페이지수) |"
     tmp = tmp + "receiptDT(접수일시) | reserveDT(예약일시) | sendDT(전송일시) | resultDT(전송결과 수신일시) | receiptNum(접수번호) | "
-    tmp = tmp + "requestNum(요청번호) | chargePageCnt(과금 페이지수) | tiffFileSize(변환파일용량(단위 : byte)) | iSuccessPageCnt(지능망 성공장수) | receiveNumType(수신번호 유형) | fileNames(전송 파일명)" + vbCrLf
+    tmp = tmp + "requestNum(요청번호) | chargePageCnt(과금 페이지수) | tiffFileSize(변환파일용량(단위 : byte)) | fileNames(전송 파일명)" + vbCrLf
     
     Dim sentFax As PBFaxInfo
     
@@ -1825,6 +1822,9 @@ Private Sub btnSearch_Click()
         
         '수신번호
         tmp = tmp + sentFax.receiveNum + " | "
+        
+        '수신번호 유형
+        tmp = tmp + sentFax.receiveNumType + " | "
         
         '수신자명
         tmp = tmp + sentFax.receiveName + " | "
@@ -1867,12 +1867,7 @@ Private Sub btnSearch_Click()
         
         '변환파일용량 (단위 : byte)
         tmp = tmp + sentFax.tiffFileSize + "byte | "
-        
-        '지능망 성공장수
-        tmp = tmp + CStr(sentFax.iSuccessPageCnt) + " | "
-        
-        '수신번호 유형
-        tmp = tmp + sentFax.receiveNumType + " | "
+                
         
         i = 0
         
