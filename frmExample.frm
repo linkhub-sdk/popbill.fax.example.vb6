@@ -45,7 +45,7 @@ Begin VB.Form frmExample
             Top             =   240
             Width           =   2835
          End
-         Begin VB.CommandButton btnResendFaxRNSame 
+         Begin VB.CommandButton btnResendFaxRN_Same 
             Caption         =   "동보 재전송"
             Height          =   450
             Left            =   2280
@@ -142,7 +142,7 @@ Begin VB.Form frmExample
             Width           =   1815
          End
       End
-      Begin VB.CommandButton btnResendFaxSame 
+      Begin VB.CommandButton btnResendFax_Same 
          Caption         =   "동보 재전송"
          Height          =   450
          Left            =   2640
@@ -522,44 +522,38 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 '=========================================================================
 '
-' 팝빌 팩스 API VB 6.0 SDK Example
+' 팝빌 팩스 API VB SDK Example
 '
-' - 업데이트 일자 : 2022-01-17
+' - 업데이트 일자 : 2022-04-06
 ' - 연동 기술지원 연락처 : 1600-9854
 ' - 연동 기술지원 이메일 : code@linkhubcorp.com
-' - VB6 SDK 적용방법 안내 : https://docs.popbill.com/fax/tutorial/vb
+' - VB SDK 적용방법 안내 : https://docs.popbill.com/fax/tutorial/vb
 '
 ' <테스트 연동개발 준비사항>
-' 1) 25, 28번 라인에 선언된 링크아이디(LinkID)와 비밀키(SecretKey)를
+' 1) 19, 22번 라인에 선언된 링크아이디(LinkID)와 비밀키(SecretKey)를
 '    링크허브 가입시 메일로 발급받은 인증정보를 참조하여 변경합니다.
+'
 '=========================================================================
 
 Option Explicit
 
-'=========================================================================
-' - 인증정보(링크아이디, 비밀키)는 파트너의 연동회원을 식별하는
-'   인증에 사용되는 정보로 유출되지 않도록 주의하시기 바랍니다.
-' - 상업용 전환이후에도 인증정보(링크아이디, 비밀키)는 변경되지 않습니다.
-'=========================================================================
-
 '링크아이디
-Private Const linkID = "TESTER"
+Private Const LinkID = "TESTER"
 
-'비밀키. 유출에 주의하시기 바랍니다.
+'비밀키
 Private Const SecretKey = "SwWxqU+0TErBXy/9TVjIPEnI0VTUMMSQZtJf3Ed8q3I="
 
-'팩스 서비스 객체 생성
+'팩스 서비스 모듈 선언
 Private FaxService As New PBFAXService
 
 '=========================================================================
 ' 사업자번호를 조회하여 연동회원 가입여부를 확인합니다.
-' - LinkID는 인증정보로 설정되어 있는 링크아이디 값입니다.
 ' - https://docs.popbill.com/fax/vb/api#CheckIsMember
 '=========================================================================
 Private Sub btnCheckIsMember_Click()
     Dim Response As PBResponse
     
-    Set Response = FaxService.CheckIsMember(txtCorpNum.Text, linkID)
+    Set Response = FaxService.CheckIsMember(txtCorpNum.Text, LinkID)
     
     If Response Is Nothing Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
@@ -594,14 +588,14 @@ Private Sub btnJoinMember_Click()
     Dim joinData As New PBJoinForm
     Dim Response As PBResponse
     
-    '아이디, 6자이상 50자 미만
+    '아이디, 6자이상 50자 이하
     joinData.id = "userid"
     
     '비밀번호, 8자 이상 20자 이하(영문, 숫자, 특수문자 조합)
     joinData.Password = "asdf$%^123"
     
     '파트너링크 아이디
-    joinData.linkID = linkID
+    joinData.LinkID = LinkID
     
     '사업자번호, '-'제외, 10자리
     joinData.CorpNum = "1234567890"
@@ -629,12 +623,6 @@ Private Sub btnJoinMember_Click()
     
     '담당자 연락처, 최대 20자
     joinData.ContactTEL = "02-999-9999"
-    
-    '담당자 휴대폰번호, 최대 20자
-    joinData.ContactHP = "010-1234-5678"
-    
-    '담당자 팩스번호, 최대 20자
-    joinData.ContactFAX = "02-999-9998"
     
     Set Response = FaxService.JoinMember(joinData)
     
@@ -691,17 +679,17 @@ End Sub
 ' - https://docs.popbill.com/fax/vb/api#GetAccessURL
 '=========================================================================
 Private Sub btnGetAccessURL_Click()
-    Dim url As String
+    Dim URL As String
     
-    url = FaxService.GetAccessURL(txtCorpNum.Text, txtUserID.Text)
+    URL = FaxService.GetAccessURL(txtCorpNum.Text, txtUserID.Text)
     
-    If url = "" Then
+    If URL = "" Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
-    MsgBox "URL : " + vbCrLf + url
-    txtURL.Text = url
+    MsgBox "URL : " + vbCrLf + URL
+    txtURL.Text = URL
 End Sub
 
 '=========================================================================
@@ -712,7 +700,7 @@ Private Sub btnRegistContact_Click()
     Dim joinData As New PBContactInfo
     Dim Response As PBResponse
     
-    '담당자 아이디, 6자 이상 50자 미만
+    '담당자 아이디, 6자 이상 50자 이하
     joinData.id = "testkorea"
     
     '비밀번호, 8자 이상 20자 이하(영문, 숫자, 특수문자 조합)
@@ -724,19 +712,13 @@ Private Sub btnRegistContact_Click()
     '담당자 연락처, 최대 20자
     joinData.tel = "070-1234-1234"
     
-    '담당자 휴대폰번호, 최대 20자
-    joinData.hp = "010-1234-1234"
-    
-    '담당자 팩스번,최대 20자
-    joinData.fax = "070-1234-1234"
-    
     '담당자 메일주소, 최대 100자
     joinData.email = "test@test.com"
     
     '담당자 권한, 1-개인 / 2-읽기 / 3-회사
     joinData.searchRole = 3
         
-    Set Response = FaxService.RegistContact(txtCorpNum.Text, joinData, txtUserID.Text)
+    Set Response = FaxService.RegistContact(txtCorpNum.Text, joinData)
     
     If Response Is Nothing Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
@@ -755,8 +737,7 @@ Private Sub btnGetContactInfo_Click()
     Dim info As PBContactInfo
     Dim ContactID As String
     
-    '확인할 담당자 아이디
-    ContactID = ""
+    ContactID = "testkorea"
     
     Set info = FaxService.GetContactInfo(txtCorpNum.Text, ContactID, txtUserID.Text)
     
@@ -765,12 +746,12 @@ Private Sub btnGetContactInfo_Click()
         Exit Sub
     End If
     
-    tmp = "id(아이디) | personName(성명) | email(이메일) | hp(휴대폰번호) |  fax(팩스번호) | tel(연락처) | " _
+    tmp = "id(아이디) | personName(성명) | email(이메일) | tel(연락처) | " _
          + "regDT(등록일시) | searchRole(담당자 권한) | mgrYN(관리자 여부) | state(상태) " + vbCrLf
     
    
-    tmp = tmp + info.id + " | " + info.personName + " | " + info.email + " | " + info.hp + " | " + info.fax _
-        + info.tel + " | " + info.regDT + " | " + CStr(info.searchRole) + " | " + CStr(info.mgrYN) + " | " + CStr(info.state) + vbCrLf
+    tmp = tmp + info.id + " | " + info.personName + " | " + info.email + " | " + info.tel + " | " _
+            + info.regDT + " | " + CStr(info.searchRole) + " | " + CStr(info.mgrYN) + " | " + CStr(info.state) + vbCrLf
         
     MsgBox tmp
 End Sub
@@ -791,11 +772,11 @@ Private Sub btnListContact_Click()
         Exit Sub
     End If
     
-    tmp = "id(아이디) | personName(성명) | email(이메일) | hp(휴대폰번호) |  fax(팩스번호) | tel(연락처) | " _
+    tmp = "id(아이디) | personName(성명) | email(이메일) | tel(연락처) | " _
          + "regDT(등록일시) | searchRole(담당자 권한) | mgrYN(관리자 여부) | state(상태) " + vbCrLf
     
     For Each info In resultList
-        tmp = tmp + info.id + " | " + info.personName + " | " + info.email + " | " + info.hp + " | " + info.fax _
+        tmp = tmp + info.id + " | " + info.personName + " | " + info.email + " | " _
         + info.tel + " | " + info.regDT + " | " + CStr(info.searchRole) + " | " + CStr(info.mgrYN) + " | " + CStr(info.state) + vbCrLf
     Next
     
@@ -818,12 +799,6 @@ Private Sub btnUpdateContact_Click()
     
     '담당자 연락처, 최대 20자
     joinData.tel = "070-1234-1234"
-    
-    '담당자 휴대폰번호, 최대 20자
-    joinData.hp = "010-1234-1234"
-        
-    '담당자 팩스번호, 최대 20자
-    joinData.fax = "070-1234-1234"
     
     '담당자 이메일, 최대 100자
     joinData.email = "test@test.com"
@@ -866,7 +841,7 @@ Private Sub btnGetCorpInfo_Click()
 End Sub
 
 '=========================================================================
-' 연동회원의 회사정보를 수정합니다
+' 연동회원의 회사정보를 수정합니다.
 ' - https://docs.popbill.com/fax/vb/api#UpdateCorpInfo
 '=========================================================================
 Private Sub btnUpdateCorpInfo_Click()
@@ -900,7 +875,6 @@ End Sub
 
 '=========================================================================
 ' 연동회원의 잔여포인트를 확인합니다.
-' - 과금방식이 파트너과금인 경우 파트너 잔여포인트(GetPartnerBalance API)를 통해 확인하시기 바랍니다.
 ' - https://docs.popbill.com/fax/vb/api#GetBalance
 '=========================================================================
 Private Sub btnGetBalance_Click()
@@ -917,22 +891,41 @@ Private Sub btnGetBalance_Click()
 End Sub
 
 '=========================================================================
+' 연동회원 포인트 충전을 위한 페이지의 팝업 URL을 반환합니다.
+' - 반환되는 URL은 보안 정책상 30초 동안 유효하며, 시간을 초과한 후에는 해당 URL을 통한 페이지 접근이 불가합니다.
+' - https://docs.popbill.com/fax/vb/api#GetChargeURL
+'=========================================================================
+Private Sub btnGetChargeURL_Click()
+    Dim URL As String
+    
+    URL = FaxService.GetChargeURL(txtCorpNum.Text, txtUserID.Text)
+    
+    If URL = "" Then
+        MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
+        Exit Sub
+    End If
+    
+    MsgBox "URL : " + vbCrLf + URL
+    txtURL.Text = URL
+End Sub
+
+'=========================================================================
 ' 연동회원 포인트 결제내역 확인을 위한 페이지의 팝업 URL을 반환합니다.
 ' - 반환되는 URL은 보안 정책상 30초 동안 유효하며, 시간을 초과한 후에는 해당 URL을 통한 페이지 접근이 불가합니다.
 ' - https://docs.popbill.com/fax/vb/api#GetPaymentURL
 '=========================================================================
 Private Sub btnGetPaymentURL_Click()
-    Dim url As String
+    Dim URL As String
            
-    url = FaxService.GetPaymentURL(txtCorpNum.Text, txtUserID.Text)
+    URL = FaxService.GetPaymentURL(txtCorpNum.Text, txtUserID.Text)
     
-    If url = "" Then
+    If URL = "" Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
-    MsgBox "URL : " + vbCrLf + url
-    txtURL.Text = url
+    MsgBox "URL : " + vbCrLf + URL
+    txtURL.Text = URL
 End Sub
 
 '=========================================================================
@@ -941,41 +934,21 @@ End Sub
 ' - https://docs.popbill.com/fax/vb/api#GetUseHistoryURL
 '=========================================================================
 Private Sub btnGetUseHistoryURL_Click()
-    Dim url As String
+    Dim URL As String
            
-    url = FaxService.GetUseHistoryURL(txtCorpNum.Text, txtUserID.Text)
+    URL = FaxService.GetUseHistoryURL(txtCorpNum.Text, txtUserID.Text)
     
-    If url = "" Then
+    If URL = "" Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
-    MsgBox "URL : " + vbCrLf + url
-    txtURL.Text = url
-End Sub
-
-'=========================================================================
-' 연동회원 포인트 충전을 위한 페이지의 팝업 URL을 반환합니다.
-' - 반환되는 URL은 보안 정책상 30초 동안 유효하며, 시간을 초과한 후에는 해당 URL을 통한 페이지 접근이 불가합니다.
-' - https://docs.popbill.com/fax/vb/api#GetChargeURL
-'=========================================================================
-Private Sub btnGetChargeURL_Click()
-    Dim url As String
-    
-    url = FaxService.GetChargeURL(txtCorpNum.Text, txtUserID.Text)
-    
-    If url = "" Then
-        MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
-        Exit Sub
-    End If
-    
-    MsgBox "URL : " + vbCrLf + url
-    txtURL.Text = url
+    MsgBox "URL : " + vbCrLf + URL
+    txtURL.Text = URL
 End Sub
 
 '=========================================================================
 ' 파트너의 잔여포인트를 확인합니다.
-' - 과금방식이 연동과금인 경우 연동회원 잔여포인트(GetBalance API)를 이용하시기 바랍니다.
 ' - https://docs.popbill.com/fax/vb/api#GetPartnerBalance
 '=========================================================================
 Private Sub btnGetPartnerBalance_Click()
@@ -997,22 +970,21 @@ End Sub
 ' - https://docs.popbill.com/fax/vb/api#GetPartnerURL
 '=========================================================================
 Private Sub btnGetPartnerURL_CHRG_Click()
-    Dim url As String
+    Dim URL As String
     
-    url = FaxService.GetPartnerURL(txtCorpNum.Text, "CHRG")
+    URL = FaxService.GetPartnerURL(txtCorpNum.Text, "CHRG")
     
-    If url = "" Then
+    If URL = "" Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
-    MsgBox "URL : " + vbCrLf + url
-    txtURL.Text = url
+    MsgBox "URL : " + vbCrLf + URL
+    txtURL.Text = URL
 End Sub
 
 '=========================================================================
 ' 팩스 1건을 전송합니다. (최대 전송파일 개수: 20개)
-' - 팩스전송 문서 파일포맷 안내 : https://docs.popbill.com/fax/format?lang=vb
 ' - https://docs.popbill.com/fax/vb/api#SendFAX
 '=========================================================================
 Private Sub btnSendFAX_Click()
@@ -1071,7 +1043,6 @@ End Sub
 
 '=========================================================================
 ' 동일한 팩스파일을 다수의 수신자에게 전송하기 위해 팝빌에 접수합니다. (최대 1,000건)
-' - 팩스전송 문서 파일포맷 안내 : https://docs.popbill.com/fax/format?lang=vb
 ' - https://docs.popbill.com/fax/vb/api#SendFAX
 '=========================================================================
 Private Sub btnSendFax_Same_Click()
@@ -1132,8 +1103,7 @@ Private Sub btnSendFax_Same_Click()
 End Sub
 
 '=========================================================================
-' 팩스 1건을 전송합니다.(다중파일 전송) (최대 전송파일 개수: 20개)
-' - 팩스전송 문서 파일포맷 안내 : https://docs.popbill.com/fax/format?lang=vb
+' 다수의 팩스파일을 수신자에게 전송하기 위해 팝빌에 접수합니다. (최대 전송파일 개수 : 20개)
 ' - https://docs.popbill.com/fax/vb/api#SendFAX
 '=========================================================================
 Private Sub btnSendFAX_Multi_Click()
@@ -1197,8 +1167,7 @@ Private Sub btnSendFAX_Multi_Click()
 End Sub
 
 '=========================================================================
-' 동일한 팩스파일을 다수의 수신자에게 전송하기 위해 팝빌에 접수합니다.(다중파일 동보전송) (최대 전송파일 개수 : 20개) (최대 1,000건)
-' - 팩스전송 문서 파일포맷 안내 : https://docs.popbill.com/fax/format?lang=vb
+' 다수의 팩스파일을 다수의 수신자에게 전송하기 위해 팝빌에 접수합니다. (최대 전송파일 개수 : 20개) (최대 1,000건)
 ' - https://docs.popbill.com/fax/vb/api#SendFAX
 '=========================================================================
 Private Sub btnSendFax_Multi_Same_Click()
@@ -1280,7 +1249,7 @@ Private Sub btnGetFaxDetail_Click()
         Exit Sub
     End If
     
-    tmp = "state(전송상태 코드) | result(전송결과 코드) | title(팩스제목) | sendNum(발신번호) | senderName(발신자명) | receiveNum(수신번호) | receiveNumType(수신번호 유형)  | receiveName(수신자명) |"
+    tmp = "state(전송상태 코드) | result(전송결과 코드) | title(팩스제목) | sendNum(발신번호) | senderName(발신자명) | receiveNum(수신번호) | receiveNumType(수신번호 유형) | receiveName(수신자명) |"
     tmp = tmp + "sendPageCnt(전체 페이지수) | successPageCnt(성공 페이지수) | failPageCnt(실패 페이지수) | refundPageCnt(환불 페이지수) | cancelPageCnt(취소 페이지수) |"
     tmp = tmp + "receiptDT(접수일시) | reserveDT(예약일시) | sendDT(전송일시) | resultDT(전송결과 수신일시) | receiptNum(접수번호) | "
     tmp = tmp + "requestNum(요청번호) | chargePageCnt(과금 페이지수) | tiffFileSize(변환파일용량(단위 : byte)) | fileNames(전송 파일명)" + vbCrLf
@@ -1390,6 +1359,7 @@ End Sub
 ' 팝빌에서 반환받은 접수번호를 통해 팩스 1건을 재전송합니다.
 ' - 발신/수신 정보 미입력시 기존과 동일한 정보로 팩스가 전송되고, 접수일 기준 최대 60일이 경과되지 않는 건만 재전송이 가능합니다.
 ' - 팩스 재전송 요청시 포인트가 차감됩니다. (전송실패시 환불처리)
+' - 변환실패 사유로 전송실패한 팩스 접수건은 재전송이 불가합니다.
 ' - https://docs.popbill.com/fax/vb/api#ResendFAX
 '=========================================================================
 Private Sub btnResendFAX_Click()
@@ -1440,9 +1410,10 @@ Private Sub btnResendFAX_Click()
 End Sub
 
 '=========================================================================
-' 팝빌에서 반환받은 접수번호를 통해 다수건의 팩스를 재전송합니다. (최대 전송파일 개수: 20개) (최대 1,000건)
+' 동일한 팩스파일을 다수의 수신자에게 전송하기 위해 팝빌에 접수합니다. (최대 전송파일 개수: 20개) (최대 1,000건)
 ' - 발신/수신 정보 미입력시 기존과 동일한 정보로 팩스가 전송되고, 접수일 기준 최대 60일이 경과되지 않는 건만 재전송이 가능합니다.
 ' - 팩스 재전송 요청시 포인트가 차감됩니다. (전송실패시 환불처리)
+' - 변환실패 사유로 전송실패한 팩스 접수건은 재전송이 불가합니다.
 ' - https://docs.popbill.com/fax/vb/api#ResendFAX
 '=========================================================================
 Private Sub btnResendFAX_Same_Click()
@@ -1516,6 +1487,7 @@ Dim sentFaxList As Collection
     tmp = tmp + "requestNum(요청번호) | chargePageCnt(과금 페이지수) | tiffFileSize(변환파일용량(단위 : byte)) | fileNames(전송 파일명)" + vbCrLf
     
     For Each sentFax In sentFaxList
+    
         tmp = tmp + CStr(sentFax.state) + " | "             '전송상태 코드
         tmp = tmp + CStr(sentFax.result) + " | "            '전송결과 코드
         tmp = tmp + sentFax.title + " | "                   '팩스제목
@@ -1537,7 +1509,7 @@ Dim sentFaxList As Collection
         tmp = tmp + sentFax.requestNum + " | "              '요청번호
         tmp = tmp + CStr(sentFax.chargePageCnt) + " | "     '과금 페이지수
         tmp = tmp + sentFax.tiffFileSize + "byte | "        '변환파일용량 (단위 : byte)
-        
+     
         i = 0
         
         For Each fileName In sentFax.fileNames              '팩스전송 파일명
@@ -1576,6 +1548,7 @@ End Sub
 ' 파트너가 할당한 전송요청 번호를 통해 팩스 1건을 재전송합니다.
 ' - 발신/수신 정보 미입력시 기존과 동일한 정보로 팩스가 전송되고, 접수일 기준 최대 60일이 경과되지 않는 건만 재전송이 가능합니다.
 ' - 팩스 재전송 요청시 포인트가 차감됩니다. (전송실패시 환불처리)
+' - 변환실패 사유로 전송실패한 팩스 접수건은 재전송이 불가합니다.
 ' - https://docs.popbill.com/fax/vb/api#ResendFAXRN
 '=========================================================================
 Private Sub btnResendFAXRN_Click()
@@ -1630,9 +1603,10 @@ Private Sub btnResendFAXRN_Click()
 End Sub
 
 '=========================================================================
-' 파트너가 할당한 전송요청 번호를 통해 다수건의 팩스를 재전송합니다. (최대 전송파일 개수: 20개) (최대 1,000건)
+'파트너가 할당한 전송요청 번호를 통해 다수건의 팩스를 재전송합니다. (최대 전송파일 개수: 20개) (최대 1,000건)
 ' - 발신/수신 정보 미입력시 기존과 동일한 정보로 팩스가 전송되고, 접수일 기준 최대 60일이 경과되지 않는 건만 재전송이 가능합니다.
 ' - 팩스 재전송 요청시 포인트가 차감됩니다. (전송실패시 환불처리)
+' - 변환실패 사유로 전송실패한 팩스 접수건은 재전송이 불가합니다.
 ' - https://docs.popbill.com/fax/vb/api#ResendFAXRN
 '=========================================================================
 Private Sub btnResendFAXRN_Same_Click()
@@ -1712,26 +1686,48 @@ Private Sub btnGetSenderNumberList_Click()
 End Sub
 
 '=========================================================================
+' 팩스 발신번호 등록여부를 확인합니다.
+' - 발신번호 상태가 '승인'인 경우에만 리턴값 'Response'의 변수 'code'가 1로 반환됩니다.
+' - https://docs.popbill.com/fax/vb/api#CheckSenderNumber
+'=========================================================================
+Private Sub btnCheckSenderNumber_Click()
+    Dim Response As PBResponse
+    Dim SenderNumber As String
+    
+    SenderNumber = "070-4304-2981"
+
+    Set Response = FaxService.CheckSenderNumber(txtCorpNum.Text, SenderNumber, txtUserID.Text)
+    
+    If Response Is Nothing Then
+        MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
+        Exit Sub
+    End If
+    
+    MsgBox ("응답코드 : " + CStr(Response.code) + vbCrLf + "응답메시지 : " + Response.message)
+    
+End Sub
+
+'=========================================================================
 ' 발신번호를 등록하고 내역을 확인하는 팩스 발신번호 관리 페이지 팝업 URL을 반환합니다.
 ' - 반환되는 URL은 보안 정책상 30초 동안 유효하며, 시간을 초과한 후에는 해당 URL을 통한 페이지 접근이 불가합니다.
 ' - https://docs.popbill.com/fax/vb/api#GetSenderNumberMgtURL
 '=========================================================================
 Private Sub btnGetSenderNumberMgtURL_Click()
-    Dim url As String
+    Dim URL As String
     
-    url = FaxService.GetSenderNumberMgtURL(txtCorpNum.Text, txtUserID.Text)
+    URL = FaxService.GetSenderNumberMgtURL(txtCorpNum.Text, txtUserID.Text)
     
-    If url = "" Then
+    If URL = "" Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
-    MsgBox "URL : " + vbCrLf + url
-    txtURL.Text = url
+    MsgBox "URL : " + vbCrLf + URL
+    txtURL.Text = URL
 End Sub
 
 '=========================================================================
-' 검색조건에 해당하는 팩스 전송내역 목록을 조회합니다. (조회기간 단위 : 최대 2개월)
+' 검색조건을 사용하여 팩스전송 내역을 조회합니다. (조회기간 단위 : 최대 2개월)
 ' - 팩스 접수일시로부터 2개월 이내 접수건만 조회할 수 있습니다.
 ' - https://docs.popbill.com/fax/vb/api#Search
 '=========================================================================
@@ -1796,8 +1792,8 @@ Private Sub btnSearch_Click()
     tmp = tmp + "message (응답메시지) : " + faxSearchList.message + vbCrLf + vbCrLf
     
     MsgBox tmp
-
-    tmp = "state(전송상태 코드) | result(전송결과 코드) | title(팩스제목) | sendnum(발신번호) | senderName(발신자명) | receiveNum(수신번호) | receiveNumType(수신번호 유형)  | receiveName(수신자명) |"
+    
+    tmp = "state(전송상태 코드) | result(전송결과 코드) | title(팩스제목) | sendnum(발신번호) | senderName(발신자명) | receiveNum(수신번호) | receiveNumType(수신번호 유형) | receiveName(수신자명) |"
     tmp = tmp + "sendPageCnt(전체 페이지수) | successPageCnt(성공 페이지수) | failPageCnt(실패 페이지수) | refundPageCnt(환불 페이지수) | cancelPageCnt(취소 페이지수) |"
     tmp = tmp + "receiptDT(접수일시) | reserveDT(예약일시) | sendDT(전송일시) | resultDT(전송결과 수신일시) | receiptNum(접수번호) | "
     tmp = tmp + "requestNum(요청번호) | chargePageCnt(과금 페이지수) | tiffFileSize(변환파일용량(단위 : byte)) | fileNames(전송 파일명)" + vbCrLf
@@ -1868,7 +1864,6 @@ Private Sub btnSearch_Click()
         
         '변환파일용량 (단위 : byte)
         tmp = tmp + sentFax.tiffFileSize + "byte | "
-                
         
         i = 0
         
@@ -1894,44 +1889,44 @@ End Sub
 ' - https://docs.popbill.com/fax/vb/api#GetSentListURL
 '=========================================================================
 Private Sub btnGetSentListURL_Click()
-    Dim url As String
+    Dim URL As String
     
-    url = FaxService.GetSentListURL(txtCorpNum.Text, txtUserID.Text)
+    URL = FaxService.GetSentListURL(txtCorpNum.Text, txtUserID.Text)
     
-    If url = "" Then
+    If URL = "" Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
-    MsgBox "URL : " + vbCrLf + url
-    txtURL.Text = url
+    MsgBox "URL : " + vbCrLf + URL
+    txtURL.Text = URL
 End Sub
 
 '=========================================================================
-'팩스 미리보기 팝업 URL을 반환하며, 팩스전송을 위한 TIF 포맷 변환 완료 후 호출 할 수 있습니다.
+' 팩스 미리보기 팝업 URL을 반환하며, 팩스전송을 위한 TIF 포맷 변환 완료 후 호출 할 수 있습니다.
 ' - 반환되는 URL은 보안 정책상 30초 동안 유효하며, 시간을 초과한 후에는 해당 URL을 통한 페이지 접근이 불가합니다.
 ' - https://docs.popbill.com/fax/vb/api#GetPreviewURL
 '=========================================================================
 Private Sub btnGetPreviewURL_Click()
-    Dim url As String
+    Dim URL As String
     
-    url = FaxService.GetPreviewURL(txtCorpNum.Text, txtReceiptNum.Text, txtUserID.Text)
+    URL = FaxService.GetPreviewURL(txtCorpNum.Text, txtReceiptNum.Text, txtUserID.Text)
     
-    If url = "" Then
+    If URL = "" Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
         Exit Sub
     End If
     
-    MsgBox "URL : " + vbCrLf + url
-    txtURL.Text = url
+    MsgBox "URL : " + vbCrLf + URL
+    txtURL.Text = URL
 End Sub
 
 Private Sub Form_Load()
-    
+
     '팩스서비스 모듈 초기화
-    FaxService.Initialize linkID, SecretKey
+    FaxService.Initialize LinkID, SecretKey
     
-    '연동환경 설정값 True(테스트용), False(상업용)
+    '연동환경설정값, True-개발용 False-상업용
     FaxService.IsTest = True
     
     '인증토큰 IP제한기능 사용여부, True-사용, False-미사용, 기본값(True)
@@ -1939,6 +1934,9 @@ Private Sub Form_Load()
     
     '로컬시스템 시간 사용여부 True-사용, False-미사용, 기본값(False)
     FaxService.UseLocalTimeYN = False
-        
+    
 End Sub
+
+
+
 
