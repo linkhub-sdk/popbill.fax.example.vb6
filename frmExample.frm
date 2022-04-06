@@ -88,17 +88,25 @@ Begin VB.Form frmExample
       End
       Begin VB.Frame Frame9 
          Caption         =   "발신번호 관리"
-         Height          =   1575
+         Height          =   2175
          Left            =   9120
          TabIndex        =   37
          Top             =   360
          Width           =   2055
+         Begin VB.CommandButton btnCheckSenderNumber 
+            Caption         =   "발신번호 등록 여부"
+            Height          =   495
+            Left            =   120
+            TabIndex        =   61
+            Top             =   360
+            Width           =   1815
+         End
          Begin VB.CommandButton btnGetSenderNumberMgtURL 
             Caption         =   "발신번호 관리 팝업"
             Height          =   495
             Left            =   120
             TabIndex        =   39
-            Top             =   960
+            Top             =   1560
             Width           =   1815
          End
          Begin VB.CommandButton btnGetSenderNumberList 
@@ -106,7 +114,7 @@ Begin VB.Form frmExample
             Height          =   495
             Left            =   120
             TabIndex        =   38
-            Top             =   360
+            Top             =   960
             Width           =   1815
          End
       End
