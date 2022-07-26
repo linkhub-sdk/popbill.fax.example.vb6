@@ -532,7 +532,7 @@ Attribute VB_Exposed = False
 '
 ' 팝빌 팩스 API VB SDK Example
 '
-' - 업데이트 일자 : 2022-04-06
+' - 업데이트 일자 : 2022-07-26
 ' - 연동 기술지원 연락처 : 1600-9854
 ' - 연동 기술지원 이메일 : code@linkhubcorp.com
 ' - VB SDK 적용방법 안내 : https://docs.popbill.com/fax/tutorial/vb
@@ -1083,8 +1083,16 @@ Private Sub btnSendFax_Same_Click()
     '수신정보, 최대 1000건
     For i = 1 To 5
         Set receiver = New PBReceiver
+        
+        '수신번호
         receiver.receiverNum = "070111222"
+         
+        '수신자명
         receiver.receiverName = "수신자 명칭"
+         
+        '파트너 지정 키
+        receiver.interOPRefKey = "interOPRefKey_" + CStr(i)
+
         receivers.Add receiver
     Next
     
@@ -1150,6 +1158,9 @@ Private Sub btnSendFAX_Multi_Click()
     '수신자명
     receiver.receiverName = "수신자 명칭"
     
+    '파트너 지정 키
+    receiver.interOPRefKey = "interOPRefKey_" + CStr(i)
+    
     receivers.Add receiver
     
     '광고팩스 전송여부
@@ -1212,8 +1223,16 @@ Private Sub btnSendFax_Multi_Same_Click()
     '수신정보 최대 1000명까지 가능
     For i = 1 To 5
         Set receiver = New PBReceiver
+        
+        '수신번호
         receiver.receiverNum = "070111222"
+        
+        '수신자명
         receiver.receiverName = "수신자 명칭"
+        
+        '파트너 지정 키
+        receiver.interOPRefKey = "interOPRefKey_" + CStr(i)
+        
         receivers.Add receiver
     Next
     
@@ -1259,7 +1278,7 @@ Private Sub btnGetFaxDetail_Click()
     
     tmp = "state(전송상태 코드) | result(전송결과 코드) | title(팩스제목) | sendNum(발신번호) | senderName(발신자명) | receiveNum(수신번호) | receiveNumType(수신번호 유형) | receiveName(수신자명) |"
     tmp = tmp + "sendPageCnt(전체 페이지수) | successPageCnt(성공 페이지수) | failPageCnt(실패 페이지수) | refundPageCnt(환불 페이지수) | cancelPageCnt(취소 페이지수) |"
-    tmp = tmp + "receiptDT(접수일시) | reserveDT(예약일시) | sendDT(전송일시) | resultDT(전송결과 수신일시) | receiptNum(접수번호) | "
+    tmp = tmp + "receiptDT(접수일시) | reserveDT(예약일시) | sendDT(전송일시) | resultDT(전송결과 수신일시) | receiptNum(접수번호) | interOPRefKey(파트너 지정 키) |"
     tmp = tmp + "requestNum(요청번호) | chargePageCnt(과금 페이지수) | tiffFileSize(변환파일용량(단위 : byte)) | fileNames(전송 파일명)" + vbCrLf
     
     For Each sentFax In sentFaxList
@@ -1320,6 +1339,9 @@ Private Sub btnGetFaxDetail_Click()
         
         '요청번호
         tmp = tmp + sentFax.requestNum + " | "
+        
+        '파트너 지정 키
+        tmp = tmp + sentFax.interOPRefKey + " | "
         
         '과금 페이지수
         tmp = tmp + CStr(sentFax.chargePageCnt) + " | "
@@ -1491,7 +1513,7 @@ Dim sentFaxList As Collection
     
     tmp = "state(전송상태 코드) | result(전송결과 코드) | title(팩스제목) | sendNum(발신번호) | senderName(발신자명) | receiveNum(수신번호) | receiveNumType(수신번호 유형) | receiveName(수신자명) |"
     tmp = tmp + "sendPageCnt(전체 페이지수) | successPageCnt(성공 페이지수) | failPageCnt(실패 페이지수) | refundPageCnt(환불 페이지수) | cancelPageCnt(취소 페이지수) |"
-    tmp = tmp + "receiptDT(접수일시) | reserveDT(예약일시) | sendDT(전송일시) | resultDT(전송결과 수신일시) | receiptNum(접수번호) | "
+    tmp = tmp + "receiptDT(접수일시) | reserveDT(예약일시) | sendDT(전송일시) | resultDT(전송결과 수신일시) | receiptNum(접수번호) | interOPRefKey(파트너 지정 키) | "
     tmp = tmp + "requestNum(요청번호) | chargePageCnt(과금 페이지수) | tiffFileSize(변환파일용량(단위 : byte)) | fileNames(전송 파일명)" + vbCrLf
     
     For Each sentFax In sentFaxList
@@ -1515,6 +1537,7 @@ Dim sentFaxList As Collection
         tmp = tmp + sentFax.resultDT + " | "                '전송결과 수신일시
         tmp = tmp + sentFax.receiptNum + " | "              '접수번호
         tmp = tmp + sentFax.requestNum + " | "              '요청번호
+        tmp = tmp + sentFax.interOPRefKey + " | "           '파트너 지정 키
         tmp = tmp + CStr(sentFax.chargePageCnt) + " | "     '과금 페이지수
         tmp = tmp + sentFax.tiffFileSize + "byte | "        '변환파일용량 (단위 : byte)
      
@@ -1754,10 +1777,10 @@ Private Sub btnSearch_Click()
     Dim QString As String
     
     '[필수] 시작일자, 형식(yyyyMMdd)
-    SDate = "20220101"
+    SDate = "20220726"
     
     '[필수] 종료일자, 형식(yyyyMMdd)
-    EDate = "20220130"
+    EDate = "20220726"
     
     '전송상태 배열, 1(대기), 2(성공), 3(실패), 4(취소)
     state.Add "1"
@@ -1804,7 +1827,7 @@ Private Sub btnSearch_Click()
     tmp = "state(전송상태 코드) | result(전송결과 코드) | title(팩스제목) | sendnum(발신번호) | senderName(발신자명) | receiveNum(수신번호) | receiveNumType(수신번호 유형) | receiveName(수신자명) |"
     tmp = tmp + "sendPageCnt(전체 페이지수) | successPageCnt(성공 페이지수) | failPageCnt(실패 페이지수) | refundPageCnt(환불 페이지수) | cancelPageCnt(취소 페이지수) |"
     tmp = tmp + "receiptDT(접수일시) | reserveDT(예약일시) | sendDT(전송일시) | resultDT(전송결과 수신일시) | receiptNum(접수번호) | "
-    tmp = tmp + "requestNum(요청번호) | chargePageCnt(과금 페이지수) | tiffFileSize(변환파일용량(단위 : byte)) | fileNames(전송 파일명)" + vbCrLf
+    tmp = tmp + "requestNum(요청번호) | interOPRefKey(파트너 지정 키) | chargePageCnt(과금 페이지수) | tiffFileSize(변환파일용량(단위 : byte)) | fileNames(전송 파일명)" + vbCrLf
     
     Dim sentFax As PBFaxInfo
     
@@ -1866,6 +1889,9 @@ Private Sub btnSearch_Click()
         
         '요청번호
         tmp = tmp + sentFax.requestNum + " | "
+        
+        '파트너 지정 키
+        tmp = tmp + sentFax.interOPRefKey + " | "
         
         '과금 페이지수
         tmp = tmp + CStr(sentFax.chargePageCnt) + " | "
