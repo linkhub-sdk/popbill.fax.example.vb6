@@ -445,8 +445,24 @@ Begin VB.Form frmExample
          TabIndex        =   7
          Top             =   360
          Width           =   2505
+         Begin VB.CommandButton btnUnitCost2 
+            Caption         =   "지능망 전송 단가 확인"
+            Height          =   410
+            Left            =   120
+            TabIndex        =   63
+            Top             =   1800
+            Width           =   2175
+         End
+         Begin VB.CommandButton btnGetChargeInfo2 
+            Caption         =   "지능망 과금정보 확인"
+            Height          =   410
+            Left            =   120
+            TabIndex        =   62
+            Top             =   840
+            Width           =   2175
+         End
          Begin VB.CommandButton btnGetChargeInfo 
-            Caption         =   "과금정보 확인"
+            Caption         =   "일반망 과금정보 확인"
             Height          =   410
             Left            =   120
             TabIndex        =   33
@@ -454,11 +470,11 @@ Begin VB.Form frmExample
             Width           =   2175
          End
          Begin VB.CommandButton btnUnitCost 
-            Caption         =   "전송 단가 확인"
+            Caption         =   "일반망 전송 단가 확인"
             Height          =   410
             Left            =   120
             TabIndex        =   8
-            Top             =   840
+            Top             =   1320
             Width           =   2175
          End
       End
@@ -643,13 +659,16 @@ Private Sub btnJoinMember_Click()
 End Sub
 
 '=========================================================================
-' 팩스 전송시 과금되는 포인트 단가를 확인합니다.
+' 팩스 일반망 전송시 과금되는 포인트 단가를 확인합니다.
 ' - https://docs.popbill.com/fax/vb/api#GetUnitCost
 '=========================================================================
 Private Sub btnUnitCost_Click()
     Dim unitCost As Single
+    Dim receiveNumType As String
     
-    unitCost = FaxService.GetUnitCost(txtCorpNum.Text)
+    receiveNumType = "일반"
+    
+    unitCost = FaxService.GetUnitCost(txtCorpNum.Text, receiveNumType)
     
     If unitCost < 0 Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
@@ -660,14 +679,62 @@ Private Sub btnUnitCost_Click()
 End Sub
 
 '=========================================================================
-' 팝빌 팩스 API 서비스 과금정보를 확인합니다.
+' 팩스 지능망 전송시 과금되는 포인트 단가를 확인합니다.
+' - https://docs.popbill.com/fax/vb/api#GetUnitCost
+'=========================================================================
+Private Sub btnUnitCost2_Click()
+    Dim unitCost As Single
+    Dim receiveNumType As String
+    
+    receiveNumType = "지능"
+    
+    unitCost = FaxService.GetUnitCost(txtCorpNum.Text, receiveNumType)
+    
+    If unitCost < 0 Then
+        MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
+        Exit Sub
+    End If
+    
+    MsgBox "전송 단가 : " + CStr(unitCost)
+End Sub
+
+'=========================================================================
+' 팝빌 팩스 API 서비스 일반망 과금정보를 확인합니다.
 ' - https://docs.popbill.com/fax/vb/api#GetChargeInfo
 '=========================================================================
 Private Sub btnGetChargeInfo_Click()
     Dim ChargeInfo As PBChargeInfo
     Dim tmp As String
+    Dim receiveNumType As String
     
-    Set ChargeInfo = FaxService.GetChargeInfo(txtCorpNum.Text)
+    receiveNumType = "일반"
+    
+    Set ChargeInfo = FaxService.GetChargeInfo(txtCorpNum.Text, txtUserID.Text, receiveNumType)
+     
+    If ChargeInfo Is Nothing Then
+        MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
+        Exit Sub
+    End If
+    
+    tmp = tmp + "unitCost (전송단가) : " + ChargeInfo.unitCost + vbCrLf
+    tmp = tmp + "chargeMethod (과금유형) : " + ChargeInfo.chargeMethod + vbCrLf
+    tmp = tmp + "rateSystem (과금제도) : " + ChargeInfo.rateSystem + vbCrLf
+    
+    MsgBox tmp
+End Sub
+
+'=========================================================================
+' 팝빌 팩스 API 서비스 지능망 과금정보를 확인합니다.
+' - https://docs.popbill.com/fax/vb/api#GetChargeInfo
+'=========================================================================
+Private Sub btnGetChargeInfo2_Click()
+    Dim ChargeInfo As PBChargeInfo
+    Dim tmp As String
+    Dim receiveNumType As String
+    
+    receiveNumType = "지능"
+    
+    Set ChargeInfo = FaxService.GetChargeInfo(txtCorpNum.Text, txtUserID.Text, receiveNumType)
      
     If ChargeInfo Is Nothing Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
