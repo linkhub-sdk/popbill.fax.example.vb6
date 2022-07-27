@@ -814,7 +814,7 @@ Private Sub btnGetContactInfo_Click()
     
     ContactID = "testkorea"
     
-    Set info = FaxService.GetContactInfo(txtCorpNum.Text, ContactID, txtUserID.Text)
+    Set info = FaxService.GetContactInfo(txtCorpNum.Text, ContactID)
     
     If info Is Nothing Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
@@ -1794,7 +1794,7 @@ Private Sub btnCheckSenderNumber_Click()
     
     SenderNumber = "070-4304-2981"
 
-    Set Response = FaxService.CheckSenderNumber(txtCorpNum.Text, SenderNumber, txtUserID.Text)
+    Set Response = FaxService.CheckSenderNumber(txtCorpNum.Text, SenderNumber)
     
     If Response Is Nothing Then
         MsgBox ("응답코드 : " + CStr(FaxService.LastErrCode) + vbCrLf + "응답메시지 : " + FaxService.LastErrMessage)
